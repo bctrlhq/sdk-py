@@ -21,6 +21,11 @@ def _body(values: Mapping[str, Any]) -> JsonObject:
     return {_wire_key(key): value for key, value in values.items() if value is not None}
 
 
+def _merge_patch(values: Mapping[str, Any]) -> JsonObject:
+    """Convert field names while preserving explicit nulls for RFC 7396 patches."""
+    return {_wire_key(key): value for key, value in values.items()}
+
+
 def _wire_key(key: str) -> str:
     if "_" not in key:
         return key
@@ -394,16 +399,6 @@ class RunsClient:
     def usage(self, run_id: str) -> JsonObject:
         return self._http.request("GET", f"/runs/{_enc(run_id)}/usage")
 
-    def live(self, run_id: str, **request: Any) -> JsonObject:
-        return self._http.request(
-            "POST", f"/runs/{_enc(run_id)}/live", json_body=_body(request)
-        )
-
-    def recording(self, run_id: str, **request: Any) -> JsonObject:
-        return self._http.request(
-            "POST", f"/runs/{_enc(run_id)}/recording", json_body=_body(request)
-        )
-
 
 class RunEventsNamespace:
     def __init__(self, http: V1HttpClient) -> None:
@@ -463,7 +458,9 @@ class RunFilesNamespace:
 
     def list(self, run_id: str, **params: Any) -> JsonObject:
         return self._http.request(
-            "GET", f"/runs/{_enc(run_id)}/files", params=_body(params)
+            "GET",
+            "/files",
+            params=_body({"run_id": run_id, **params}),
         )
 
     def iter(self, run_id: str, **params: Any) -> Iterator[JsonObject]:
@@ -758,6 +755,111 @@ class AccountClient:
         self.api_keys = ApiKeysClient(http)
         self.subaccounts = SubaccountsClient(http)
         self.usage = UsageClient(http)
+
+    def get(self) -> JsonObject:
+        return self._http.request("GET", "/account")
+
+    def update(
+        self,
+        *,
+        branding: Mapping[str, Any] | None,
+        dry_run: bool = False,
+    ) -> JsonObject:
+        body = {
+            "branding": None if branding is None else _merge_patch(branding),
+        }
+        return self._http.request(
+            "PATCH",
+            "/account",
+            params={"dryRun": True} if dry_run else None,
+            json_body=body,
+        )
+
+
+class ViewsClient:
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+
+    def list(self, **params: Any) -> JsonObject:
+        return self._http.request("GET", "/views", params=_body(params))
+
+    def iter(self, **params: Any) -> Iterator[JsonObject]:
+        return _iter_pages(lambda query: self.list(**query), params)
+
+    def create(
+        self,
+        *,
+        scope: Mapping[str, Any],
+        components: Mapping[str, Any] | None = None,
+        expires_in_seconds: int | None = None,
+    ) -> JsonObject:
+        body: JsonObject = {"scope": _body(scope)}
+        if components is not None:
+            body["components"] = _body(components)
+        if expires_in_seconds is not None:
+            body["expiresInSeconds"] = expires_in_seconds
+        return self._http.request("POST", "/views", json_body=body)
+
+    def get(self, view_id: str) -> JsonObject:
+        return self._http.request("GET", f"/views/{_enc(view_id)}")
+
+    def delete(self, view_id: str) -> JsonObject:
+        return self._http.request("DELETE", f"/views/{_enc(view_id)}")
+
+
+class WebhookDeliveriesNamespace:
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+
+    def list(self, webhook_id: str, **params: Any) -> JsonObject:
+        return self._http.request(
+            "GET",
+            f"/webhooks/{_enc(webhook_id)}/deliveries",
+            params=_body(params),
+        )
+
+    def iter(self, webhook_id: str, **params: Any) -> Iterator[JsonObject]:
+        return _iter_pages(lambda query: self.list(webhook_id, **query), params)
+
+    def redeliver(self, webhook_id: str, delivery_id: str) -> JsonObject:
+        return self._http.request(
+            "POST",
+            f"/webhooks/{_enc(webhook_id)}/deliveries/{_enc(delivery_id)}/redeliver",
+        )
+
+
+class WebhooksClient:
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+        self.deliveries = WebhookDeliveriesNamespace(http)
+
+    def list(self, **params: Any) -> JsonObject:
+        return self._http.request("GET", "/webhooks", params=_body(params))
+
+    def iter(self, **params: Any) -> Iterator[JsonObject]:
+        return _iter_pages(lambda query: self.list(**query), params)
+
+    def create(self, **request: Any) -> JsonObject:
+        return self._http.request("POST", "/webhooks", json_body=_body(request))
+
+    def get(self, webhook_id: str) -> JsonObject:
+        return self._http.request("GET", f"/webhooks/{_enc(webhook_id)}")
+
+    def update(self, webhook_id: str, **request: Any) -> JsonObject:
+        return self._http.request(
+            "PATCH",
+            f"/webhooks/{_enc(webhook_id)}",
+            json_body=_merge_patch(request),
+        )
+
+    def delete(self, webhook_id: str) -> JsonObject:
+        return self._http.request("DELETE", f"/webhooks/{_enc(webhook_id)}")
+
+    def rotate_secret(self, webhook_id: str) -> JsonObject:
+        return self._http.request("POST", f"/webhooks/{_enc(webhook_id)}/rotate-secret")
+
+    def test(self, webhook_id: str) -> JsonObject:
+        return self._http.request("POST", f"/webhooks/{_enc(webhook_id)}/test")
 
 
 class AuthClient:

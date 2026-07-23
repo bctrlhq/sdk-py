@@ -237,12 +237,18 @@ def _query(params: Optional[Mapping[str, Any]]) -> str:
         if value is None:
             continue
         if isinstance(value, (list, tuple)):
-            pairs.extend((key, str(item)) for item in value if item is not None)
+            pairs.extend((key, _query_value(item)) for item in value if item is not None)
         elif isinstance(value, dict):
             continue
         else:
-            pairs.append((key, str(value)))
+            pairs.append((key, _query_value(value)))
     return urlencode(pairs)
+
+
+def _query_value(value: Any) -> str:
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    return str(value)
 
 
 def _decode_response(raw: bytes, content_type: Optional[str]) -> Any:

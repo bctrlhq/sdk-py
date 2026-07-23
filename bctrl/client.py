@@ -21,6 +21,8 @@ from .resources import (
     ToolsClient,
     UsageClient,
     VaultClient,
+    ViewsClient,
+    WebhooksClient,
 )
 
 
@@ -58,3 +60,5 @@ class Bctrl:
         self.api_keys = ApiKeysClient(self._http)
         self.subaccounts = SubaccountsClient(self._http)
         self.usage = UsageClient(self._http)
+        self.views = ViewsClient(self._http)
+        self.webhooks = WebhooksClient(self._http)

@@ -43,6 +43,31 @@ with bctrl.runtimes.started_browser(name="checkout") as browser:
 Python methods use `snake_case`; the SDK sends the API's camelCase fields on the
 wire. For example, `runtime_path` becomes `runtimePath`.
 
+## Human-facing Views
+
+Views are the supported way to share live progress, recordings, activity, and
+human actions. The bearer URL is returned only when the view is created:
+
+```python
+view = bctrl.views.create(
+    scope={"runtime_id": "runtime_..."},
+    components={
+        "live": {"control": "none"},
+        "recordings": {},
+        "activity": {},
+    },
+    expires_in_seconds=3600,
+)
+
+print(view["url"])
+```
+
+Set the `chrome=none` query parameter before the URL fragment when embedding
+the complete white-label view in your own application. Organization branding
+is managed with `bctrl.account.get()` and `bctrl.account.update(...)`. Signed
+event delivery is managed through `bctrl.webhooks`, including secret rotation,
+delivery inspection, and redelivery.
+
 ## Design
 
 - Sync-first client.

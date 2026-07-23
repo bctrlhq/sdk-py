@@ -71,6 +71,110 @@ class MockHandler(BaseHTTPRequestHandler):
         if method == "GET" and route == "/v1/usage":
             return self._json(200, {"organizationId": "org_1", "credits": {"available": 100}})
 
+        branding = {
+            "config": {},
+            "resolved": {
+                "productName": "Acme Ops" if method == "PATCH" else "bctrl",
+                "logo": None,
+                "showPoweredBy": True,
+                "tokens": {
+                    "bg": "#181512",
+                    "inset": "#101110",
+                    "surfaceRaised": "#211d18",
+                    "panel": "#211d18",
+                    "hairline": "#332c24",
+                    "borderStrong": "#4a4035",
+                    "text": "#ece7de",
+                    "textMuted": "#a89c8b",
+                    "textFaint": "#776e62",
+                    "accent": "#6f8fd4" if method == "PATCH" else "#aa9c82",
+                    "accentSoft": "rgba(111,143,212,0.16)",
+                    "accentBorder": "rgba(111,143,212,0.42)",
+                },
+            },
+        }
+        if route == "/v1/account" and method in {"GET", "PATCH"}:
+            return self._json(
+                200,
+                {
+                    "id": "org_1",
+                    "name": "Test Organization",
+                    "branding": branding,
+                    "updatedAt": iso(),
+                },
+            )
+
+        view = {
+            "id": "view_1",
+            "scope": {"runtimeId": "runtime_1"},
+            "components": {"live": {"control": "none"}, "activity": {}},
+            "branding": branding["resolved"],
+            "createdAt": iso(),
+            "expiresAt": iso(),
+        }
+        if method == "POST" and route == "/v1/views":
+            return self._json(
+                201,
+                {
+                    **view,
+                    "token": "view_token_test",
+                    "url": "https://view.example.test/#view_token_test",
+                },
+            )
+        if method == "GET" and route == "/v1/views":
+            return self._json(200, {"data": [view], "nextCursor": None})
+        if method == "GET" and route == "/v1/views/view_1":
+            return self._json(200, view)
+        if method == "DELETE" and route == "/v1/views/view_1":
+            return self._json(200, {"id": "view_1", "deleted": True})
+
+        webhook = {
+            "id": "webhook_1",
+            "subaccountId": None,
+            "name": "Operations",
+            "url": "https://ops.example.test/bctrl",
+            "events": ["run.completed"],
+            "enabled": method != "PATCH",
+            "createdAt": iso(),
+            "updatedAt": iso(),
+        }
+        delivery = {
+            "id": "delivery_1",
+            "webhookId": "webhook_1",
+            "eventId": "event_1",
+            "eventType": "run.completed",
+            "status": "pending",
+            "attemptCount": 0,
+            "responseStatus": None,
+            "nextAttemptAt": iso(),
+            "sentAt": None,
+            "lastError": None,
+            "createdAt": iso(),
+            "updatedAt": iso(),
+        }
+        if method == "POST" and route == "/v1/webhooks":
+            return self._json(201, {**webhook, "secret": f"whsec_{'a' * 40}"})
+        if method == "GET" and route == "/v1/webhooks":
+            return self._json(200, {"data": [webhook], "nextCursor": None})
+        if route == "/v1/webhooks/webhook_1" and method in {"GET", "PATCH"}:
+            return self._json(200, webhook)
+        if method == "DELETE" and route == "/v1/webhooks/webhook_1":
+            return self._json(200, {"id": "webhook_1", "deleted": True})
+        if method == "POST" and route == "/v1/webhooks/webhook_1/rotate-secret":
+            return self._json(
+                200,
+                {"id": "webhook_1", "secret": f"whsec_{'b' * 40}"},
+            )
+        if method == "POST" and route == "/v1/webhooks/webhook_1/test":
+            return self._json(202, delivery)
+        if method == "GET" and route == "/v1/webhooks/webhook_1/deliveries":
+            return self._json(200, {"data": [delivery], "nextCursor": None})
+        if (
+            method == "POST"
+            and route == "/v1/webhooks/webhook_1/deliveries/delivery_1/redeliver"
+        ):
+            return self._json(202, delivery)
+
         if method == "POST" and route == "/v1/runtimes":
             return self._json(
                 201,
@@ -210,6 +314,15 @@ class MockHandler(BaseHTTPRequestHandler):
         if method == "GET" and route == "/v1/runs/run_1/activity/stream":
             return self._sse(['event: log\ndata: Browser opened\n\n'])
 
+        if method == "GET" and route == "/v1/files":
+            return self._json(
+                200,
+                {
+                    "data": [{"id": "file_1", "runId": "run_1", "name": "result.json"}],
+                    "nextCursor": None,
+                },
+            )
+
         if method == "GET" and route == "/v1/vault/secrets/login/totp":
             return self._json(200, {"code": "123456"})
 
@@ -285,6 +398,71 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(paths(), ["POST /v1/runtimes/runtime_1/start"])
         self.assertEqual(MockHandler.requests[0]["headers"].get("Idempotency-Key"), "start-1")
 
+    def test_account_branding_views_and_webhooks_use_public_routes(self) -> None:
+        account = self.client.account.get()
+        preview = self.client.account.update(
+            branding={
+                "product_name": "Acme Ops",
+                "accent": "#6f8fd4",
+                "logo": None,
+            },
+            dry_run=True,
+        )
+        view = self.client.views.create(
+            scope={"runtime_id": "runtime_1"},
+            components={"live": {"control": "none"}, "activity": {}},
+        )
+        views = self.client.views.list(limit=10)
+        self.client.views.get(view["id"])
+        self.client.views.delete(view["id"])
+
+        webhook = self.client.webhooks.create(
+            name="Operations",
+            url="https://ops.example.test/bctrl",
+            events=["run.completed"],
+        )
+        self.client.webhooks.list(limit=10)
+        self.client.webhooks.get(webhook["id"])
+        self.client.webhooks.update(webhook["id"], enabled=False, name=None)
+        rotated = self.client.webhooks.rotate_secret(webhook["id"])
+        test_delivery = self.client.webhooks.test(webhook["id"])
+        deliveries = self.client.webhooks.deliveries.list(webhook["id"], limit=5)
+        self.client.webhooks.deliveries.redeliver(webhook["id"], test_delivery["id"])
+        self.client.webhooks.delete(webhook["id"])
+
+        self.assertEqual(account["branding"]["resolved"]["productName"], "bctrl")
+        self.assertEqual(preview["branding"]["resolved"]["productName"], "Acme Ops")
+        self.assertEqual(view["token"], "view_token_test")
+        self.assertEqual(views["data"][0]["id"], view["id"])
+        self.assertTrue(webhook["secret"].startswith("whsec_"))
+        self.assertTrue(rotated["secret"].startswith("whsec_"))
+        self.assertEqual(deliveries["data"][0]["id"], test_delivery["id"])
+        self.assertEqual(MockHandler.requests[1]["body"]["branding"]["productName"], "Acme Ops")
+        self.assertIn("logo", MockHandler.requests[1]["body"]["branding"])
+        self.assertIsNone(MockHandler.requests[1]["body"]["branding"]["logo"])
+        self.assertIsNone(MockHandler.requests[9]["body"]["name"])
+
+        self.assertEqual(
+            paths(),
+            [
+                "GET /v1/account",
+                "PATCH /v1/account?dryRun=true",
+                "POST /v1/views",
+                "GET /v1/views?limit=10",
+                "GET /v1/views/view_1",
+                "DELETE /v1/views/view_1",
+                "POST /v1/webhooks",
+                "GET /v1/webhooks?limit=10",
+                "GET /v1/webhooks/webhook_1",
+                "PATCH /v1/webhooks/webhook_1",
+                "POST /v1/webhooks/webhook_1/rotate-secret",
+                "POST /v1/webhooks/webhook_1/test",
+                "GET /v1/webhooks/webhook_1/deliveries?limit=5",
+                "POST /v1/webhooks/webhook_1/deliveries/delivery_1/redeliver",
+                "DELETE /v1/webhooks/webhook_1",
+            ],
+        )
+
     def test_runtime_target_routes(self) -> None:
         listed = self.client.runtimes.targets.list("runtime_1")
         created = self.client.runtimes.targets.create(
@@ -344,11 +522,19 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertFalse(hasattr(self.client.api_keys, "get"))
         self.assertFalse(hasattr(self.client.api_keys, "update"))
         self.assertFalse(hasattr(self.client.subaccounts, "delete"))
+        self.assertFalse(hasattr(self.client.runs, "live"))
+        self.assertFalse(hasattr(self.client.runs, "recording"))
 
         totp = self.client.vault.totp("login")
 
         self.assertEqual(totp["code"], "123456")
         self.assertEqual(paths(), ["GET /v1/vault/secrets/login/totp"])
+
+    def test_run_files_helper_uses_the_canonical_files_query(self) -> None:
+        files = self.client.runs.files.list("run_1", type="download")
+
+        self.assertEqual(files["data"][0]["id"], "file_1")
+        self.assertEqual(paths(), ["GET /v1/files?runId=run_1&type=download"])
 
     def test_output_model_conversion_and_create_and_wait(self) -> None:
         class Invoice(BaseModel):
