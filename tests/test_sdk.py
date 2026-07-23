@@ -411,6 +411,10 @@ class BctrlPythonSdkTest(unittest.TestCase):
         view = self.client.views.create(
             scope={"runtime_id": "runtime_1"},
             components={"live": {"control": "none"}, "activity": {}},
+            presentation={
+                "mode": "embedded",
+                "allowed_origins": ["https://portal.acme.com"],
+            },
         )
         views = self.client.views.list(limit=10)
         self.client.views.get(view["id"])
@@ -440,6 +444,13 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(MockHandler.requests[1]["body"]["branding"]["productName"], "Acme Ops")
         self.assertIn("logo", MockHandler.requests[1]["body"]["branding"])
         self.assertIsNone(MockHandler.requests[1]["body"]["branding"]["logo"])
+        self.assertEqual(
+            MockHandler.requests[2]["body"]["presentation"],
+            {
+                "mode": "embedded",
+                "allowedOrigins": ["https://portal.acme.com"],
+            },
+        )
         self.assertIsNone(MockHandler.requests[9]["body"]["name"])
 
         self.assertEqual(

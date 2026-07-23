@@ -791,11 +791,14 @@ class ViewsClient:
         *,
         scope: Mapping[str, Any],
         components: Mapping[str, Any] | None = None,
+        presentation: Mapping[str, Any] | None = None,
         expires_in_seconds: int | None = None,
     ) -> JsonObject:
         body: JsonObject = {"scope": _body(scope)}
         if components is not None:
             body["components"] = _body(components)
+        if presentation is not None:
+            body["presentation"] = _body(presentation)
         if expires_in_seconds is not None:
             body["expiresInSeconds"] = expires_in_seconds
         return self._http.request("POST", "/views", json_body=body)
