@@ -128,6 +128,7 @@ class RuntimesClient:
         self.runs = RuntimeRunsNamespace(http)
         self.invocations = RuntimeInvocationsNamespace(http)
         self.targets = RuntimeTargetsNamespace(http)
+        self.human_actions = RuntimeHumanActionsNamespace(http)
 
     def list(self, **params: Any) -> JsonObject:
         return self._http.request("GET", "/runtimes", params=_body(params))
@@ -216,14 +217,6 @@ class RuntimeRunsNamespace:
 class RuntimeFilesNamespace:
     def __init__(self, http: V1HttpClient) -> None:
         self._http = http
-
-    def list(self, runtime_id: str, **params: Any) -> JsonObject:
-        return self._http.request(
-            "GET", f"/runtimes/{_enc(runtime_id)}/files", params=_body(params)
-        )
-
-    def iter(self, runtime_id: str, **params: Any) -> Iterator[JsonObject]:
-        return _iter_pages(lambda query: self.list(runtime_id, **query), params)
 
     def stage(self, runtime_id: str, *, file_id: str, **request: Any) -> JsonObject:
         return self._http.request(
@@ -456,16 +449,6 @@ class RunFilesNamespace:
     def __init__(self, http: V1HttpClient) -> None:
         self._http = http
 
-    def list(self, run_id: str, **params: Any) -> JsonObject:
-        return self._http.request(
-            "GET",
-            "/files",
-            params=_body({"run_id": run_id, **params}),
-        )
-
-    def iter(self, run_id: str, **params: Any) -> Iterator[JsonObject]:
-        return _iter_pages(lambda query: self.list(run_id, **query), params)
-
     def export(self, run_id: str, **request: Any) -> JsonObject:
         return self._http.request(
             "POST", f"/runs/{_enc(run_id)}/files/export", json_body=_body(request)
@@ -483,11 +466,6 @@ class RunInvocationsNamespace:
 
     def iter(self, run_id: str, **params: Any) -> Iterator[JsonObject]:
         return _iter_pages(lambda query: self.list(run_id, **query), params)
-
-    def get(self, run_id: str, invocation_id: str) -> JsonObject:
-        return self._http.request(
-            "GET", f"/runs/{_enc(run_id)}/invocations/{_enc(invocation_id)}"
-        )
 
 
 class FilesClient:
@@ -516,6 +494,55 @@ class FilesClient:
             files=[make_file_part("file", file, filename=filename)],
         )
 
+
+class InvocationsClient:
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+
+    def get(self, invocation_id: str) -> JsonObject:
+        return self._http.request("GET", f"/invocations/{_enc(invocation_id)}")
+
+
+class RuntimeHumanActionsNamespace:
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+
+    def create(self, runtime_id: str, **request: Any) -> JsonObject:
+        return self._http.request(
+            "POST",
+            f"/runtimes/{_enc(runtime_id)}/human-actions",
+            json_body=_body(request),
+        )
+
+    def current(self, runtime_id: str) -> JsonObject:
+        return self._http.request(
+            "GET", f"/runtimes/{_enc(runtime_id)}/human-actions/current"
+        )
+
+    def get(self, runtime_id: str, human_action_id: str) -> JsonObject:
+        return self._http.request(
+            "GET",
+            f"/runtimes/{_enc(runtime_id)}/human-actions/{_enc(human_action_id)}",
+        )
+
+    def wait(self, runtime_id: str, human_action_id: str, **request: Any) -> JsonObject:
+        return self._http.request(
+            "POST",
+            f"/runtimes/{_enc(runtime_id)}/human-actions/{_enc(human_action_id)}/wait",
+            json_body=_body(request),
+        )
+
+    def complete(self, runtime_id: str, human_action_id: str) -> JsonObject:
+        return self._http.request(
+            "POST",
+            f"/runtimes/{_enc(runtime_id)}/human-actions/{_enc(human_action_id)}/complete",
+        )
+
+    def cancel(self, runtime_id: str, human_action_id: str) -> JsonObject:
+        return self._http.request(
+            "POST",
+            f"/runtimes/{_enc(runtime_id)}/human-actions/{_enc(human_action_id)}/cancel",
+        )
 
 class BrowserExtensionsClient:
     def __init__(self, http: V1HttpClient) -> None:

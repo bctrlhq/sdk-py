@@ -11,6 +11,7 @@ from .resources import (
     BrowserExtensionsClient,
     FilesClient,
     HelpClient,
+    InvocationsClient,
     ProxiesClient,
     RunsClient,
     RuntimesClient,
@@ -46,6 +47,7 @@ class Bctrl:
         self.spaces = SpacesClient(self._http)
         self.runtimes = RuntimesClient(self._http)
         self.runs = RunsClient(self._http)
+        self.invocations = InvocationsClient(self._http)
         self.files = FilesClient(self._http)
         self.tools = ToolsClient(self._http)
         self.toolsets = ToolsetsClient(self._http)

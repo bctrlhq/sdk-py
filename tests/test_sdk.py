@@ -323,6 +323,51 @@ class MockHandler(BaseHTTPRequestHandler):
                 },
             )
 
+        if method == "GET" and route == "/v1/invocations/invocation_1":
+            return self._json(
+                200,
+                {
+                    "id": "invocation_1",
+                    "runtimeId": "runtime_1",
+                    "runId": "run_1",
+                    "status": "succeeded",
+                },
+            )
+
+        human_action = {
+            "id": "human_action_1",
+            "runtimeId": "runtime_1",
+            "runId": "run_1",
+            "message": "Review checkout",
+            "status": "pending",
+            "createdAt": iso(),
+            "expiresAt": iso(),
+        }
+        if method == "POST" and route == "/v1/runtimes/runtime_1/human-actions":
+            return self._json(201, human_action)
+        if method == "GET" and route == "/v1/runtimes/runtime_1/human-actions/current":
+            return self._json(200, human_action)
+        if (
+            method == "GET"
+            and route == "/v1/runtimes/runtime_1/human-actions/human_action_1"
+        ):
+            return self._json(200, human_action)
+        if (
+            method == "POST"
+            and route == "/v1/runtimes/runtime_1/human-actions/human_action_1/wait"
+        ):
+            return self._json(200, {**human_action, "waitStatus": "timeout"})
+        if (
+            method == "POST"
+            and route == "/v1/runtimes/runtime_1/human-actions/human_action_1/complete"
+        ):
+            return self._json(200, {**human_action, "status": "completed"})
+        if (
+            method == "POST"
+            and route == "/v1/runtimes/runtime_1/human-actions/human_action_1/cancel"
+        ):
+            return self._json(200, {**human_action, "status": "cancelled"})
+
         if method == "GET" and route == "/v1/vault/secrets/login/totp":
             return self._json(200, {"code": "123456"})
 
@@ -541,11 +586,47 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(totp["code"], "123456")
         self.assertEqual(paths(), ["GET /v1/vault/secrets/login/totp"])
 
-    def test_run_files_helper_uses_the_canonical_files_query(self) -> None:
-        files = self.client.runs.files.list("run_1", type="download")
+    def test_files_list_filters_by_run(self) -> None:
+        files = self.client.files.list(run_id="run_1", type="download")
 
         self.assertEqual(files["data"][0]["id"], "file_1")
         self.assertEqual(paths(), ["GET /v1/files?runId=run_1&type=download"])
+
+    def test_direct_invocation_and_id_addressed_human_actions(self) -> None:
+        invocation = self.client.invocations.get("invocation_1")
+        action = self.client.runtimes.human_actions.create(
+            "runtime_1", message="Review checkout"
+        )
+        current = self.client.runtimes.human_actions.current("runtime_1")
+        fetched = self.client.runtimes.human_actions.get("runtime_1", action["id"])
+        waited = self.client.runtimes.human_actions.wait(
+            "runtime_1", action["id"], timeout_seconds=30
+        )
+        completed = self.client.runtimes.human_actions.complete(
+            "runtime_1", action["id"]
+        )
+        cancelled = self.client.runtimes.human_actions.cancel(
+            "runtime_1", action["id"]
+        )
+
+        self.assertEqual(invocation["id"], "invocation_1")
+        self.assertEqual(current["id"], action["id"])
+        self.assertEqual(fetched["id"], action["id"])
+        self.assertEqual(waited["waitStatus"], "timeout")
+        self.assertEqual(completed["status"], "completed")
+        self.assertEqual(cancelled["status"], "cancelled")
+        self.assertEqual(
+            paths(),
+            [
+                "GET /v1/invocations/invocation_1",
+                "POST /v1/runtimes/runtime_1/human-actions",
+                "GET /v1/runtimes/runtime_1/human-actions/current",
+                "GET /v1/runtimes/runtime_1/human-actions/human_action_1",
+                "POST /v1/runtimes/runtime_1/human-actions/human_action_1/wait",
+                "POST /v1/runtimes/runtime_1/human-actions/human_action_1/complete",
+                "POST /v1/runtimes/runtime_1/human-actions/human_action_1/cancel",
+            ],
+        )
 
     def test_output_model_conversion_and_create_and_wait(self) -> None:
         class Invoice(BaseModel):
