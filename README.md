@@ -12,31 +12,21 @@ pip install bctrl
 
 ```python
 from bctrl import Bctrl
-from pydantic import BaseModel, ConfigDict
-
-
-class Invoice(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    invoiceNumber: str
-    total: float
 
 bctrl = Bctrl(api_key="bctrl_...")
 
 with bctrl.runtimes.started_browser(name="checkout") as browser:
     print(browser.connect_url)
 
-    invocation = bctrl.runtimes.invocations.create_and_wait(
-        browser.runtime_id,
-        action="extract",
-        instruction="Extract the invoice number and total.",
-        output_model=Invoice,
+    conversation = bctrl.conversations.create(
+        runtime_id=browser.runtime_id,
+        agent="stagehand",
     )
-
-    invoice = invocation["parsed_output"]
-    print(invoice.invoiceNumber, invoice.total)
-
-    for event in bctrl.runs.events.stream(browser.run_id):
+    bctrl.conversations.messages.create(
+        conversation["id"],
+        text="Extract the invoice number and total.",
+    )
+    for event in bctrl.conversations.stream(conversation["id"]):
         print(event)
 ```
 
@@ -45,8 +35,8 @@ wire. For example, `runtime_path` becomes `runtimePath`.
 
 ## Human-facing Views
 
-Views are the supported way to share live progress, recordings, activity, and
-human actions. The bearer URL is returned only when the view is created:
+Views are the supported way to share live progress and recordings. The bearer
+URL is returned only when the view is created:
 
 ```python
 view = bctrl.views.create(
@@ -54,7 +44,6 @@ view = bctrl.views.create(
     components={
         "live": {"control": "none"},
         "recordings": {},
-        "activity": {},
     },
     expires_in_seconds=3600,
 )
@@ -73,10 +62,10 @@ delivery inspection, and redelivery.
 - Sync-first client.
 - Route-first namespaces that mirror the API reference.
 - Raw response bodies as dictionaries.
-- Pydantic model support for invocation output schemas.
 - Python context managers for runtime lifecycle cleanup.
-- Sync SSE iterators for run events and activity.
-- Explicit helpers for pagination, multipart uploads, and `create_and_wait`.
+- Typed built-in Tool inputs generated from the canonical Tool registry.
+- Sync SSE iterators for Conversations and unified Run streams.
+- Explicit helpers for pagination and multipart uploads.
 - No hidden follow-up requests or stateful resource refreshes.
 
 ## License

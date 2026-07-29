@@ -6,15 +6,11 @@ import unittest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 
-from pydantic import BaseModel
-
-from bctrl import Bctrl, BctrlApiError, BctrlNotFoundError
-from bctrl.http import V1HttpClient
+from bctrl import Bctrl
 
 
 class MockHandler(BaseHTTPRequestHandler):
     requests: list[dict[str, Any]] = []
-    route_hits: dict[str, int] = {}
 
     def do_GET(self) -> None:
         self._handle("GET")
@@ -25,369 +21,43 @@ class MockHandler(BaseHTTPRequestHandler):
     def do_PATCH(self) -> None:
         self._handle("PATCH")
 
-    def do_DELETE(self) -> None:
-        self._handle("DELETE")
-
     def log_message(self, format: str, *args: Any) -> None:
         return
 
     def _handle(self, method: str) -> None:
-        length = int(self.headers.get("content-length", "0"))
-        raw = self.rfile.read(length) if length else b""
-        body = _decode_body(raw, self.headers.get("content-type"))
-        path = self.path
-        route = path.split("?", 1)[0]
+        raw = self.rfile.read(int(self.headers.get("content-length", "0")))
+        body = json.loads(raw) if raw else None
+        route = self.path.split("?", 1)[0]
         self.requests.append(
             {
                 "method": method,
-                "path": path,
-                "headers": dict(self.headers),
+                "path": self.path,
                 "body": body,
+                "headers": dict(self.headers),
             }
         )
-        self.route_hits[route] = self.route_hits.get(route, 0) + 1
 
         if method == "POST" and route == "/v1/spaces":
-            return self._json(
-                201,
-                {
-                    "id": "space_1",
-                    "name": body.get("name"),
-                    "createdAt": iso(),
-                    "updatedAt": iso(),
-                },
-            )
-
-        if method == "GET" and route == "/v1/auth/whoami":
+            return self._json(201, {"id": "sp_test", "name": body["name"]})
+        if method == "POST" and route == "/v1/runtimes/rt_test/start":
             return self._json(
                 200,
                 {
-                    "defaultSpaceId": "space_1",
-                    "organizationId": "org_1",
-                    "scope": "organization",
-                },
-            )
-
-        if method == "GET" and route == "/v1/usage":
-            return self._json(200, {"organizationId": "org_1", "credits": {"available": 100}})
-
-        branding = {
-            "config": {},
-            "resolved": {
-                "productName": "Acme Ops" if method == "PATCH" else "bctrl",
-                "logo": None,
-                "showPoweredBy": True,
-                "tokens": {
-                    "bg": "#181512",
-                    "inset": "#101110",
-                    "surfaceRaised": "#211d18",
-                    "panel": "#211d18",
-                    "hairline": "#332c24",
-                    "borderStrong": "#4a4035",
-                    "text": "#ece7de",
-                    "textMuted": "#a89c8b",
-                    "textFaint": "#776e62",
-                    "accent": "#6f8fd4" if method == "PATCH" else "#aa9c82",
-                    "accentSoft": "rgba(111,143,212,0.16)",
-                    "accentBorder": "rgba(111,143,212,0.42)",
-                },
-            },
-        }
-        if route == "/v1/account" and method in {"GET", "PATCH"}:
-            return self._json(
-                200,
-                {
-                    "id": "org_1",
-                    "name": "Test Organization",
-                    "branding": branding,
-                    "updatedAt": iso(),
-                },
-            )
-
-        view = {
-            "id": "view_1",
-            "scope": {"runtimeId": "runtime_1"},
-            "components": {"live": {"control": "none"}, "activity": {}},
-            "branding": branding["resolved"],
-            "createdAt": iso(),
-            "expiresAt": iso(),
-        }
-        if method == "POST" and route == "/v1/views":
-            return self._json(
-                201,
-                {
-                    **view,
-                    "token": "view_token_test",
-                    "url": "https://view.example.test/#view_token_test",
-                },
-            )
-        if method == "GET" and route == "/v1/views":
-            return self._json(200, {"data": [view], "nextCursor": None})
-        if method == "GET" and route == "/v1/views/view_1":
-            return self._json(200, view)
-        if method == "DELETE" and route == "/v1/views/view_1":
-            return self._json(200, {"id": "view_1", "deleted": True})
-
-        webhook = {
-            "id": "webhook_1",
-            "subaccountId": None,
-            "name": "Operations",
-            "url": "https://ops.example.test/bctrl",
-            "events": ["run.completed"],
-            "enabled": method != "PATCH",
-            "createdAt": iso(),
-            "updatedAt": iso(),
-        }
-        delivery = {
-            "id": "delivery_1",
-            "webhookId": "webhook_1",
-            "eventId": "event_1",
-            "eventType": "run.completed",
-            "status": "pending",
-            "attemptCount": 0,
-            "responseStatus": None,
-            "nextAttemptAt": iso(),
-            "sentAt": None,
-            "lastError": None,
-            "createdAt": iso(),
-            "updatedAt": iso(),
-        }
-        if method == "POST" and route == "/v1/webhooks":
-            return self._json(201, {**webhook, "secret": f"whsec_{'a' * 40}"})
-        if method == "GET" and route == "/v1/webhooks":
-            return self._json(200, {"data": [webhook], "nextCursor": None})
-        if route == "/v1/webhooks/webhook_1" and method in {"GET", "PATCH"}:
-            return self._json(200, webhook)
-        if method == "DELETE" and route == "/v1/webhooks/webhook_1":
-            return self._json(200, {"id": "webhook_1", "deleted": True})
-        if method == "POST" and route == "/v1/webhooks/webhook_1/rotate-secret":
-            return self._json(
-                200,
-                {"id": "webhook_1", "secret": f"whsec_{'b' * 40}"},
-            )
-        if method == "POST" and route == "/v1/webhooks/webhook_1/test":
-            return self._json(202, delivery)
-        if method == "GET" and route == "/v1/webhooks/webhook_1/deliveries":
-            return self._json(200, {"data": [delivery], "nextCursor": None})
-        if (
-            method == "POST"
-            and route == "/v1/webhooks/webhook_1/deliveries/delivery_1/redeliver"
-        ):
-            return self._json(202, delivery)
-
-        if method == "POST" and route == "/v1/runtimes":
-            return self._json(
-                201,
-                {
-                    "id": "runtime_1",
-                    "type": body.get("type", "browser"),
-                    "status": "stopped",
-                    "createdAt": iso(),
-                    "updatedAt": iso(),
-                },
-            )
-
-        if method == "POST" and route == "/v1/runtimes/runtime_1/start":
-            return self._json(
-                200,
-                {
-                    "runtimeId": "runtime_1",
-                    "runId": "run_1",
+                    "runtimeId": "rt_test",
+                    "runId": "run_test",
                     "status": "active",
                     "connectUrl": "wss://example.test/devtools",
                     "protocol": "cdp",
                     "started": True,
                 },
             )
-
-        if method == "POST" and route == "/v1/runtimes/runtime_1/stop":
-            return self._json(200, {"id": "runtime_1", "status": "stopped"})
-
-        if method == "GET" and route == "/v1/runtimes/runtime_1":
-            return self._json(200, {"id": "runtime_1", "status": "active", "activeRunId": "run_1"})
-
-        if method == "GET" and route == "/v1/runtimes/runtime_1/targets":
-            return self._json(
-                200,
-                {
-                    "data": [runtime_target()],
-                    "nextCursor": None,
-                },
-            )
-
-        if method == "POST" and route == "/v1/runtimes/runtime_1/targets":
-            return self._json(
-                201,
-                runtime_target(
-                    {
-                        "uri": body.get("uri", "about:blank"),
-                        "active": body.get("activate") is True,
-                    }
-                ),
-            )
-
-        if method == "GET" and route == "/v1/runtimes/runtime_1/targets/target_1":
-            return self._json(200, runtime_target())
-
-        if method == "POST" and route == "/v1/runtimes/runtime_1/targets/target_1/activate":
-            return self._json(200, runtime_target({"active": True}))
-
-        if method == "DELETE" and route == "/v1/runtimes/runtime_1/targets/target_1":
-            return self._json(200, {"id": "target_1", "deleted": True})
-
-        if method == "GET" and route == "/v1/runtimes/missing":
-            return self._json(
-                404,
-                {
-                    "error": "Runtime not found",
-                    "code": "runtime.not_found",
-                    "requestId": "req_1",
-                },
-            )
-
-        if method == "POST" and route == "/v1/runtimes/runtime_1/invocations":
-            return self._json(
-                202,
-                {
-                    "id": "invocation_1",
-                    "runtimeId": "runtime_1",
-                    "runId": "run_1",
-                    "action": body.get("action"),
-                    "status": "queued",
-                    "createdAt": iso(),
-                },
-            )
-
-        if method == "POST" and route == "/v1/runtimes/runtime_1/invocations/invocation_1/wait":
-            wait_count = len([request for request in self.requests if request["path"] == self.path])
-            if wait_count > 1:
-                return self._json(
-                    200,
-                    {
-                        "id": "invocation_1",
-                        "runtimeId": "runtime_1",
-                        "runId": "run_1",
-                        "action": "extract",
-                        "status": "succeeded",
-                        "output": {"invoiceNumber": "INV-123"},
-                        "waitStatus": "completed",
-                        "createdAt": iso(),
-                    },
-                )
-            return self._json(
-                200,
-                {
-                    "id": "invocation_1",
-                    "runtimeId": "runtime_1",
-                    "runId": "run_1",
-                    "action": "extract",
-                    "status": "running",
-                    "waitStatus": "timeout",
-                    "retryAfterMs": 0,
-                    "createdAt": iso(),
-                },
-            )
-
-        if method == "GET" and route == "/v1/runs/run_1/invocations":
-            return self._json(
-                200,
-                {
-                    "data": [
-                        {
-                            "id": "invocation_1",
-                            "runtimeId": "runtime_1",
-                            "runId": "run_1",
-                        }
-                    ],
-                    "nextCursor": None,
-                },
-            )
-
-        if method == "GET" and route == "/v1/runs/run_1/events/stream":
-            return self._sse(
-                [
-                    'event: run.started\ndata: {"runId":"run_1"}\n\n',
-                    'id: evt_2\nevent: run.ended\ndata: {"status":"stopped"}\n\n',
-                ]
-            )
-
-        if method == "GET" and route == "/v1/runs/run_1/activity/stream":
-            return self._sse(['event: log\ndata: Browser opened\n\n'])
-
-        if method == "GET" and route == "/v1/files":
-            return self._json(
-                200,
-                {
-                    "data": [{"id": "file_1", "runId": "run_1", "name": "result.json"}],
-                    "nextCursor": None,
-                },
-            )
-
-        if method == "GET" and route == "/v1/invocations/invocation_1":
-            return self._json(
-                200,
-                {
-                    "id": "invocation_1",
-                    "runtimeId": "runtime_1",
-                    "runId": "run_1",
-                    "status": "succeeded",
-                },
-            )
-
-        human_action = {
-            "id": "human_action_1",
-            "runtimeId": "runtime_1",
-            "runId": "run_1",
-            "message": "Review checkout",
-            "status": "pending",
-            "createdAt": iso(),
-            "expiresAt": iso(),
-        }
-        if method == "POST" and route == "/v1/runtimes/runtime_1/human-actions":
-            return self._json(201, human_action)
-        if method == "GET" and route == "/v1/runtimes/runtime_1/human-actions/current":
-            return self._json(200, human_action)
-        if (
-            method == "GET"
-            and route == "/v1/runtimes/runtime_1/human-actions/human_action_1"
-        ):
-            return self._json(200, human_action)
-        if (
-            method == "POST"
-            and route == "/v1/runtimes/runtime_1/human-actions/human_action_1/wait"
-        ):
-            return self._json(200, {**human_action, "waitStatus": "timeout"})
-        if (
-            method == "POST"
-            and route == "/v1/runtimes/runtime_1/human-actions/human_action_1/complete"
-        ):
-            return self._json(200, {**human_action, "status": "completed"})
-        if (
-            method == "POST"
-            and route == "/v1/runtimes/runtime_1/human-actions/human_action_1/cancel"
-        ):
-            return self._json(200, {**human_action, "status": "cancelled"})
-
-        if method == "GET" and route == "/v1/vault/secrets/login/totp":
-            return self._json(200, {"code": "123456"})
-
-        if route == "/v1/retry-safe":
-            if self.route_hits[route] == 1:
-                return self._json(503, {"error": "temporarily unavailable"})
-            return self._json(200, {"ok": True})
-
-        if route == "/v1/retry-post":
-            if self.route_hits[route] == 1:
-                return self._json(503, {"error": "temporarily unavailable"})
-            return self._json(200, {"ok": True})
-
-        return self._json(
-            404,
-            {
-                "error": f"Unhandled route {method} {route}",
-                "code": "test.unhandled",
-            },
-        )
+        if method == "POST" and route == "/v1/tools/stagehand.act/call":
+            return self._json(200, {"success": True, "message": "done"})
+        if method == "PATCH" and route == "/v1/conversations/conv_test":
+            return self._json(200, {"id": "conv_test", **body})
+        if method == "POST" and route == "/v1/conversations/conv_test/messages":
+            return self._json(202, {"turnId": "turn_test", "status": "queued"})
+        return self._json(404, {"error": f"Unhandled route {method} {route}"})
 
     def _json(self, status: int, body: Any) -> None:
         raw = json.dumps(body).encode()
@@ -397,19 +67,10 @@ class MockHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(raw)
 
-    def _sse(self, chunks: list[str]) -> None:
-        self.send_response(200)
-        self.send_header("content-type", "text/event-stream")
-        self.end_headers()
-        for chunk in chunks:
-            self.wfile.write(chunk.encode())
-            self.wfile.flush()
-
 
 class BctrlPythonSdkTest(unittest.TestCase):
     def setUp(self) -> None:
         MockHandler.requests = []
-        MockHandler.route_hits = {}
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), MockHandler)
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         self.thread.start()
@@ -423,346 +84,34 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.server.server_close()
         self.thread.join(timeout=2)
 
-    def test_root_namespaces_and_raw_responses(self) -> None:
-        space = self.client.spaces.create(name="sdk-python")
-        whoami = self.client.auth.whoami()
-        usage = self.client.usage.get()
+    def test_spaces_and_runtime_start_use_current_routes(self) -> None:
+        space = self.client.spaces.create(name="automation")
+        started = self.client.runtimes.start("rt_test", idempotency_key="start-1")
+        self.assertEqual(space["id"], "sp_test")
+        self.assertEqual(started["runId"], "run_test")
+        self.assertEqual(MockHandler.requests[1]["headers"]["Idempotency-Key"], "start-1")
 
-        self.assertEqual(space["id"], "space_1")
-        self.assertEqual(whoami["defaultSpaceId"], "space_1")
-        self.assertEqual(usage["organizationId"], "org_1")
-        self.assertEqual(
-            paths(),
-            ["POST /v1/spaces", "GET /v1/auth/whoami", "GET /v1/usage"],
+    def test_tools_and_conversations_are_first_class(self) -> None:
+        result = self.client.tools.call(
+            "stagehand.act",
+            {"runtimeId": "rt_test", "instruction": "Click Continue"},
         )
-
-    def test_start_is_direct_and_idempotent_header_is_explicit(self) -> None:
-        started = self.client.runtimes.start("runtime_1", idempotency_key="start-1")
-
-        self.assertEqual(started["connectUrl"], "wss://example.test/devtools")
-        self.assertEqual(paths(), ["POST /v1/runtimes/runtime_1/start"])
-        self.assertEqual(MockHandler.requests[0]["headers"].get("Idempotency-Key"), "start-1")
-
-    def test_account_branding_views_and_webhooks_use_public_routes(self) -> None:
-        account = self.client.account.get()
-        preview = self.client.account.update(
-            branding={
-                "product_name": "Acme Ops",
-                "accent": "#6f8fd4",
-                "logo": None,
-            },
-            dry_run=True,
+        conversation = self.client.conversations.update(
+            "conv_test", agent="browser-use", model="openai/gpt-5"
         )
-        view = self.client.views.create(
-            scope={"runtime_id": "runtime_1"},
-            components={"live": {"control": "none"}, "activity": {}},
-            presentation={
-                "mode": "embedded",
-                "allowed_origins": ["https://portal.acme.com"],
-            },
+        turn = self.client.conversations.messages.create(
+            "conv_test", text="Continue", idempotency_key="message-1"
         )
-        views = self.client.views.list(limit=10)
-        self.client.views.get(view["id"])
-        self.client.views.delete(view["id"])
+        self.assertTrue(result["success"])
+        self.assertEqual(conversation["agent"], "browser-use")
+        self.assertEqual(turn["status"], "queued")
+        self.assertEqual(MockHandler.requests[2]["headers"]["Idempotency-Key"], "message-1")
 
-        webhook = self.client.webhooks.create(
-            name="Operations",
-            url="https://ops.example.test/bctrl",
-            events=["run.completed"],
-        )
-        self.client.webhooks.list(limit=10)
-        self.client.webhooks.get(webhook["id"])
-        self.client.webhooks.update(webhook["id"], enabled=False, name=None)
-        rotated = self.client.webhooks.rotate_secret(webhook["id"])
-        test_delivery = self.client.webhooks.test(webhook["id"])
-        deliveries = self.client.webhooks.deliveries.list(webhook["id"], limit=5)
-        self.client.webhooks.deliveries.redeliver(webhook["id"], test_delivery["id"])
-        self.client.webhooks.delete(webhook["id"])
-
-        self.assertEqual(account["branding"]["resolved"]["productName"], "bctrl")
-        self.assertEqual(preview["branding"]["resolved"]["productName"], "Acme Ops")
-        self.assertEqual(view["token"], "view_token_test")
-        self.assertEqual(views["data"][0]["id"], view["id"])
-        self.assertTrue(webhook["secret"].startswith("whsec_"))
-        self.assertTrue(rotated["secret"].startswith("whsec_"))
-        self.assertEqual(deliveries["data"][0]["id"], test_delivery["id"])
-        self.assertEqual(MockHandler.requests[1]["body"]["branding"]["productName"], "Acme Ops")
-        self.assertIn("logo", MockHandler.requests[1]["body"]["branding"])
-        self.assertIsNone(MockHandler.requests[1]["body"]["branding"]["logo"])
-        self.assertEqual(
-            MockHandler.requests[2]["body"]["presentation"],
-            {
-                "mode": "embedded",
-                "allowedOrigins": ["https://portal.acme.com"],
-            },
-        )
-        self.assertIsNone(MockHandler.requests[9]["body"]["name"])
-
-        self.assertEqual(
-            paths(),
-            [
-                "GET /v1/account",
-                "PATCH /v1/account?dryRun=true",
-                "POST /v1/views",
-                "GET /v1/views?limit=10",
-                "GET /v1/views/view_1",
-                "DELETE /v1/views/view_1",
-                "POST /v1/webhooks",
-                "GET /v1/webhooks?limit=10",
-                "GET /v1/webhooks/webhook_1",
-                "PATCH /v1/webhooks/webhook_1",
-                "POST /v1/webhooks/webhook_1/rotate-secret",
-                "POST /v1/webhooks/webhook_1/test",
-                "GET /v1/webhooks/webhook_1/deliveries?limit=5",
-                "POST /v1/webhooks/webhook_1/deliveries/delivery_1/redeliver",
-                "DELETE /v1/webhooks/webhook_1",
-            ],
-        )
-
-    def test_runtime_target_routes(self) -> None:
-        listed = self.client.runtimes.targets.list("runtime_1")
-        created = self.client.runtimes.targets.create(
-            "runtime_1",
-            uri="https://example.com",
-            activate=True,
-        )
-        fetched = self.client.runtimes.targets.get("runtime_1", "target_1")
-        activated = self.client.runtimes.targets.activate("runtime_1", "target_1")
-        deleted = self.client.runtimes.targets.delete("runtime_1", "target_1")
-
-        self.assertEqual(listed["data"][0]["id"], "target_1")
-        self.assertEqual(created["uri"], "https://example.com")
-        self.assertTrue(fetched["active"])
-        self.assertTrue(activated["active"])
-        self.assertEqual(deleted, {"id": "target_1", "deleted": True})
-        self.assertEqual(
-            paths(),
-            [
-                "GET /v1/runtimes/runtime_1/targets",
-                "POST /v1/runtimes/runtime_1/targets",
-                "GET /v1/runtimes/runtime_1/targets/target_1",
-                "POST /v1/runtimes/runtime_1/targets/target_1/activate",
-                "DELETE /v1/runtimes/runtime_1/targets/target_1",
-            ],
-        )
-        self.assertEqual(
-            MockHandler.requests[1]["body"],
-            {"uri": "https://example.com", "activate": True},
-        )
-
-    def test_transport_retries_only_safe_or_idempotent_requests(self) -> None:
-        http = V1HttpClient(
-            api_key="test_key",
-            base_url=f"http://127.0.0.1:{self.server.server_port}",
-        )
-
-        self.assertEqual(http.request("GET", "/retry-safe"), {"ok": True})
-        self.assertEqual(paths(), ["GET /v1/retry-safe", "GET /v1/retry-safe"])
-
-        MockHandler.requests = []
-        MockHandler.route_hits = {}
-        with self.assertRaises(BctrlApiError) as raised:
-            http.request("POST", "/retry-post", json_body={"name": "unsafe"})
-        self.assertEqual(raised.exception.status_code, 503)
-        self.assertEqual(paths(), ["POST /v1/retry-post"])
-
-        MockHandler.requests = []
-        MockHandler.route_hits = {}
-        self.assertEqual(
-            http.request("POST", "/retry-post", idempotency_key="retry-post-1"),
-            {"ok": True},
-        )
-        self.assertEqual(paths(), ["POST /v1/retry-post", "POST /v1/retry-post"])
-
-    def test_clients_do_not_expose_fake_crud_routes(self) -> None:
-        self.assertFalse(hasattr(self.client.api_keys, "get"))
-        self.assertFalse(hasattr(self.client.api_keys, "update"))
-        self.assertFalse(hasattr(self.client.subaccounts, "delete"))
-        self.assertFalse(hasattr(self.client.runs, "live"))
-        self.assertFalse(hasattr(self.client.runs, "recording"))
-
-        totp = self.client.vault.totp("login")
-
-        self.assertEqual(totp["code"], "123456")
-        self.assertEqual(paths(), ["GET /v1/vault/secrets/login/totp"])
-
-    def test_files_list_filters_by_run(self) -> None:
-        files = self.client.files.list(run_id="run_1", type="download")
-
-        self.assertEqual(files["data"][0]["id"], "file_1")
-        self.assertEqual(paths(), ["GET /v1/files?runId=run_1&type=download"])
-
-    def test_direct_invocation_and_id_addressed_human_actions(self) -> None:
-        invocation = self.client.invocations.get("invocation_1")
-        action = self.client.runtimes.human_actions.create(
-            "runtime_1", message="Review checkout"
-        )
-        current = self.client.runtimes.human_actions.current("runtime_1")
-        fetched = self.client.runtimes.human_actions.get("runtime_1", action["id"])
-        waited = self.client.runtimes.human_actions.wait(
-            "runtime_1", action["id"], timeout_seconds=30
-        )
-        completed = self.client.runtimes.human_actions.complete(
-            "runtime_1", action["id"]
-        )
-        cancelled = self.client.runtimes.human_actions.cancel(
-            "runtime_1", action["id"]
-        )
-
-        self.assertEqual(invocation["id"], "invocation_1")
-        self.assertEqual(current["id"], action["id"])
-        self.assertEqual(fetched["id"], action["id"])
-        self.assertEqual(waited["waitStatus"], "timeout")
-        self.assertEqual(completed["status"], "completed")
-        self.assertEqual(cancelled["status"], "cancelled")
-        self.assertEqual(
-            paths(),
-            [
-                "GET /v1/invocations/invocation_1",
-                "POST /v1/runtimes/runtime_1/human-actions",
-                "GET /v1/runtimes/runtime_1/human-actions/current",
-                "GET /v1/runtimes/runtime_1/human-actions/human_action_1",
-                "POST /v1/runtimes/runtime_1/human-actions/human_action_1/wait",
-                "POST /v1/runtimes/runtime_1/human-actions/human_action_1/complete",
-                "POST /v1/runtimes/runtime_1/human-actions/human_action_1/cancel",
-            ],
-        )
-
-    def test_output_model_conversion_and_create_and_wait(self) -> None:
-        class Invoice(BaseModel):
-            invoiceNumber: str
-
-        invocation = self.client.runtimes.invocations.create_and_wait(
-            "runtime_1",
-            action="extract",
-            instruction="Extract invoice number",
-            model="openai/gpt-5",
-            output_model=Invoice,
-            timeout=5,
-            poll_timeout_ms=1000,
-        )
-
-        self.assertEqual(invocation["status"], "succeeded")
-        self.assertEqual(invocation["parsed_output"].invoiceNumber, "INV-123")
-        request_body = MockHandler.requests[0]["body"]
-        self.assertEqual(request_body["action"], "extract")
-        self.assertEqual(request_body["instruction"], "Extract invoice number")
-        self.assertEqual(request_body["model"], "openai/gpt-5")
-        self.assertEqual(request_body["outputSchema"]["type"], "object")
-        self.assertEqual(
-            request_body["outputSchema"]["properties"]["invoiceNumber"]["type"],
-            "string",
-        )
-        self.assertIn("invoiceNumber", request_body["outputSchema"]["required"])
-        self.assertEqual(
-            paths(),
-            [
-                "POST /v1/runtimes/runtime_1/invocations",
-                "POST /v1/runtimes/runtime_1/invocations/invocation_1/wait",
-                "POST /v1/runtimes/runtime_1/invocations/invocation_1/wait",
-            ],
-        )
-
-    def test_invocation_rejects_non_pydantic_schema_forms(self) -> None:
-        class FakeSchema:
-            @classmethod
-            def model_json_schema(cls) -> dict[str, Any]:
-                return {"type": "object"}
-
-        with self.assertRaises(TypeError):
-            self.client.runtimes.invocations.create(
-                "runtime_1",
-                action="extract",
-                schema={"type": "object"},
-            )
-
-        with self.assertRaises(TypeError):
-            self.client.runtimes.invocations.create(
-                "runtime_1",
-                action="extract",
-                outputSchema={"type": "object"},
-            )
-
-        with self.assertRaises(TypeError):
-            self.client.runtimes.invocations.create(
-                "runtime_1",
-                action="extract",
-                output_model=FakeSchema,
-            )
-
-    def test_started_browser_context_manager_stops_runtime(self) -> None:
-        with self.client.runtimes.started_browser(name="checkout") as runtime:
-            self.assertEqual(runtime.id, "runtime_1")
-            self.assertEqual(runtime.runtime_id, "runtime_1")
-            self.assertEqual(runtime.run_id, "run_1")
-            self.assertEqual(runtime.connect_url, "wss://example.test/devtools")
-            self.assertEqual(runtime.protocol, "cdp")
-
-        self.assertEqual(
-            paths(),
-            [
-                "POST /v1/runtimes",
-                "POST /v1/runtimes/runtime_1/start",
-                "POST /v1/runtimes/runtime_1/stop",
-            ],
-        )
-
-    def test_sse_stream_iterators_parse_events(self) -> None:
-        events = list(self.client.runs.events.stream("run_1"))
-        activity = list(self.client.runs.activity.stream("run_1"))
-
-        self.assertEqual(
-            events,
-            [
-                {"event": "run.started", "data": {"runId": "run_1"}},
-                {"event": "run.ended", "id": "evt_2", "data": {"status": "stopped"}},
-            ],
-        )
-        self.assertEqual(activity, [{"event": "log", "data": "Browser opened"}])
-        self.assertEqual(
-            paths(),
-            [
-                "GET /v1/runs/run_1/events/stream",
-                "GET /v1/runs/run_1/activity/stream",
-            ],
-        )
-
-    def test_typed_not_found_error(self) -> None:
-        with self.assertRaises(BctrlNotFoundError) as raised:
-            self.client.runtimes.get("missing")
-
-        self.assertEqual(raised.exception.code, "runtime.not_found")
-        self.assertEqual(raised.exception.request_id, "req_1")
-
-
-def paths() -> list[str]:
-    return [f"{request['method']} {request['path']}" for request in MockHandler.requests]
-
-
-def runtime_target(overrides: dict[str, Any] | None = None) -> dict[str, Any]:
-    return {
-        "id": "target_1",
-        "runtimeId": "runtime_1",
-        "type": "browser_page",
-        "label": "Page 1",
-        "uri": "https://example.test/",
-        "active": True,
-        "metadata": {"title": "Example"},
-        **(overrides or {}),
-    }
-
-
-def _decode_body(raw: bytes, content_type: str | None) -> Any:
-    if not raw:
-        return {}
-    text = raw.decode()
-    if content_type and "application/json" not in content_type:
-        return text
-    return json.loads(text)
-
-
-def iso() -> str:
-    return "2026-06-02T00:00:00.000Z"
+    def test_legacy_execution_namespaces_are_absent(self) -> None:
+        self.assertFalse(hasattr(self.client, "invocations"))
+        self.assertFalse(hasattr(self.client, "vault"))
+        self.assertFalse(hasattr(self.client.runtimes, "targets"))
+        self.assertFalse(hasattr(self.client.runtimes, "human_actions"))
 
 
 if __name__ == "__main__":

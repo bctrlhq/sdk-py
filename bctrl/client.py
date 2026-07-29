@@ -9,9 +9,9 @@ from .resources import (
     ApiKeysClient,
     AuthClient,
     BrowserExtensionsClient,
+    ConversationsClient,
     FilesClient,
     HelpClient,
-    InvocationsClient,
     ProxiesClient,
     RunsClient,
     RuntimesClient,
@@ -21,7 +21,6 @@ from .resources import (
     ToolsetsClient,
     ToolsClient,
     UsageClient,
-    VaultClient,
     ViewsClient,
     WebhooksClient,
 )
@@ -47,13 +46,12 @@ class Bctrl:
         self.spaces = SpacesClient(self._http)
         self.runtimes = RuntimesClient(self._http)
         self.runs = RunsClient(self._http)
-        self.invocations = InvocationsClient(self._http)
+        self.conversations = ConversationsClient(self._http)
         self.files = FilesClient(self._http)
         self.tools = ToolsClient(self._http)
         self.toolsets = ToolsetsClient(self._http)
         self.tool_calls = ToolCallsClient(self._http)
         self.ai = AiClient(self._http)
-        self.vault = VaultClient(self._http)
         self.browser_extensions = BrowserExtensionsClient(self._http)
         self.proxies = ProxiesClient(self._http)
         self.help = HelpClient(self._http)
