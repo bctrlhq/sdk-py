@@ -108,7 +108,8 @@ class BctrlPythonSdkTest(unittest.TestCase):
     def test_tools_and_conversations_are_first_class(self) -> None:
         result = self.client.tools.call(
             "stagehand.act",
-            {"runtimeId": "rt_test", "instruction": "Click Continue"},
+            {"instruction": "Click Continue"},
+            runtime_id="rt_test",
         )
         conversation = self.client.conversations.update(
             "conv_test", agent="browser-use", model="openai/gpt-5"
@@ -117,6 +118,8 @@ class BctrlPythonSdkTest(unittest.TestCase):
             "conv_test", text="Continue", idempotency_key="message-1"
         )
         self.assertTrue(result["success"])
+        self.assertEqual(MockHandler.requests[0]["headers"]["Bctrl-Runtime-Id"], "rt_test")
+        self.assertNotIn("runtimeId", MockHandler.requests[0]["body"])
         self.assertEqual(conversation["agent"], "browser-use")
         self.assertEqual(turn["status"], "queued")
         self.assertEqual(MockHandler.requests[2]["headers"]["Idempotency-Key"], "message-1")
