@@ -46,11 +46,19 @@ class MockHandler(BaseHTTPRequestHandler):
                     "runtimeId": "rt_test",
                     "runId": "run_test",
                     "status": "active",
-                    "connectUrl": "wss://example.test/devtools",
-                    "protocol": "cdp",
+                    "connection": {
+                        "runId": "run_test",
+                        "recording": {"enabled": True},
+                        "connectUrl": "wss://example.test/devtools",
+                        "protocol": "cdp",
+                    },
                     "started": True,
                 },
             )
+        if method == "GET" and route == "/v1/runtimes/rt_test":
+            return self._json(200, {"id": "rt_test", "connection": {"connectUrl": "wss://example.test/devtools"}})
+        if method == "GET" and route == "/v1/runs/run_test":
+            return self._json(200, {"id": "run_test", "connection": {"connectUrl": "wss://example.test/devtools"}})
         if method == "POST" and route == "/v1/tools/stagehand.act/call":
             return self._json(200, {"success": True, "message": "done"})
         if method == "PATCH" and route == "/v1/conversations/conv_test":
@@ -87,9 +95,15 @@ class BctrlPythonSdkTest(unittest.TestCase):
     def test_spaces_and_runtime_start_use_current_routes(self) -> None:
         space = self.client.spaces.create(name="automation")
         started = self.client.runtimes.start("rt_test", idempotency_key="start-1")
+        runtime = self.client.runtimes.get("rt_test", include="connection")
+        run = self.client.runs.get("run_test", include="connection")
         self.assertEqual(space["id"], "sp_test")
         self.assertEqual(started["runId"], "run_test")
         self.assertEqual(MockHandler.requests[1]["headers"]["Idempotency-Key"], "start-1")
+        self.assertEqual(MockHandler.requests[2]["path"], "/v1/runtimes/rt_test?include=connection")
+        self.assertEqual(MockHandler.requests[3]["path"], "/v1/runs/run_test?include=connection")
+        self.assertIn("connection", runtime)
+        self.assertIn("connection", run)
 
     def test_tools_and_conversations_are_first_class(self) -> None:
         result = self.client.tools.call(

@@ -11,7 +11,7 @@ JsonObject = dict[str, Any]
 
 
 class RuntimeLifecycleClient(Protocol):
-    def create(self, **request: Any) -> JsonObject: ...
+    def create(self, *, idempotency_key: Optional[str] = None, **request: Any) -> JsonObject: ...
 
     def start(self, runtime_id: str, *, idempotency_key: Optional[str] = None) -> JsonObject: ...
 
@@ -32,10 +32,15 @@ class StartedRuntime:
     def __enter__(self) -> "StartedRuntime":
         if self.runtime is not None:
             raise RuntimeError("Runtime context has already been entered")
-        runtime = self.runtimes.create(**dict(self.request))
-        start = self.runtimes.start(runtime["id"], idempotency_key=self.idempotency_key)
+        runtime = self.runtimes.create(
+            idempotency_key=self.idempotency_key,
+            **dict(self.request),
+        )
+        connection = runtime.get("connection")
+        if not isinstance(connection, dict):
+            raise RuntimeError("Runtime create response did not include connection")
         self.runtime = runtime
-        self.start = start
+        self.start = {"runId": connection.get("runId"), "connection": connection}
         return self
 
     def __exit__(
@@ -65,11 +70,11 @@ class StartedRuntime:
 
     @property
     def connect_url(self) -> str:
-        return self._start_value("connectUrl")
+        return self._connection_value("connectUrl")
 
     @property
     def protocol(self) -> str:
-        return self._start_value("protocol")
+        return self._connection_value("protocol")
 
     def _runtime_value(self, key: str) -> str:
         if self.runtime is None:
@@ -85,4 +90,15 @@ class StartedRuntime:
         value = self.start.get(key)
         if not isinstance(value, str):
             raise RuntimeError(f"Runtime start response did not include {key}")
+        return value
+
+    def _connection_value(self, key: str) -> str:
+        if self.start is None:
+            raise RuntimeError("Runtime context has not been entered")
+        connection = self.start.get("connection")
+        if not isinstance(connection, dict):
+            raise RuntimeError("Runtime response did not include connection")
+        value = connection.get(key)
+        if not isinstance(value, str):
+            raise RuntimeError(f"Runtime connection did not include {key}")
         return value

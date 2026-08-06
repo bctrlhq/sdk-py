@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Iterator, Mapping, Optional
+from typing import Any, Iterator, Literal, Mapping, Optional
 from urllib.parse import quote, urlencode
 
 from .generated.tool_types import BuiltinToolsClient
@@ -89,11 +89,21 @@ class RuntimesClient:
     def iter(self, **params: Any) -> Iterator[JsonObject]:
         return _iter_pages(lambda query: self.list(**query), params)
 
-    def create(self, **request: Any) -> JsonObject:
-        return self._http.request("POST", "/runtimes", json_body=_body(request))
+    def create(
+        self, *, idempotency_key: Optional[str] = None, **request: Any
+    ) -> JsonObject:
+        return self._http.request(
+            "POST",
+            "/runtimes",
+            json_body=_body(request),
+            idempotency_key=idempotency_key,
+        )
 
-    def get(self, runtime_id: str) -> JsonObject:
-        return self._http.request("GET", f"/runtimes/{_enc(runtime_id)}")
+    def get(
+        self, runtime_id: str, *, include: Optional[Literal["connection"]] = None
+    ) -> JsonObject:
+        params = {"include": include} if include is not None else {}
+        return self._http.request("GET", f"/runtimes/{_enc(runtime_id)}", params=params)
 
     def update(self, runtime_id: str, **request: Any) -> JsonObject:
         return self._http.request(
@@ -103,9 +113,18 @@ class RuntimesClient:
     def delete(self, runtime_id: str) -> JsonObject:
         return self._http.request("DELETE", f"/runtimes/{_enc(runtime_id)}")
 
-    def start(self, runtime_id: str, *, idempotency_key: Optional[str] = None) -> JsonObject:
+    def start(
+        self,
+        runtime_id: str,
+        *,
+        recording: Optional[bool] = None,
+        idempotency_key: Optional[str] = None,
+    ) -> JsonObject:
         return self._http.request(
-            "POST", f"/runtimes/{_enc(runtime_id)}/start", idempotency_key=idempotency_key
+            "POST",
+            f"/runtimes/{_enc(runtime_id)}/start",
+            json_body=_body({"recording": recording}),
+            idempotency_key=idempotency_key,
         )
 
     def stop(self, runtime_id: str) -> JsonObject:
@@ -119,6 +138,7 @@ class RuntimesClient:
     ) -> StartedRuntime:
         body = _body(request)
         body.setdefault("type", "browser")
+        body.setdefault("start", True)
         return StartedRuntime(
             runtimes=self,
             request=body,
@@ -139,8 +159,11 @@ class RunsClient:
     def iter(self, **params: Any) -> Iterator[JsonObject]:
         return _iter_pages(lambda query: self.list(**query), params)
 
-    def get(self, run_id: str) -> JsonObject:
-        return self._http.request("GET", f"/runs/{_enc(run_id)}")
+    def get(
+        self, run_id: str, *, include: Optional[Literal["connection"]] = None
+    ) -> JsonObject:
+        params = {"include": include} if include is not None else {}
+        return self._http.request("GET", f"/runs/{_enc(run_id)}", params=params)
 
     def stream_url(self, run_id: str, **params: Any) -> str:
         return _stream_url(self._http.base_url, f"/runs/{_enc(run_id)}/stream", _body(params))
