@@ -65,6 +65,13 @@ class BuiltinToolCaptchaSolveOutput(TypedDict):
     type: NotRequired[Literal["recaptcha_v2", "recaptcha_v3", "turnstile", "hcaptcha", "geetest_v3", "geetest_v4", "arkose", "prosopo", "mtcaptcha", "lemin", "friendly_captcha", "amazon_waf", "altcha", "datadome", "basilisk", "yidun", "tendi"]]
     workerUserAgent: NotRequired[str]
 
+class BuiltinToolCodeExecuteInput(TypedDict):
+    input: NotRequired[JsonObject]
+    language: NotRequired[Literal["typescript"]]
+    maxLogBytes: NotRequired[int]
+    source: str
+    timeoutMs: NotRequired[int]
+
 class BuiltinToolFilesListInput(TypedDict):
     cursor: NotRequired[str]
     limit: NotRequired[int]
@@ -334,6 +341,9 @@ class BuiltinToolsClient:
 
     @overload
     def start(self, tool_ref: Literal["captcha.solve"], input: BuiltinToolCaptchaSolveInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
+
+    @overload
+    def start(self, tool_ref: Literal["code.execute"], input: BuiltinToolCodeExecuteInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
 
     @overload
     def start(self, tool_ref: Literal["human.request"], input: BuiltinToolHumanRequestInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
