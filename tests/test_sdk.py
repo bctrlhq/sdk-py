@@ -61,6 +61,8 @@ class MockHandler(BaseHTTPRequestHandler):
             return self._json(200, {"id": "run_test", "connection": {"connectUrl": "wss://example.test/devtools"}})
         if method == "POST" and route == "/v1/tools/stagehand.act/call":
             return self._json(200, {"success": True, "message": "done"})
+        if method == "POST" and route == "/v1/tools/code.execute/calls":
+            return self._json(202, {"id": "call_code", "status": "queued"})
         if method == "PATCH" and route == "/v1/conversations/conv_test":
             return self._json(200, {"id": "conv_test", **body})
         if method == "POST" and route == "/v1/conversations/conv_test/messages":
@@ -129,6 +131,21 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertFalse(hasattr(self.client, "vault"))
         self.assertFalse(hasattr(self.client.runtimes, "targets"))
         self.assertFalse(hasattr(self.client.runtimes, "human_actions"))
+
+    def test_code_execute_uses_async_tool_call_route(self) -> None:
+        result = self.client.tools.start(
+            "code.execute",
+            {"source": "export default async () => ({ ok: true });", "input": {"value": 1}},
+            runtime_id="rt_test",
+            idempotency_key="code-execute-1",
+        )
+
+        self.assertEqual(result["id"], "call_code")
+        request = MockHandler.requests[0]
+        self.assertEqual(request["path"], "/v1/tools/code.execute/calls")
+        self.assertEqual(request["headers"]["Bctrl-Runtime-Id"], "rt_test")
+        self.assertEqual(request["headers"]["Idempotency-Key"], "code-execute-1")
+        self.assertEqual(request["body"]["input"], {"value": 1})
 
 
 if __name__ == "__main__":
