@@ -39,6 +39,22 @@ class MockHandler(BaseHTTPRequestHandler):
 
         if method == "POST" and route == "/v1/spaces":
             return self._json(201, {"id": "sp_test", "name": body["name"]})
+        if method == "POST" and route == "/v1/runtimes":
+            return self._json(
+                201,
+                {
+                    "id": "rt_context",
+                    "connection": {
+                        "runId": "run_context",
+                        "recording": {"enabled": False},
+                        "cdpUrl": "wss://example.test/context/devtools",
+                        "webDriverUrl": "https://example.test/context/webdriver",
+                        "webMcpUrl": "https://example.test/context/mcp",
+                    },
+                },
+            )
+        if method == "POST" and route == "/v1/runtimes/rt_context/stop":
+            return self._json(200, {"runtimeId": "rt_context", "status": "stopped"})
         if method == "POST" and route == "/v1/runtimes/rt_test/start":
             return self._json(
                 200,
@@ -49,16 +65,17 @@ class MockHandler(BaseHTTPRequestHandler):
                     "connection": {
                         "runId": "run_test",
                         "recording": {"enabled": True},
-                        "connectUrl": "wss://example.test/devtools",
-                        "protocol": "cdp",
+                        "cdpUrl": "wss://example.test/devtools",
+                        "webDriverUrl": "https://example.test/webdriver",
+                        "webMcpUrl": "https://example.test/mcp",
                     },
                     "started": True,
                 },
             )
         if method == "GET" and route == "/v1/runtimes/rt_test":
-            return self._json(200, {"id": "rt_test", "connection": {"connectUrl": "wss://example.test/devtools"}})
+            return self._json(200, {"id": "rt_test", "connection": {"cdpUrl": "wss://example.test/devtools"}})
         if method == "GET" and route == "/v1/runs/run_test":
-            return self._json(200, {"id": "run_test", "connection": {"connectUrl": "wss://example.test/devtools"}})
+            return self._json(200, {"id": "run_test", "connection": {"cdpUrl": "wss://example.test/devtools"}})
         if method == "POST" and route == "/v1/tools/stagehand.act/call":
             return self._json(200, {"success": True, "message": "done"})
         if method == "POST" and route == "/v1/tools/code.execute/calls":
@@ -125,6 +142,19 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(conversation["agent"], "browser-use")
         self.assertEqual(turn["status"], "queued")
         self.assertEqual(MockHandler.requests[2]["headers"]["Idempotency-Key"], "message-1")
+
+    def test_started_browser_uses_create_and_exposes_current_connections(self) -> None:
+        with self.client.runtimes.started_browser(idempotency_key="create-1") as runtime:
+            self.assertEqual(runtime.id, "rt_context")
+            self.assertEqual(runtime.run_id, "run_context")
+            self.assertEqual(runtime.cdp_url, "wss://example.test/context/devtools")
+            self.assertEqual(runtime.web_driver_url, "https://example.test/context/webdriver")
+            self.assertEqual(runtime.web_mcp_url, "https://example.test/context/mcp")
+
+        self.assertEqual(MockHandler.requests[0]["path"], "/v1/runtimes")
+        self.assertEqual(MockHandler.requests[0]["headers"]["Idempotency-Key"], "create-1")
+        self.assertTrue(MockHandler.requests[0]["body"]["start"])
+        self.assertEqual(MockHandler.requests[1]["path"], "/v1/runtimes/rt_context/stop")
 
     def test_legacy_execution_namespaces_are_absent(self) -> None:
         self.assertFalse(hasattr(self.client, "invocations"))

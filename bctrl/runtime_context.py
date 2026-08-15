@@ -69,12 +69,16 @@ class StartedRuntime:
         return self._start_value("runId")
 
     @property
-    def connect_url(self) -> str:
-        return self._connection_value("connectUrl")
+    def cdp_url(self) -> str:
+        return self._connection_value("cdpUrl")
 
     @property
-    def protocol(self) -> str:
-        return self._connection_value("protocol")
+    def web_driver_url(self) -> Optional[str]:
+        return self._optional_connection_value("webDriverUrl")
+
+    @property
+    def web_mcp_url(self) -> Optional[str]:
+        return self._optional_connection_value("webMcpUrl")
 
     def _runtime_value(self, key: str) -> str:
         if self.runtime is None:
@@ -101,4 +105,17 @@ class StartedRuntime:
         value = connection.get(key)
         if not isinstance(value, str):
             raise RuntimeError(f"Runtime connection did not include {key}")
+        return value
+
+    def _optional_connection_value(self, key: str) -> Optional[str]:
+        if self.start is None:
+            raise RuntimeError("Runtime context has not been entered")
+        connection = self.start.get("connection")
+        if not isinstance(connection, dict):
+            raise RuntimeError("Runtime response did not include connection")
+        value = connection.get(key)
+        if value is None:
+            return None
+        if not isinstance(value, str):
+            raise RuntimeError(f"Runtime connection contained an invalid {key}")
         return value
