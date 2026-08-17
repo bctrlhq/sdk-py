@@ -12,6 +12,7 @@ from .resources import (
     ConversationsClient,
     FilesClient,
     HelpClient,
+    NotificationRecipientsClient,
     ProxiesClient,
     RunsClient,
     RuntimesClient,
@@ -48,6 +49,7 @@ class Bctrl:
         self.runs = RunsClient(self._http)
         self.conversations = ConversationsClient(self._http)
         self.files = FilesClient(self._http)
+        self.notification_recipients = NotificationRecipientsClient(self._http)
         self.tools = ToolsClient(self._http)
         self.toolsets = ToolsetsClient(self._http)
         self.tool_calls = ToolCallsClient(self._http)

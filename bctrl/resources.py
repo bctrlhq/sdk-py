@@ -217,6 +217,9 @@ class FilesClient:
     def get(self, file_id: str) -> JsonObject:
         return self._http.request("GET", f"/files/{_enc(file_id)}")
 
+    def content(self, file_id: str) -> bytes:
+        return self._http.request_bytes("GET", f"/files/{_enc(file_id)}/content")
+
     def update(self, file_id: str, **request: Any) -> JsonObject:
         return self._http.request("PATCH", f"/files/{_enc(file_id)}", json_body=_body(request))
 
@@ -228,6 +231,36 @@ class FilesClient:
             "/files",
             fields=_body(fields),
             files=[make_file_part("file", file, filename=filename)],
+        )
+
+
+class NotificationRecipientsClient:
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+
+    def list(self, **params: Any) -> JsonObject:
+        return self._http.request(
+            "GET", "/notification-recipients", params=_body(params)
+        )
+
+    def iter(self, **params: Any) -> Iterator[JsonObject]:
+        return _iter_pages(lambda query: self.list(**query), params)
+
+    def create(self, **request: Any) -> JsonObject:
+        return self._http.request(
+            "POST", "/notification-recipients", json_body=_body(request)
+        )
+
+    def update(self, recipient_id: str, **request: Any) -> JsonObject:
+        return self._http.request(
+            "PATCH",
+            f"/notification-recipients/{_enc(recipient_id)}",
+            json_body=_merge_patch(request),
+        )
+
+    def delete(self, recipient_id: str) -> JsonObject:
+        return self._http.request(
+            "DELETE", f"/notification-recipients/{_enc(recipient_id)}"
         )
 
 
@@ -334,6 +367,8 @@ class BrowserExtensionsClient:
 class ProxiesClient:
     def __init__(self, http: V1HttpClient) -> None:
         self._http = http
+        self.geo = ProxyGeoNamespace(http)
+        self.locations = ProxyLocationsNamespace(http)
         self.pools = ProxyPoolsNamespace(http)
 
     def list(self, **params: Any) -> JsonObject:
@@ -358,6 +393,28 @@ class ProxiesClient:
 
     def test(self, proxy_id: str) -> JsonObject:
         return self._http.request("POST", f"/proxies/{_enc(proxy_id)}/test")
+
+
+class ProxyGeoNamespace:
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+
+    def list(self, **params: Any) -> JsonObject:
+        return self._http.request("GET", "/proxies/geo", params=_body(params))
+
+    def iter(self, **params: Any) -> Iterator[JsonObject]:
+        return _iter_pages(lambda query: self.list(**query), params)
+
+
+class ProxyLocationsNamespace:
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+
+    def list(self, **params: Any) -> JsonObject:
+        return self._http.request("GET", "/proxies/locations", params=_body(params))
+
+    def iter(self, **params: Any) -> Iterator[JsonObject]:
+        return _iter_pages(lambda query: self.list(**query), params)
 
 
 class ProxyPoolsNamespace:
@@ -495,6 +552,7 @@ class AccountClient:
     def __init__(self, http: V1HttpClient) -> None:
         self._http = http
         self.api_keys = ApiKeysClient(http)
+        self.notification_recipients = NotificationRecipientsClient(http)
         self.subaccounts = SubaccountsClient(http)
         self.usage = UsageClient(http)
 
@@ -668,7 +726,11 @@ class SubaccountUsageNamespace:
         return self._http.request("GET", "/subaccounts/usage", params=_body(params))
 
     def get(self, subaccount_id: str) -> JsonObject:
-        return self._http.request("GET", f"/subaccounts/{_enc(subaccount_id)}/usage")
+        return self._http.request(
+            "GET",
+            f"/subaccounts/{_enc(subaccount_id)}",
+            params={"include": "usage"},
+        )
 
 
 class UsageClient:

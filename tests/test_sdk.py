@@ -21,6 +21,9 @@ class MockHandler(BaseHTTPRequestHandler):
     def do_PATCH(self) -> None:
         self._handle("PATCH")
 
+    def do_DELETE(self) -> None:
+        self._handle("DELETE")
+
     def log_message(self, format: str, *args: Any) -> None:
         return
 
@@ -76,6 +79,22 @@ class MockHandler(BaseHTTPRequestHandler):
             return self._json(200, {"id": "rt_test", "connection": {"cdpUrl": "wss://example.test/devtools"}})
         if method == "GET" and route == "/v1/runs/run_test":
             return self._json(200, {"id": "run_test", "connection": {"cdpUrl": "wss://example.test/devtools"}})
+        if method == "GET" and route == "/v1/files/file_test/content":
+            return self._bytes(200, b"file contents")
+        if method == "GET" and route == "/v1/notification-recipients":
+            return self._json(200, {"data": [], "nextCursor": None})
+        if method == "POST" and route == "/v1/notification-recipients":
+            return self._json(201, {"id": "nrec_test", **body})
+        if method == "PATCH" and route == "/v1/notification-recipients/nrec_test":
+            return self._json(200, {"id": "nrec_test", **body})
+        if method == "DELETE" and route == "/v1/notification-recipients/nrec_test":
+            return self._json(200, {"id": "nrec_test", "deleted": True})
+        if method == "GET" and route == "/v1/proxies/geo":
+            return self._json(200, {"data": [], "nextCursor": None})
+        if method == "GET" and route == "/v1/proxies/locations":
+            return self._json(200, {"data": [], "nextCursor": None})
+        if method == "GET" and route == "/v1/subaccounts/sub_test":
+            return self._json(200, {"id": "sub_test", "usage": {}})
         if method == "POST" and route == "/v1/tools/stagehand.act/call":
             return self._json(200, {"success": True, "message": "done"})
         if method == "POST" and route == "/v1/tools/code.execute/calls":
@@ -93,6 +112,13 @@ class MockHandler(BaseHTTPRequestHandler):
         self.send_header("content-length", str(len(raw)))
         self.end_headers()
         self.wfile.write(raw)
+
+    def _bytes(self, status: int, body: bytes) -> None:
+        self.send_response(status)
+        self.send_header("content-type", "application/octet-stream")
+        self.send_header("content-length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
 
 class BctrlPythonSdkTest(unittest.TestCase):
@@ -176,6 +202,25 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(request["headers"]["Bctrl-Runtime-Id"], "rt_test")
         self.assertEqual(request["headers"]["Idempotency-Key"], "code-execute-1")
         self.assertEqual(request["body"]["input"], {"value": 1})
+
+    def test_files_notifications_proxy_catalog_and_subaccount_usage_use_current_routes(self) -> None:
+        self.assertEqual(self.client.files.content("file_test"), b"file contents")
+        self.client.notification_recipients.list(limit=10)
+        self.client.notification_recipients.create(type="email", value="user@example.com")
+        self.client.notification_recipients.update("nrec_test", enabled=False)
+        self.client.notification_recipients.delete("nrec_test")
+        self.client.proxies.geo.list(country="US", type="city")
+        self.client.proxies.locations.list(pool="pool1")
+        self.client.subaccounts.usage.get("sub_test")
+
+        self.assertEqual(MockHandler.requests[0]["path"], "/v1/files/file_test/content")
+        self.assertEqual(MockHandler.requests[1]["path"], "/v1/notification-recipients?limit=10")
+        self.assertEqual(MockHandler.requests[2]["body"]["type"], "email")
+        self.assertEqual(MockHandler.requests[3]["body"]["enabled"], False)
+        self.assertEqual(MockHandler.requests[4]["method"], "DELETE")
+        self.assertEqual(MockHandler.requests[5]["path"], "/v1/proxies/geo?country=US&type=city")
+        self.assertEqual(MockHandler.requests[6]["path"], "/v1/proxies/locations?pool=pool1")
+        self.assertEqual(MockHandler.requests[7]["path"], "/v1/subaccounts/sub_test?include=usage")
 
 
 if __name__ == "__main__":

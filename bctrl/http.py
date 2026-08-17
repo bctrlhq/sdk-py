@@ -71,6 +71,31 @@ class V1HttpClient:
             timeout=timeout,
         )
 
+    def request_bytes(
+        self,
+        method: str,
+        path: str,
+        *,
+        params: Optional[Mapping[str, Any]] = None,
+        headers: Optional[Mapping[str, str]] = None,
+        timeout: Optional[float] = None,
+        idempotency_key: Optional[str] = None,
+    ) -> bytes:
+        request_headers = self._headers(
+            {"accept": "*/*", **(headers or {})}, idempotency_key
+        )
+        response = self._send(
+            method,
+            path,
+            params=params,
+            headers=request_headers,
+            timeout=timeout,
+            decode=False,
+        )
+        if not isinstance(response, bytes):
+            raise TypeError("Binary API response did not contain bytes")
+        return response
+
     def multipart(
         self,
         path: str,
@@ -143,6 +168,7 @@ class V1HttpClient:
         body: Optional[bytes] = None,
         headers: Mapping[str, str],
         timeout: Optional[float] = None,
+        decode: bool = True,
     ) -> Any:
         url = _url(self.base_url, path, params)
         attempts = self.max_retries + 1 if _can_retry_request(method, headers) else 1
@@ -154,6 +180,8 @@ class V1HttpClient:
                 resolved_timeout = self.timeout if timeout is None else timeout
                 with urlopen(request, timeout=resolved_timeout) as response:
                     raw = response.read()
+                    if not decode:
+                        return raw
                     return _decode_response(raw, response.headers.get("content-type"))
             except HTTPError as error:
                 raw = error.read()
