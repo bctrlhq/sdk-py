@@ -1,6 +1,6 @@
 [project]
 name = "bctrl"
-version = "0.1.2"
+version = "0.1.3"
 description = "Remote browser automation for AI agents - Python SDK"
 readme = "README.md"
 license = "ISC"
@@ -21,7 +21,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
-dependencies = []
+dependencies = [
+    "typing-extensions>=4.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/bctrlhq/sdk-py"

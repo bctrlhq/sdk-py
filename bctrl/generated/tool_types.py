@@ -4,7 +4,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal, Mapping, NotRequired, Required, TypeAlias, TypedDict, overload
+from typing import Any, Literal, Mapping, TypeAlias, TypedDict, overload
+from typing_extensions import NotRequired, Required
 from urllib.parse import quote
 
 JsonObject: TypeAlias = dict[str, Any]
