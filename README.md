@@ -16,7 +16,7 @@ from bctrl import Bctrl
 bctrl = Bctrl(api_key="bctrl_...")
 
 with bctrl.runtimes.started_browser(name="checkout") as browser:
-    print(browser.connect_url)
+    print(browser.cdp_url)
 
     conversation = bctrl.conversations.create(
         runtime_id=browser.runtime_id,
