@@ -29,7 +29,13 @@ class MockHandler(BaseHTTPRequestHandler):
 
     def _handle(self, method: str) -> None:
         raw = self.rfile.read(int(self.headers.get("content-length", "0")))
-        body = json.loads(raw) if raw else None
+        content_type = self.headers.get("content-type", "")
+        if raw and content_type.startswith("multipart/"):
+            body = raw
+        elif raw:
+            body = json.loads(raw)
+        else:
+            body = None
         route = self.path.split("?", 1)[0]
         self.requests.append(
             {
@@ -42,6 +48,8 @@ class MockHandler(BaseHTTPRequestHandler):
 
         if method == "POST" and route == "/v1/spaces":
             return self._json(201, {"id": "sp_test", "name": body["name"]})
+        if method == "POST" and route == "/v1/files":
+            return self._json(201, {"id": "file_uploaded", "name": "fixture.txt"})
         if method == "POST" and route == "/v1/runtimes":
             return self._json(
                 201,
@@ -156,16 +164,14 @@ class BctrlPythonSdkTest(unittest.TestCase):
             {"instruction": "Click Continue"},
             runtime_id="rt_test",
         )
-        conversation = self.client.conversations.update(
-            "conv_test", agent="browser-use", model="openai/gpt-5"
-        )
+        conversation = self.client.conversations.update("conv_test", model="openai/gpt-5")
         turn = self.client.conversations.messages.create(
             "conv_test", text="Continue", idempotency_key="message-1"
         )
         self.assertTrue(result["success"])
         self.assertEqual(MockHandler.requests[0]["headers"]["Bctrl-Runtime-Id"], "rt_test")
         self.assertNotIn("runtimeId", MockHandler.requests[0]["body"])
-        self.assertEqual(conversation["agent"], "browser-use")
+        self.assertNotIn("agent", conversation)
         self.assertEqual(turn["status"], "queued")
         self.assertEqual(MockHandler.requests[2]["headers"]["Idempotency-Key"], "message-1")
 
@@ -221,6 +227,17 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(MockHandler.requests[5]["path"], "/v1/proxies/geo?country=US&type=city")
         self.assertEqual(MockHandler.requests[6]["path"], "/v1/proxies/locations?pool=pool1")
         self.assertEqual(MockHandler.requests[7]["path"], "/v1/subaccounts/sub_test?include=usage")
+
+    def test_file_upload_scopes_space_in_query(self) -> None:
+        uploaded = self.client.files.upload(
+            file=b"fixture",
+            filename="fixture.txt",
+            space_id="sp_test",
+            name="fixture.txt",
+        )
+
+        self.assertEqual(uploaded["id"], "file_uploaded")
+        self.assertEqual(MockHandler.requests[0]["path"], "/v1/files?spaceId=sp_test")
 
 
 if __name__ == "__main__":

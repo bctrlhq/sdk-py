@@ -20,7 +20,6 @@ with bctrl.runtimes.started_browser(name="checkout") as browser:
 
     conversation = bctrl.conversations.create(
         runtime_id=browser.runtime_id,
-        agent="stagehand",
     )
     bctrl.conversations.messages.create(
         conversation["id"],

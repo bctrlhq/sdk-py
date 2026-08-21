@@ -100,6 +100,7 @@ class V1HttpClient:
         self,
         path: str,
         *,
+        params: Optional[Mapping[str, Any]] = None,
         fields: Optional[Mapping[str, Any]] = None,
         files: Iterable[FilePart],
         headers: Optional[Mapping[str, str]] = None,
@@ -112,7 +113,14 @@ class V1HttpClient:
         request_headers["content-type"] = (
             f"multipart/form-data; boundary={boundary}"
         )
-        return self._send("POST", path, body=body, headers=request_headers, timeout=timeout)
+        return self._send(
+            "POST",
+            path,
+            params=params,
+            body=body,
+            headers=request_headers,
+            timeout=timeout,
+        )
 
     def stream_sse(
         self,

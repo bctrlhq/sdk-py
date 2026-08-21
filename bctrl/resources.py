@@ -227,8 +227,10 @@ class FilesClient:
         return self._http.request("DELETE", f"/files/{_enc(file_id)}")
 
     def upload(self, *, file: Any, filename: Optional[str] = None, **fields: Any) -> JsonObject:
+        space_id = fields.pop("space_id", None)
         return self._http.multipart(
             "/files",
+            params={"spaceId": space_id} if space_id is not None else None,
             fields=_body(fields),
             files=[make_file_part("file", file, filename=filename)],
         )
