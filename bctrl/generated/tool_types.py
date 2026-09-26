@@ -51,6 +51,14 @@ class BuiltinToolBrowserPagesOpenOutput(TypedDict):
     title: str
     url: str
 
+class BuiltinToolBrowserSetInputFilesInput(TypedDict):
+    fileIds: list[str]
+    pageId: NotRequired[str]
+    selector: str
+
+class BuiltinToolBrowserSetInputFilesOutput(TypedDict):
+    files: list[dict[str, Any]]
+
 class BuiltinToolCaptchaSolveInput(TypedDict):
     pageId: NotRequired[str]
     timeoutMs: NotRequired[int]
@@ -65,6 +73,21 @@ class BuiltinToolCaptchaSolveOutput(TypedDict):
     token: NotRequired[str]
     type: NotRequired[Literal["recaptcha_v2", "recaptcha_v3", "turnstile", "hcaptcha", "geetest_v3", "geetest_v4", "arkose", "prosopo", "mtcaptcha", "lemin", "friendly_captcha", "amazon_waf", "altcha", "datadome", "basilisk", "yidun", "tendi"]]
     workerUserAgent: NotRequired[str]
+
+class BuiltinToolCaptchaStatusInput(TypedDict):
+    pageId: NotRequired[str]
+
+class BuiltinToolCaptchaStatusOutput(TypedDict):
+    enabled: bool
+    pages: list[dict[str, Any]]
+
+class BuiltinToolCaptchaWaitInput(TypedDict):
+    pageId: NotRequired[str]
+    timeoutMs: NotRequired[int]
+
+class BuiltinToolCaptchaWaitOutput(TypedDict):
+    enabled: bool
+    pages: list[dict[str, Any]]
 
 class BuiltinToolCodeExecuteInput(TypedDict):
     input: NotRequired[JsonObject]
@@ -98,6 +121,37 @@ class BuiltinToolHumanRequestInput(TypedDict):
     expiresInSeconds: NotRequired[int]
     prompt: str
     responseSchema: NotRequired[JsonObject]
+    view: NotRequired[dict[str, Any]]
+
+class BuiltinToolRunFilesAddInput(TypedDict):
+    fileId: str
+
+class BuiltinToolRunFilesAddOutput(TypedDict):
+    binding: dict[str, Any] | None
+    createdAt: str
+    fileId: str
+    name: str
+    role: Literal["input", "output"]
+    runtimePath: str | None
+    size: int
+    sourcePath: str | None
+    spacePath: str
+
+class BuiltinToolRunFilesCollectInput(TypedDict):
+    name: NotRequired[str]
+    path: NotRequired[str]
+    runtimePath: str
+
+class BuiltinToolRunFilesCollectOutput(TypedDict):
+    binding: dict[str, Any] | None
+    createdAt: str
+    fileId: str
+    name: str
+    role: Literal["input", "output"]
+    runtimePath: str | None
+    size: int
+    sourcePath: str | None
+    spacePath: str
 
 class BuiltinToolRunFilesExportInput(TypedDict):
     fileIds: NotRequired[list[str]]
@@ -108,14 +162,14 @@ class BuiltinToolRunFilesExportOutput(TypedDict):
     name: str
     size: int
 
-class BuiltinToolRuntimeFilesCollectInput(TypedDict):
-    name: NotRequired[str]
-    path: str
+class BuiltinToolRunFilesListInput(TypedDict):
+    cursor: NotRequired[str]
+    limit: NotRequired[int]
+    role: NotRequired[Literal["input", "output"]]
 
-class BuiltinToolRuntimeFilesCollectOutput(TypedDict):
-    fileId: str
-    name: str
-    size: int
+class BuiltinToolRunFilesListOutput(TypedDict):
+    data: list[dict[str, Any]]
+    nextCursor: str | None
 
 class BuiltinToolRuntimeFilesListInput(TypedDict):
     cursor: NotRequired[str]
@@ -125,15 +179,6 @@ class BuiltinToolRuntimeFilesListInput(TypedDict):
 class BuiltinToolRuntimeFilesListOutput(TypedDict):
     entries: list[dict[str, Any]]
     nextCursor: str | None
-
-class BuiltinToolRuntimeFilesStageInput(TypedDict):
-    fileId: str
-    path: str
-
-class BuiltinToolRuntimeFilesStageOutput(TypedDict):
-    fileId: str
-    path: str
-    size: int
 
 class BuiltinToolStagehandActInput(TypedDict):
     instruction: str
@@ -269,7 +314,16 @@ class BuiltinToolsClient:
     def call(self, tool_ref: Literal["browser.pages.open"], input: BuiltinToolBrowserPagesOpenInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolBrowserPagesOpenOutput: ...
 
     @overload
+    def call(self, tool_ref: Literal["browser.setInputFiles"], input: BuiltinToolBrowserSetInputFilesInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolBrowserSetInputFilesOutput: ...
+
+    @overload
     def call(self, tool_ref: Literal["captcha.solve"], input: BuiltinToolCaptchaSolveInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolCaptchaSolveOutput: ...
+
+    @overload
+    def call(self, tool_ref: Literal["captcha.status"], input: BuiltinToolCaptchaStatusInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolCaptchaStatusOutput: ...
+
+    @overload
+    def call(self, tool_ref: Literal["captcha.wait"], input: BuiltinToolCaptchaWaitInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolCaptchaWaitOutput: ...
 
     @overload
     def call(self, tool_ref: Literal["files.list"], input: BuiltinToolFilesListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolFilesListOutput: ...
@@ -278,16 +332,19 @@ class BuiltinToolsClient:
     def call(self, tool_ref: Literal["files.read_text"], input: BuiltinToolFilesReadTextInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolFilesReadTextOutput: ...
 
     @overload
+    def call(self, tool_ref: Literal["run.files.add"], input: BuiltinToolRunFilesAddInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolRunFilesAddOutput: ...
+
+    @overload
+    def call(self, tool_ref: Literal["run.files.collect"], input: BuiltinToolRunFilesCollectInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolRunFilesCollectOutput: ...
+
+    @overload
     def call(self, tool_ref: Literal["run.files.export"], input: BuiltinToolRunFilesExportInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolRunFilesExportOutput: ...
 
     @overload
-    def call(self, tool_ref: Literal["runtime.files.collect"], input: BuiltinToolRuntimeFilesCollectInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolRuntimeFilesCollectOutput: ...
+    def call(self, tool_ref: Literal["run.files.list"], input: BuiltinToolRunFilesListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolRunFilesListOutput: ...
 
     @overload
     def call(self, tool_ref: Literal["runtime.files.list"], input: BuiltinToolRuntimeFilesListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolRuntimeFilesListOutput: ...
-
-    @overload
-    def call(self, tool_ref: Literal["runtime.files.stage"], input: BuiltinToolRuntimeFilesStageInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolRuntimeFilesStageOutput: ...
 
     @overload
     def call(self, tool_ref: Literal["stagehand.act"], input: BuiltinToolStagehandActInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolStagehandActOutput: ...
@@ -341,6 +398,9 @@ class BuiltinToolsClient:
     def start(self, tool_ref: Literal["browser.pages.open"], input: BuiltinToolBrowserPagesOpenInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
 
     @overload
+    def start(self, tool_ref: Literal["browser.setInputFiles"], input: BuiltinToolBrowserSetInputFilesInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
+
+    @overload
     def start(self, tool_ref: Literal["captcha.solve"], input: BuiltinToolCaptchaSolveInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
 
     @overload
@@ -350,13 +410,13 @@ class BuiltinToolsClient:
     def start(self, tool_ref: Literal["human.request"], input: BuiltinToolHumanRequestInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
 
     @overload
+    def start(self, tool_ref: Literal["run.files.add"], input: BuiltinToolRunFilesAddInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
+
+    @overload
+    def start(self, tool_ref: Literal["run.files.collect"], input: BuiltinToolRunFilesCollectInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
+
+    @overload
     def start(self, tool_ref: Literal["run.files.export"], input: BuiltinToolRunFilesExportInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["runtime.files.collect"], input: BuiltinToolRuntimeFilesCollectInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["runtime.files.stage"], input: BuiltinToolRuntimeFilesStageInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
 
     @overload
     def start(self, tool_ref: Literal["stagehand.act"], input: BuiltinToolStagehandActInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...

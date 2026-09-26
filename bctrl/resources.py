@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from typing import Any, Iterator, Literal, Mapping, Optional
 from urllib.parse import quote, urlencode
 
@@ -118,12 +119,15 @@ class RuntimesClient:
         runtime_id: str,
         *,
         recording: Optional[bool] = None,
+        files: Optional[list[Mapping[str, str]]] = None,
         idempotency_key: Optional[str] = None,
     ) -> JsonObject:
+        """Start a Runtime. ``files`` (``[{"fileId": ...}]``) are Space Files
+        bound to the Run this start opens."""
         return self._http.request(
             "POST",
             f"/runtimes/{_enc(runtime_id)}/start",
-            json_body=_body({"recording": recording}),
+            json_body=_body({"recording": recording, "files": files}),
             idempotency_key=idempotency_key,
         )
 
@@ -197,11 +201,72 @@ class RunTraceNamespace:
         return _iter_pages(lambda query: self.list(run_id, **query), params)
 
 class RunFilesNamespace:
+    """A Run's files: inputs (Space Files bound to the Run, which its browser
+    has at ``runtimePath`` once ``binding.state`` is ``ready``) and outputs
+    the Run produced."""
+
     def __init__(self, http: V1HttpClient) -> None:
         self._http = http
 
-    def list(self, run_id: str) -> JsonObject:
-        return self._http.request("GET", f"/runs/{_enc(run_id)}/files")
+    @staticmethod
+    def _path(run_id: str, suffix: str = "") -> str:
+        return f"/runs/{_enc(run_id)}/files{suffix}"
+
+    def list(self, run_id: str, **params: Any) -> JsonObject:
+        return self._http.request("GET", self._path(run_id), params=_body(params))
+
+    def iter(self, run_id: str, **params: Any) -> Iterator[JsonObject]:
+        return _iter_pages(lambda query: self.list(run_id, **query), params)
+
+    def get(self, run_id: str, file_id: str) -> JsonObject:
+        return self._http.request("GET", self._path(run_id, f"/{_enc(file_id)}"))
+
+    def add(self, run_id: str, file_id: str) -> JsonObject:
+        """Bind an existing Space File to the Run. It keeps its Space path."""
+        return self._http.request("POST", self._path(run_id), json_body={"fileId": file_id})
+
+    def upload(
+        self,
+        run_id: str,
+        *,
+        file: Any,
+        filename: Optional[str] = None,
+        path: Optional[str] = None,
+        name: Optional[str] = None,
+        idempotency_key: Optional[str] = None,
+    ) -> JsonObject:
+        """Upload a Space File and bind it to the Run. The route requires an
+        idempotency key; one is generated when none is given."""
+        return self._http.multipart(
+            self._path(run_id, "/upload"),
+            fields=_body({"path": path, "name": name}),
+            files=[make_file_part("file", file, filename=filename)],
+            idempotency_key=idempotency_key or uuid.uuid4().hex,
+        )
+
+    def retry(self, run_id: str, file_id: str) -> JsonObject:
+        """Copy a failed input into the Run's browser again."""
+        return self._http.request("POST", self._path(run_id, f"/{_enc(file_id)}/retry"))
+
+    def remove(self, run_id: str, file_id: str) -> JsonObject:
+        """Remove an input from the Run's browser. The Space File is kept."""
+        return self._http.request("DELETE", self._path(run_id, f"/{_enc(file_id)}"))
+
+    def collect(
+        self,
+        run_id: str,
+        runtime_path: str,
+        *,
+        path: Optional[str] = None,
+        name: Optional[str] = None,
+    ) -> JsonObject:
+        """Save a file from the Run's workspace (for example
+        ``downloads/report.pdf``) as an output File."""
+        return self._http.request(
+            "POST",
+            self._path(run_id, "/collect"),
+            json_body=_body({"runtime_path": runtime_path, "path": path, "name": name}),
+        )
 
 
 class FilesClient:

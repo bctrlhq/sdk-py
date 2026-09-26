@@ -87,6 +87,8 @@ class MockHandler(BaseHTTPRequestHandler):
             return self._json(200, {"id": "rt_test", "connection": {"cdpUrl": "wss://example.test/devtools"}})
         if method == "GET" and route == "/v1/runs/run_test":
             return self._json(200, {"id": "run_test", "connection": {"cdpUrl": "wss://example.test/devtools"}})
+        if route.startswith("/v1/runs/run_test/files"):
+            return self._json(201 if method == "POST" else 200, {"fileId": "file_test", "role": "input"})
         if method == "GET" and route == "/v1/files/file_test/content":
             return self._bytes(200, b"file contents")
         if method == "GET" and route == "/v1/notification-recipients":
@@ -227,6 +229,37 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(MockHandler.requests[5]["path"], "/v1/proxies/geo?country=US&type=city")
         self.assertEqual(MockHandler.requests[6]["path"], "/v1/proxies/locations?pool=pool1")
         self.assertEqual(MockHandler.requests[7]["path"], "/v1/subaccounts/sub_test?include=usage")
+
+    def test_run_files_use_the_run_file_routes(self) -> None:
+        self.client.runs.files.list("run_test", role="input")
+        self.client.runs.files.add("run_test", "file_test")
+        self.client.runs.files.upload(
+            "run_test", file=b"x", filename="a.txt", path="docs/a.txt", idempotency_key="up-1"
+        )
+        self.client.runs.files.retry("run_test", "file_test")
+        self.client.runs.files.remove("run_test", "file_test")
+        self.client.runs.files.collect("run_test", "downloads/r.pdf", name="r.pdf")
+        self.client.runtimes.start("rt_test", files=[{"fileId": "file_test"}])
+
+        self.assertEqual(
+            [(request["method"], request["path"]) for request in MockHandler.requests],
+            [
+                ("GET", "/v1/runs/run_test/files?role=input"),
+                ("POST", "/v1/runs/run_test/files"),
+                ("POST", "/v1/runs/run_test/files/upload"),
+                ("POST", "/v1/runs/run_test/files/file_test/retry"),
+                ("DELETE", "/v1/runs/run_test/files/file_test"),
+                ("POST", "/v1/runs/run_test/files/collect"),
+                ("POST", "/v1/runtimes/rt_test/start"),
+            ],
+        )
+        self.assertEqual(MockHandler.requests[1]["body"], {"fileId": "file_test"})
+        self.assertEqual(MockHandler.requests[2]["headers"]["Idempotency-Key"], "up-1")
+        self.assertIn(b'name="path"', MockHandler.requests[2]["body"])
+        self.assertEqual(
+            MockHandler.requests[5]["body"], {"runtimePath": "downloads/r.pdf", "name": "r.pdf"}
+        )
+        self.assertEqual(MockHandler.requests[6]["body"], {"files": [{"fileId": "file_test"}]})
 
     def test_file_upload_scopes_space_in_query(self) -> None:
         uploaded = self.client.files.upload(
