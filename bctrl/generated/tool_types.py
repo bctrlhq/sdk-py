@@ -206,6 +206,16 @@ class BuiltinToolSecretsListOutput(TypedDict):
     folders: list[str]
     nextCursor: str | None
 
+class BuiltinToolSecretsRequestInput(TypedDict):
+    expiresInSeconds: NotRequired[int]
+    label: NotRequired[str]
+    origins: NotRequired[list[str]]
+    path: str
+    prompt: NotRequired[str]
+    type: Literal["login", "value"]
+    username: NotRequired[str]
+    view: NotRequired[dict[str, Any]]
+
 class BuiltinToolStagehandActInput(TypedDict):
     instruction: str
     pageId: NotRequired[str]
@@ -353,6 +363,9 @@ class BuiltinToolsClient:
 
     @overload
     def start(self, tool_ref: Literal["run.files.export"], input: BuiltinToolRunFilesExportInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
+
+    @overload
+    def start(self, tool_ref: Literal["secrets.request"], input: BuiltinToolSecretsRequestInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
 
     @overload
     def start(self, tool_ref: Literal["stagehand.act"], input: BuiltinToolStagehandActInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
