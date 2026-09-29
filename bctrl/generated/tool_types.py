@@ -119,6 +119,7 @@ class BuiltinToolFilesReadTextOutput(TypedDict):
 
 class BuiltinToolHumanRequestInput(TypedDict):
     expiresInSeconds: NotRequired[int]
+    handoff: NotRequired[bool]
     prompt: str
     responseSchema: NotRequired[JsonObject]
     view: NotRequired[dict[str, Any]]
