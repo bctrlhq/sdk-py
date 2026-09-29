@@ -69,6 +69,14 @@ class MockHandler(BaseHTTPRequestHandler):
             )
         if method == "POST" and route == "/v1/runtimes/rt_context/stop":
             return self._json(200, {"runtimeId": "rt_context", "status": "stopped"})
+        if route == "/v1/conversations/conv_test/turns/turn_test" and method == "GET":
+            return self._json(200, {"id": "turn_test", "status": "succeeded"})
+        if route == "/v1/conversations/conv_test/turns/turn_test/cancel" and method == "POST":
+            return self._json(200, {"id": "turn_test", "status": "cancelled"})
+        if route == "/v1/tool-calls/call_code/result" and method == "GET":
+            return self._json(202, {"id": "call_code", "status": "running"})
+        if self.path == "/v1/runtimes/rt_test/start?wait=0" and method == "POST":
+            return self._json(202, {"runtimeId": "rt_test", "runId": "run_test", "status": "starting"})
         if method == "POST" and route == "/v1/runtimes/rt_test/start":
             return self._json(
                 200,
@@ -157,6 +165,22 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.server.shutdown()
         self.server.server_close()
         self.thread.join(timeout=2)
+
+    def test_async_waits_preserve_handles_and_use_query_parameters(self) -> None:
+        started = self.client.runtimes.start("rt_test", wait=0, recording=False)
+        self.assertEqual(started, {"runtimeId": "rt_test", "runId": "run_test", "status": "starting"})
+        self.client.runtimes.get("rt_test", wait=60, include="connection")
+        self.client.conversations.turns.get("conv_test", "turn_test", wait=1)
+        self.client.conversations.turns.cancel("conv_test", "turn_test")
+        self.client.tool_calls.result("call_code", wait=0)
+        self.assertEqual(MockHandler.requests[0]["body"], {"recording": False})
+        self.assertEqual([request["path"] for request in MockHandler.requests], [
+            "/v1/runtimes/rt_test/start?wait=0",
+            "/v1/runtimes/rt_test?include=connection&wait=60",
+            "/v1/conversations/conv_test/turns/turn_test?wait=1",
+            "/v1/conversations/conv_test/turns/turn_test/cancel",
+            "/v1/tool-calls/call_code/result?wait=0",
+        ])
 
     def test_spaces_and_runtime_start_use_current_routes(self) -> None:
         space = self.client.spaces.create(name="automation")

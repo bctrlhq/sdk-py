@@ -101,9 +101,9 @@ class RuntimesClient:
         )
 
     def get(
-        self, runtime_id: str, *, include: Optional[Literal["connection"]] = None
+        self, runtime_id: str, *, include: Optional[Literal["connection"]] = None, wait: Optional[int] = None
     ) -> JsonObject:
-        params = {"include": include} if include is not None else {}
+        params = _body({"include": include, "wait": wait})
         return self._http.request("GET", f"/runtimes/{_enc(runtime_id)}", params=params)
 
     def update(self, runtime_id: str, **request: Any) -> JsonObject:
@@ -118,6 +118,7 @@ class RuntimesClient:
         self,
         runtime_id: str,
         *,
+        wait: Optional[int] = None,
         recording: Optional[bool] = None,
         files: Optional[list[Mapping[str, str]]] = None,
         idempotency_key: Optional[str] = None,
@@ -127,6 +128,7 @@ class RuntimesClient:
         return self._http.request(
             "POST",
             f"/runtimes/{_enc(runtime_id)}/start",
+            params=_body({"wait": wait}),
             json_body=_body({"recording": recording, "files": files}),
             idempotency_key=idempotency_key,
         )
@@ -387,6 +389,7 @@ class ConversationsClient:
     def __init__(self, http: V1HttpClient) -> None:
         self._http = http
         self.messages = ConversationMessagesNamespace(http)
+        self.turns = ConversationTurnsNamespace(http)
 
     def list(self, **params: Any) -> JsonObject:
         return self._http.request("GET", "/conversations", params=_body(params))
@@ -425,6 +428,22 @@ class ConversationsClient:
         return self._http.stream_sse(
             f"/conversations/{_enc(conversation_id)}/stream",
             params=_body(params),
+        )
+
+
+class ConversationTurnsNamespace:
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+
+    def get(self, conversation_id: str, turn_id: str, *, wait: Optional[int] = None) -> JsonObject:
+        return self._http.request(
+            "GET", f"/conversations/{_enc(conversation_id)}/turns/{_enc(turn_id)}",
+            params=_body({"wait": wait}),
+        )
+
+    def cancel(self, conversation_id: str, turn_id: str) -> JsonObject:
+        return self._http.request(
+            "POST", f"/conversations/{_enc(conversation_id)}/turns/{_enc(turn_id)}/cancel"
         )
 
 
