@@ -181,6 +181,18 @@ class BuiltinToolRuntimeFilesListOutput(TypedDict):
     entries: list[dict[str, Any]]
     nextCursor: str | None
 
+class BuiltinToolSecretsListInput(TypedDict):
+    cursor: NotRequired[str]
+    delimiter: NotRequired[Literal["/"]]
+    limit: NotRequired[int]
+    prefix: NotRequired[str]
+    type: NotRequired[Literal["login", "value"]]
+
+class BuiltinToolSecretsListOutput(TypedDict):
+    data: list[dict[str, Any]]
+    folders: list[str]
+    nextCursor: str | None
+
 class BuiltinToolStagehandActInput(TypedDict):
     instruction: str
     pageId: NotRequired[str]
@@ -211,81 +223,6 @@ class BuiltinToolStagehandObserveInput(TypedDict):
 class BuiltinToolStagehandObserveOutput(TypedDict):
     actions: list[dict[str, Any]]
     cacheStatus: NotRequired[Literal["HIT", "MISS"]]
-
-class BuiltinToolVaultSecretsDeleteInput(TypedDict):
-    name: str
-
-class BuiltinToolVaultSecretsDeleteOutput(TypedDict):
-    deleted: Literal[True]
-    name: str
-
-class BuiltinToolVaultSecretsGetInput(TypedDict):
-    name: str
-
-class BuiltinToolVaultSecretsGetOutput(TypedDict):
-    createdAt: NotRequired[str]
-    hasTotp: bool
-    label: NotRequired[str]
-    name: str
-    originPatterns: NotRequired[list[str]]
-    origins: NotRequired[list[str]]
-    type: Literal["login", "value"]
-    updatedAt: NotRequired[str]
-
-class BuiltinToolVaultSecretsListInput(TypedDict):
-    cursor: NotRequired[str]
-    hasTotp: NotRequired[bool]
-    limit: NotRequired[int]
-    origin: NotRequired[str]
-    prefix: NotRequired[str]
-
-class BuiltinToolVaultSecretsListOutput(TypedDict):
-    nextCursor: str | None
-    secrets: list[dict[str, Any]]
-
-BuiltinToolVaultSecretsSetInput: TypeAlias = Any
-
-class BuiltinToolVaultSecretsSetOutput(TypedDict):
-    createdAt: NotRequired[str]
-    hasTotp: bool
-    label: NotRequired[str]
-    name: str
-    originPatterns: NotRequired[list[str]]
-    origins: NotRequired[list[str]]
-    type: Literal["login", "value"]
-    updatedAt: NotRequired[str]
-
-class BuiltinToolVaultSecretsUpdateInput(TypedDict):
-    label: NotRequired[str | None]
-    name: str
-    notes: NotRequired[str | None]
-    originPatterns: NotRequired[list[str] | None]
-    origins: NotRequired[list[str] | None]
-    password: NotRequired[str]
-    totpSecret: NotRequired[str | None]
-    username: NotRequired[str]
-    value: NotRequired[str]
-
-class BuiltinToolVaultSecretsUpdateOutput(TypedDict):
-    createdAt: NotRequired[str]
-    hasTotp: bool
-    label: NotRequired[str]
-    name: str
-    originPatterns: NotRequired[list[str]]
-    origins: NotRequired[list[str]]
-    type: Literal["login", "value"]
-    updatedAt: NotRequired[str]
-
-class BuiltinToolVaultSecretsValueInput(TypedDict):
-    name: str
-
-BuiltinToolVaultSecretsValueOutput: TypeAlias = Any
-
-class BuiltinToolVaultTotpGenerateInput(TypedDict):
-    name: str
-
-class BuiltinToolVaultTotpGenerateOutput(TypedDict):
-    code: str
 
 class JsonObject(TypedDict):
     pass
@@ -348,6 +285,9 @@ class BuiltinToolsClient:
     def call(self, tool_ref: Literal["runtime.files.list"], input: BuiltinToolRuntimeFilesListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolRuntimeFilesListOutput: ...
 
     @overload
+    def call(self, tool_ref: Literal["secrets.list"], input: BuiltinToolSecretsListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolSecretsListOutput: ...
+
+    @overload
     def call(self, tool_ref: Literal["stagehand.act"], input: BuiltinToolStagehandActInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolStagehandActOutput: ...
 
     @overload
@@ -355,27 +295,6 @@ class BuiltinToolsClient:
 
     @overload
     def call(self, tool_ref: Literal["stagehand.observe"], input: BuiltinToolStagehandObserveInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolStagehandObserveOutput: ...
-
-    @overload
-    def call(self, tool_ref: Literal["vault.secrets.delete"], input: BuiltinToolVaultSecretsDeleteInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolVaultSecretsDeleteOutput: ...
-
-    @overload
-    def call(self, tool_ref: Literal["vault.secrets.get"], input: BuiltinToolVaultSecretsGetInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolVaultSecretsGetOutput: ...
-
-    @overload
-    def call(self, tool_ref: Literal["vault.secrets.list"], input: BuiltinToolVaultSecretsListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolVaultSecretsListOutput: ...
-
-    @overload
-    def call(self, tool_ref: Literal["vault.secrets.set"], input: BuiltinToolVaultSecretsSetInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolVaultSecretsSetOutput: ...
-
-    @overload
-    def call(self, tool_ref: Literal["vault.secrets.update"], input: BuiltinToolVaultSecretsUpdateInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolVaultSecretsUpdateOutput: ...
-
-    @overload
-    def call(self, tool_ref: Literal["vault.secrets.value"], input: BuiltinToolVaultSecretsValueInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolVaultSecretsValueOutput: ...
-
-    @overload
-    def call(self, tool_ref: Literal["vault.totp.generate"], input: BuiltinToolVaultTotpGenerateInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolVaultTotpGenerateOutput: ...
 
     @overload
     def call(self, tool_ref: str, input: Mapping[str, Any] | None = None, *, idempotency_key: str | None = None, runtime_id: str | None = None, **kwargs: Any) -> Any: ...
