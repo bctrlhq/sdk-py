@@ -331,6 +331,58 @@ class NotificationRecipientsClient:
         )
 
 
+class SecretsClient:
+    """Secrets: path-keyed, versioned, write-only values (``/v1/secrets``)."""
+
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+
+    @staticmethod
+    def _path(path: str) -> str:
+        # A Secret path may contain "/": encode each segment on its own.
+        return "/secrets/" + "/".join(_enc(segment) for segment in path.split("/"))
+
+    @staticmethod
+    def _if_match(if_match: Optional[int]) -> Optional[dict[str, str]]:
+        return None if if_match is None else {"If-Match": f'"{if_match}"'}
+
+    def list(self, **params: Any) -> JsonObject:
+        """One page. With ``delimiter="/"``, deeper paths are grouped into ``folders``."""
+        return self._http.request("GET", "/secrets", params=_body(params))
+
+    def iter(self, **params: Any) -> Iterator[JsonObject]:
+        """Every Secret under the query, across pages. Folders are not yielded."""
+        return _iter_pages(lambda query: self.list(**query), params)
+
+    def get(self, path: str) -> JsonObject:
+        """Metadata only; secret fields are write-only."""
+        return self._http.request("GET", self._path(path))
+
+    def put(self, path: str, *, if_match: Optional[int] = None, **request: Any) -> JsonObject:
+        """Create or replace; every write is a new version. ``from_version=`` alone rolls back."""
+        return self._http.request(
+            "PUT", self._path(path), json_body=_body(request), headers=self._if_match(if_match)
+        )
+
+    def update(self, path: str, *, if_match: Optional[int] = None, **request: Any) -> JsonObject:
+        """Change some fields; ``None`` clears one."""
+        return self._http.request(
+            "PATCH",
+            self._path(path),
+            json_body=_merge_patch(request),
+            headers=self._if_match(if_match),
+        )
+
+    def delete(self, path: str, *, if_match: Optional[int] = None) -> JsonObject:
+        return self._http.request("DELETE", self._path(path), headers=self._if_match(if_match))
+
+    def reveal(self, path: str, *, version: Optional[int] = None) -> JsonObject:
+        """The values of the current (or a given) version. Only API keys and dashboard sessions may reveal."""
+        return self._http.request(
+            "POST", "/secrets:reveal", json_body=_body({"path": path, "version": version})
+        )
+
+
 class ConversationsClient:
     def __init__(self, http: V1HttpClient) -> None:
         self._http = http

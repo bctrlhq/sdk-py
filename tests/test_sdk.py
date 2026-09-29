@@ -21,6 +21,9 @@ class MockHandler(BaseHTTPRequestHandler):
     def do_PATCH(self) -> None:
         self._handle("PATCH")
 
+    def do_PUT(self) -> None:
+        self._handle("PUT")
+
     def do_DELETE(self) -> None:
         self._handle("DELETE")
 
@@ -99,6 +102,14 @@ class MockHandler(BaseHTTPRequestHandler):
             return self._json(200, {"id": "nrec_test", **body})
         if method == "DELETE" and route == "/v1/notification-recipients/nrec_test":
             return self._json(200, {"id": "nrec_test", "deleted": True})
+        if route == "/v1/secrets:reveal" and method == "POST":
+            return self._json(200, {"id": body["path"], "version": 3, "username": "bot", "password": "p"})
+        if route.startswith("/v1/secrets/") or route == "/v1/secrets":
+            if method == "DELETE":
+                return self._json(200, {"id": "prod/github/bot", "deleted": True})
+            if method == "GET" and route == "/v1/secrets":
+                return self._json(200, {"data": [], "folders": ["prod/"], "nextCursor": None})
+            return self._json(200, {"id": "prod/github/bot", "version": 4})
         if method == "GET" and route == "/v1/proxies/geo":
             return self._json(200, {"data": [], "nextCursor": None})
         if method == "GET" and route == "/v1/proxies/locations":
@@ -229,6 +240,29 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(MockHandler.requests[5]["path"], "/v1/proxies/geo?country=US&type=city")
         self.assertEqual(MockHandler.requests[6]["path"], "/v1/proxies/locations?pool=pool1")
         self.assertEqual(MockHandler.requests[7]["path"], "/v1/subaccounts/sub_test?include=usage")
+
+    def test_secrets_keep_slashes_and_send_if_match(self) -> None:
+        self.client.secrets.list(prefix="prod/", delimiter="/")
+        self.client.secrets.get("prod/github/bot")
+        self.client.secrets.put("prod/github/bot", type="login", password="p", if_match=3)
+        self.client.secrets.put("prod/github/bot", from_version=2)
+        self.client.secrets.update("prod/github/bot", totp=None)
+        self.client.secrets.delete("prod/github/bot", if_match=4)
+        revealed = self.client.secrets.reveal("prod/github/bot")
+
+        requests = MockHandler.requests
+        self.assertEqual(requests[0]["path"], "/v1/secrets?prefix=prod%2F&delimiter=%2F")
+        self.assertEqual(requests[1]["path"], "/v1/secrets/prod/github/bot")
+        self.assertEqual(requests[2]["method"], "PUT")
+        self.assertEqual(requests[2]["headers"].get("If-Match"), '"3"')
+        self.assertEqual(requests[2]["body"], {"type": "login", "password": "p"})
+        self.assertEqual(requests[3]["body"], {"fromVersion": 2})
+        self.assertNotIn("If-Match", requests[3]["headers"])
+        self.assertEqual(requests[4]["body"], {"totp": None})
+        self.assertEqual(requests[5]["headers"].get("If-Match"), '"4"')
+        self.assertEqual(requests[6]["path"], "/v1/secrets:reveal")
+        self.assertEqual(requests[6]["body"], {"path": "prod/github/bot"})
+        self.assertEqual(revealed["password"], "p")
 
     def test_run_files_use_the_run_file_routes(self) -> None:
         self.client.runs.files.list("run_test", role="input")
