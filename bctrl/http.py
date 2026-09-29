@@ -348,7 +348,7 @@ def _sse_event(
 
 def _error_fields(parsed: Any, error: HTTPError) -> tuple[str, str, Optional[str]]:
     if isinstance(parsed, dict):
-        message = parsed.get("error") if isinstance(parsed.get("error"), str) else error.reason
+        message = parsed.get("message") if isinstance(parsed.get("message"), str) else error.reason
         code = parsed.get("code") if isinstance(parsed.get("code"), str) else "api.error"
         request_id = parsed.get("requestId") if isinstance(parsed.get("requestId"), str) else None
         return message, code, request_id

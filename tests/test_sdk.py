@@ -113,7 +113,7 @@ class MockHandler(BaseHTTPRequestHandler):
             return self._json(200, {"id": "conv_test", **body})
         if method == "POST" and route == "/v1/conversations/conv_test/messages":
             return self._json(202, {"turnId": "turn_test", "status": "queued"})
-        return self._json(404, {"error": f"Unhandled route {method} {route}"})
+        return self._json(404, {"message": f"Unhandled route {method} {route}"})
 
     def _json(self, status: int, body: Any) -> None:
         raw = json.dumps(body).encode()
