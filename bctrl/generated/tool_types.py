@@ -181,6 +181,19 @@ class BuiltinToolRuntimeFilesListOutput(TypedDict):
     entries: list[dict[str, Any]]
     nextCursor: str | None
 
+class BuiltinToolSecretsFillInput(TypedDict):
+    field: NotRequired[Literal["username", "password", "value"]]
+    frameId: NotRequired[str]
+    pageId: NotRequired[str]
+    passwordSelector: NotRequired[str]
+    secret: str
+    selector: NotRequired[str]
+    usernameSelector: NotRequired[str]
+
+class BuiltinToolSecretsFillOutput(TypedDict):
+    filled: list[Literal["username", "password", "value"]]
+    origin: str
+
 class BuiltinToolSecretsListInput(TypedDict):
     cursor: NotRequired[str]
     delimiter: NotRequired[Literal["/"]]
@@ -283,6 +296,9 @@ class BuiltinToolsClient:
 
     @overload
     def call(self, tool_ref: Literal["runtime.files.list"], input: BuiltinToolRuntimeFilesListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolRuntimeFilesListOutput: ...
+
+    @overload
+    def call(self, tool_ref: Literal["secrets.fill"], input: BuiltinToolSecretsFillInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolSecretsFillOutput: ...
 
     @overload
     def call(self, tool_ref: Literal["secrets.list"], input: BuiltinToolSecretsListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> BuiltinToolSecretsListOutput: ...
