@@ -193,7 +193,11 @@ class BctrlPythonSdkTest(unittest.TestCase):
         ])
 
     def test_spaces_and_runtime_start_use_current_routes(self) -> None:
-        space = self.client.spaces.create(name="automation")
+        secrets = {"allow": ["prod"], "deny": ["prod/root"],
+                   "env": {"OPENAI_API_KEY": "secret:prod/api#value@3"}}
+        space = self.client.spaces.create(name="automation", environment={"secrets": secrets})
+        self.assertEqual(MockHandler.requests[0]["body"],
+                         {"name": "automation", "environment": {"secrets": secrets}})
         started = self.client.runtimes.start("rt_test", idempotency_key="start-1")
         runtime = self.client.runtimes.get("rt_test", include="connection")
         run = self.client.runs.get("run_test", include="connection")
