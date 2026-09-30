@@ -49,6 +49,11 @@ class MockHandler(BaseHTTPRequestHandler):
             }
         )
 
+        if method == "POST" and route == "/v1/tools/computer.use/call":
+            return self._json(200, {"action": body["action"], "width": 800, "height": 600})
+        if method == "POST" and route == "/v1/tools/computer.use/calls":
+            return self._json(202, {"id": "call_computer", "status": "queued"})
+
         if method == "POST" and route == "/v1/api-keys":
             return self._json(201, {"data": {"id": "key-agent", "type": "agent", "agent": body["agent"],
                                           "actsFor": {"userId": "person-1"}, "lastUsedAt": None}, "secret": "test-only-secret"})
@@ -154,6 +159,14 @@ class MockHandler(BaseHTTPRequestHandler):
 
 
 class BctrlPythonSdkTest(unittest.TestCase):
+    def test_computer_actions_preserve_vendor_snake_case_fields(self) -> None:
+        action = {"action": "scroll", "scroll_direction": "down", "scroll_amount": 2, "coordinate": [20, 30]}
+        self.client.tools.call("computer.use", action, runtime_id="rt_test")
+        self.client.tools.start("computer.use", action, runtime_id="rt_test")
+        for request in MockHandler.requests:
+            self.assertEqual(request["body"], action)
+            self.assertEqual(request["headers"]["Bctrl-Runtime-Id"], "rt_test")
+
     def setUp(self) -> None:
         MockHandler.requests = []
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), MockHandler)

@@ -96,6 +96,77 @@ class BuiltinToolCodeExecuteInput(TypedDict):
     source: str
     timeoutMs: NotRequired[int]
 
+class BuiltinToolComputerUseInputVariant1(TypedDict):
+    action: Literal["screenshot"]
+
+class BuiltinToolComputerUseInputVariant2(TypedDict):
+    action: Literal["left_click"]
+    coordinate: NotRequired[list[Any]]
+    text: NotRequired[str]
+
+class BuiltinToolComputerUseInputVariant3(TypedDict):
+    action: Literal["right_click"]
+    coordinate: NotRequired[list[Any]]
+    text: NotRequired[str]
+
+class BuiltinToolComputerUseInputVariant4(TypedDict):
+    action: Literal["middle_click"]
+    coordinate: NotRequired[list[Any]]
+    text: NotRequired[str]
+
+class BuiltinToolComputerUseInputVariant5(TypedDict):
+    action: Literal["double_click"]
+    coordinate: NotRequired[list[Any]]
+    text: NotRequired[str]
+
+class BuiltinToolComputerUseInputVariant6(TypedDict):
+    action: Literal["triple_click"]
+    coordinate: NotRequired[list[Any]]
+    text: NotRequired[str]
+
+class BuiltinToolComputerUseInputVariant7(TypedDict):
+    action: Literal["type"]
+    text: str
+
+class BuiltinToolComputerUseInputVariant8(TypedDict):
+    action: Literal["key"]
+    repeat: NotRequired[int]
+    text: str
+
+class BuiltinToolComputerUseInputVariant9(TypedDict):
+    action: Literal["mouse_move"]
+    coordinate: list[Any]
+
+class BuiltinToolComputerUseInputVariant10(TypedDict):
+    action: Literal["scroll"]
+    coordinate: NotRequired[list[Any]]
+    scroll_amount: int
+    scroll_direction: Literal["up", "down", "left", "right"]
+    text: NotRequired[str]
+
+class BuiltinToolComputerUseInputVariant11(TypedDict):
+    action: Literal["left_click_drag"]
+    coordinate: list[Any]
+    path: NotRequired[list[list[Any]]]
+    start_coordinate: NotRequired[list[Any]]
+    text: NotRequired[str]
+
+class BuiltinToolComputerUseInputVariant12(TypedDict):
+    action: Literal["wait"]
+    duration: NotRequired[float]
+
+class BuiltinToolComputerUseInputVariant13(TypedDict):
+    action: Literal["cursor_position"]
+
+BuiltinToolComputerUseInput: TypeAlias = BuiltinToolComputerUseInputVariant1 | BuiltinToolComputerUseInputVariant2 | BuiltinToolComputerUseInputVariant3 | BuiltinToolComputerUseInputVariant4 | BuiltinToolComputerUseInputVariant5 | BuiltinToolComputerUseInputVariant6 | BuiltinToolComputerUseInputVariant7 | BuiltinToolComputerUseInputVariant8 | BuiltinToolComputerUseInputVariant9 | BuiltinToolComputerUseInputVariant10 | BuiltinToolComputerUseInputVariant11 | BuiltinToolComputerUseInputVariant12 | BuiltinToolComputerUseInputVariant13
+
+class BuiltinToolComputerUseOutput(TypedDict):
+    action: Literal["screenshot", "left_click", "right_click", "middle_click", "double_click", "triple_click", "type", "key", "mouse_move", "scroll", "left_click_drag", "wait", "cursor_position"]
+    coordinate: NotRequired[list[Any]]
+    height: int
+    image: NotRequired[dict[str, Any]]
+    width: int
+
 class BuiltinToolFilesListInput(TypedDict):
     cursor: NotRequired[str]
     limit: NotRequired[int]
@@ -287,6 +358,9 @@ class BuiltinToolsClient:
     def call(self, tool_ref: Literal["captcha.wait"], input: BuiltinToolCaptchaWaitInput, *, runtime_id: str | None = None) -> BuiltinToolCaptchaWaitOutput: ...
 
     @overload
+    def call(self, tool_ref: Literal["computer.use"], input: BuiltinToolComputerUseInput, *, runtime_id: str | None = None) -> BuiltinToolComputerUseOutput: ...
+
+    @overload
     def call(self, tool_ref: Literal["files.list"], input: BuiltinToolFilesListInput, *, runtime_id: str | None = None) -> BuiltinToolFilesListOutput: ...
 
     @overload
@@ -329,7 +403,7 @@ class BuiltinToolsClient:
         return self._http.request(
             "POST",
             f"/tools/{quote(tool_ref, safe='')}/call",
-            json_body=_body({**dict(input or {}), **kwargs}),
+            json_body=_body({**dict(input or {}), **kwargs}, tool_ref),
             headers={"BCTRL-Runtime-Id": runtime_id} if runtime_id else None,
         )
 
@@ -350,6 +424,9 @@ class BuiltinToolsClient:
 
     @overload
     def start(self, tool_ref: Literal["code.execute"], input: BuiltinToolCodeExecuteInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
+
+    @overload
+    def start(self, tool_ref: Literal["computer.use"], input: BuiltinToolComputerUseInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
 
     @overload
     def start(self, tool_ref: Literal["human.request"], input: BuiltinToolHumanRequestInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
@@ -382,14 +459,16 @@ class BuiltinToolsClient:
         return self._http.request(
             "POST",
             f"/tools/{quote(tool_ref, safe='')}/calls",
-            json_body=_body({**dict(input or {}), **kwargs}),
+            json_body=_body({**dict(input or {}), **kwargs}, tool_ref),
             idempotency_key=idempotency_key,
             headers={"BCTRL-Runtime-Id": runtime_id} if runtime_id else None,
         )
 
 
-def _body(values: Mapping[str, Any]) -> JsonObject:
-    return {_wire_key(key): value for key, value in values.items() if value is not None}
+def _body(values: Mapping[str, Any], tool_ref: str) -> JsonObject:
+    # computer.use follows the vendor's snake_case wire schema.
+    return {(key if tool_ref == "computer.use" else _wire_key(key)): value
+            for key, value in values.items() if value is not None}
 
 
 def _wire_key(key: str) -> str:
