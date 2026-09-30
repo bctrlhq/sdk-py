@@ -49,6 +49,9 @@ class MockHandler(BaseHTTPRequestHandler):
             }
         )
 
+        if method == "POST" and route == "/v1/api-keys":
+            return self._json(201, {"data": {"id": "key-agent", "type": "agent", "agent": body["agent"],
+                                          "actsFor": {"userId": "person-1"}, "lastUsedAt": None}, "secret": "test-only-secret"})
         if method == "POST" and route == "/v1/spaces":
             return self._json(201, {"id": "sp_test", "name": body["name"]})
         if method == "POST" and route == "/v1/files":
@@ -165,6 +168,13 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.server.shutdown()
         self.server.server_close()
         self.thread.join(timeout=2)
+
+    def test_agent_keys_send_identity_and_retain_person_and_usage_metadata(self) -> None:
+        created = self.client.api_keys.create(type="agent", agent={"name": "Invoice bot"})
+        self.assertEqual(MockHandler.requests[0]["body"], {"type": "agent", "agent": {"name": "Invoice bot"}})
+        self.assertEqual(created["data"]["actsFor"], {"userId": "person-1"})
+        self.assertEqual(created["data"]["agent"]["name"], "Invoice bot")
+        self.assertIsNone(created["data"]["lastUsedAt"])
 
     def test_async_waits_preserve_handles_and_use_query_parameters(self) -> None:
         started = self.client.runtimes.start("rt_test", wait=0, recording=False)
