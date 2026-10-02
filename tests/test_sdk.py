@@ -126,6 +126,8 @@ class MockHandler(BaseHTTPRequestHandler):
             if method == "GET" and route == "/v1/secrets":
                 return self._json(200, {"data": [], "folders": ["prod/"], "nextCursor": None})
             return self._json(200, {"id": "prod/github/bot", "version": 4})
+        if method == "GET" and route == "/v1/locations":
+            return self._json(200, {"data": [{"id": "us-east", "object": "location"}], "nextCursor": None, "hasMore": False})
         if method == "GET" and route == "/v1/proxies/geo":
             return self._json(200, {"data": [], "nextCursor": None})
         if method == "GET" and route == "/v1/proxies/locations":
@@ -282,6 +284,7 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.client.proxies.geo.list(country="US", type="city")
         self.client.proxies.locations.list(pool="pool1")
         self.client.subaccounts.usage.get("sub_test")
+        self.assertEqual(list(self.client.locations.iter(limit=1, order="asc"))[0]["id"], "us-east")
 
         self.assertEqual(MockHandler.requests[0]["path"], "/v1/files/file_test/content")
         self.assertEqual(MockHandler.requests[1]["path"], "/v1/notification-recipients?limit=10")
@@ -291,6 +294,7 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(MockHandler.requests[5]["path"], "/v1/proxies/geo?country=US&type=city")
         self.assertEqual(MockHandler.requests[6]["path"], "/v1/proxies/locations?pool=pool1")
         self.assertEqual(MockHandler.requests[7]["path"], "/v1/subaccounts/sub_test?include=usage")
+        self.assertEqual(MockHandler.requests[8]["path"], "/v1/locations?limit=1&order=asc")
 
     def test_secrets_keep_slashes_and_send_if_match(self) -> None:
         self.client.secrets.list(prefix="prod/", delimiter="/")

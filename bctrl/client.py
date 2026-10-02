@@ -12,6 +12,7 @@ from .resources import (
     ConversationsClient,
     FilesClient,
     HelpClient,
+    LocationsClient,
     NotificationRecipientsClient,
     ProxiesClient,
     RunsClient,
@@ -45,6 +46,7 @@ class Bctrl:
             timeout=timeout,
             max_retries=max_retries,
         )
+        self.locations = LocationsClient(self._http)
         self.spaces = SpacesClient(self._http)
         self.runtimes = RuntimesClient(self._http)
         self.runs = RunsClient(self._http)

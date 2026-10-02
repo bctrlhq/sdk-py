@@ -58,6 +58,17 @@ def _stream_url(base_url: str, path: str, params: Mapping[str, Any]) -> str:
     return f"{base_url}{path}?{suffix}" if suffix else f"{base_url}{path}"
 
 
+class LocationsClient:
+    def __init__(self, http: V1HttpClient) -> None:
+        self._http = http
+
+    def list(self, **params: Any) -> JsonObject:
+        return self._http.request("GET", "/locations", params=_body(params))
+
+    def iter(self, **params: Any) -> Iterator[JsonObject]:
+        return _iter_pages(lambda query: self.list(**query), params)
+
+
 class SpacesClient:
     def __init__(self, http: V1HttpClient) -> None:
         self._http = http
