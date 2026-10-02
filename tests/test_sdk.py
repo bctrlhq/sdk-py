@@ -323,7 +323,7 @@ class BctrlPythonSdkTest(unittest.TestCase):
         )
         self.client.runs.files.retry("run_test", "file_test")
         self.client.runs.files.remove("run_test", "file_test")
-        self.client.runs.files.collect("run_test", "downloads/r.pdf", name="r.pdf")
+        self.client.runs.files.collect("run_test", "downloads/r.pdf", filename="r.pdf")
         self.client.runtimes.start("rt_test", files=[{"fileId": "file_test"}])
 
         self.assertEqual(
@@ -342,7 +342,7 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(MockHandler.requests[2]["headers"]["Idempotency-Key"], "up-1")
         self.assertIn(b'name="path"', MockHandler.requests[2]["body"])
         self.assertEqual(
-            MockHandler.requests[5]["body"], {"runtimePath": "downloads/r.pdf", "name": "r.pdf"}
+            MockHandler.requests[5]["body"], {"runtimePath": "downloads/r.pdf", "filename": "r.pdf"}
         )
         self.assertEqual(MockHandler.requests[6]["body"], {"files": [{"fileId": "file_test"}]})
 
@@ -351,7 +351,6 @@ class BctrlPythonSdkTest(unittest.TestCase):
             file=b"fixture",
             filename="fixture.txt",
             space_id="sp_test",
-            name="fixture.txt",
         )
 
         self.assertEqual(uploaded["id"], "file_uploaded")

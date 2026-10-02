@@ -159,6 +159,7 @@ class V1HttpClient:
         result = {
             "authorization": f"Bearer {self.api_key}",
             "accept": "application/json",
+            "BCTRL-Version": "2026-10-01",
             "user-agent": f"bctrl-python/{SDK_VERSION}",
         }
         if idempotency_key:
@@ -347,12 +348,13 @@ def _sse_event(
 
 
 def _error_fields(parsed: Any, error: HTTPError) -> tuple[str, str, Optional[str]]:
-    if isinstance(parsed, dict):
+    if isinstance(parsed, dict) and isinstance(parsed.get("error"), dict):
+        parsed = parsed["error"]
         message = parsed.get("message") if isinstance(parsed.get("message"), str) else error.reason
         code = parsed.get("code") if isinstance(parsed.get("code"), str) else "api.error"
         request_id = parsed.get("requestId") if isinstance(parsed.get("requestId"), str) else None
         return message, code, request_id
-    return str(parsed or error.reason), "api.error", error.headers.get("x-request-id")
+    return str(parsed or error.reason), "api.error", error.headers.get("BCTRL-Request-Id")
 
 
 def _retryable_status(status_code: int) -> bool:

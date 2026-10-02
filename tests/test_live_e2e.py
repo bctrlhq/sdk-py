@@ -35,7 +35,6 @@ class BctrlLiveE2ETest(unittest.TestCase):
                 file=b"Python SDK gateway workflow fixture\n",
                 filename="sdk-py-workflow-fixture.txt",
                 space_id=space_id,
-                name="sdk-py-workflow-fixture.txt",
                 path="e2e/sdk-py-workflow-fixture.txt",
                 metadata='{"suite":"sdk-python-gateway-e2e"}',
             )
@@ -47,8 +46,8 @@ class BctrlLiveE2ETest(unittest.TestCase):
                 client.files.content(file_id), b"Python SDK gateway workflow fixture\n"
             )
 
-            renamed = client.files.update(file_id, name="sdk-py-workflow-fixture-renamed.txt")
-            self.assertEqual(renamed.get("name"), "sdk-py-workflow-fixture-renamed.txt")
+            renamed = client.files.update(file_id, filename="sdk-py-workflow-fixture-renamed.txt")
+            self.assertEqual(renamed.get("filename"), "sdk-py-workflow-fixture-renamed.txt")
 
             runtime = client.runtimes.create(
                 space_id=space_id,

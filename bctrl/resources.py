@@ -234,14 +234,13 @@ class RunFilesNamespace:
         file: Any,
         filename: Optional[str] = None,
         path: Optional[str] = None,
-        name: Optional[str] = None,
         idempotency_key: Optional[str] = None,
     ) -> JsonObject:
         """Upload a Space File and bind it to the Run. The route requires an
         idempotency key; one is generated when none is given."""
         return self._http.multipart(
             self._path(run_id, "/upload"),
-            fields=_body({"path": path, "name": name}),
+            fields=_body({"path": path, "filename": filename}),
             files=[make_file_part("file", file, filename=filename)],
             idempotency_key=idempotency_key or uuid.uuid4().hex,
         )
@@ -259,15 +258,15 @@ class RunFilesNamespace:
         run_id: str,
         runtime_path: str,
         *,
+        filename: Optional[str] = None,
         path: Optional[str] = None,
-        name: Optional[str] = None,
     ) -> JsonObject:
         """Save a file from the Run's workspace (for example
         ``downloads/report.pdf``) as an output File."""
         return self._http.request(
             "POST",
             self._path(run_id, "/collect"),
-            json_body=_body({"runtime_path": runtime_path, "path": path, "name": name}),
+            json_body=_body({"runtime_path": runtime_path, "path": path, "filename": filename}),
         )
 
 

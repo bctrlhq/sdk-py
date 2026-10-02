@@ -202,15 +202,17 @@ class BuiltinToolRunFilesAddOutput(TypedDict):
     binding: dict[str, Any] | None
     createdAt: str
     fileId: str
-    name: str
+    filename: str
+    object: Literal["run.file"]
     role: Literal["input", "output"]
     runtimePath: str | None
     size: int
     sourcePath: str | None
     spacePath: str
+    updatedAt: str
 
 class BuiltinToolRunFilesCollectInput(TypedDict):
-    name: NotRequired[str]
+    filename: NotRequired[str]
     path: NotRequired[str]
     runtimePath: str
 
@@ -218,12 +220,14 @@ class BuiltinToolRunFilesCollectOutput(TypedDict):
     binding: dict[str, Any] | None
     createdAt: str
     fileId: str
-    name: str
+    filename: str
+    object: Literal["run.file"]
     role: Literal["input", "output"]
     runtimePath: str | None
     size: int
     sourcePath: str | None
     spacePath: str
+    updatedAt: str
 
 class BuiltinToolRunFilesExportInput(TypedDict):
     fileIds: NotRequired[list[str]]
@@ -275,6 +279,7 @@ class BuiltinToolSecretsListInput(TypedDict):
 class BuiltinToolSecretsListOutput(TypedDict):
     data: list[dict[str, Any]]
     folders: list[str]
+    hasMore: bool
     nextCursor: str | None
 
 class BuiltinToolSecretsRequestInput(TypedDict):

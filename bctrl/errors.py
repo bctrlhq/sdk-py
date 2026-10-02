@@ -40,6 +40,11 @@ class BctrlApiError(BctrlError):
         self.status_code = status_code
         self.request_id = request_id
         self.body = body
+        detail = body.get("error", {}) if isinstance(body, dict) else {}
+        detail = detail if isinstance(detail, dict) else {}
+        self.hint = detail.get("hint") if isinstance(detail.get("hint"), str) else None
+        self.reason_class = detail.get("reasonClass") if isinstance(detail.get("reasonClass"), str) else None
+        self.details = detail.get("details") if isinstance(detail.get("details"), dict) else None
 
 
 class BctrlAuthenticationError(BctrlApiError):
