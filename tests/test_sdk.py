@@ -6,8 +6,18 @@ import unittest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 
-from bctrl import Bctrl
+from bctrl import Bctrl, StartedBrowser
+from unittest.mock import Mock
 
+
+def browser_response(browser_id: str, run_id: str, prefix: str = "") -> dict:
+    return {"id": browser_id, "object": "browser", "status": "running",
+            "currentRun": {"id": run_id, "object": "run", "resourceId": browser_id,
+                           "resourceType": "browser", "status": "active",
+                           "connections": {"cdpUrl": f"wss://example.test/{prefix}devtools",
+                                           "webdriverUrl": f"https://example.test/{prefix}webdriver",
+                                           "liveViewUrl": f"https://example.test/{prefix}view",
+                                           "liveViewReadOnlyUrl": f"https://example.test/{prefix}read"}}}
 
 class MockHandler(BaseHTTPRequestHandler):
     requests: list[dict[str, Any]] = []
@@ -61,51 +71,29 @@ class MockHandler(BaseHTTPRequestHandler):
             return self._json(201, {"id": "sp_test", "name": body["name"]})
         if method == "POST" and route == "/v1/files":
             return self._json(201, {"id": "file_uploaded", "name": "fixture.txt"})
-        if method == "POST" and route == "/v1/runtimes":
-            return self._json(
-                201,
-                {
-                    "id": "rt_context",
-                    "connection": {
-                        "runId": "run_context",
-                        "recording": {"enabled": False},
-                        "cdpUrl": "wss://example.test/context/devtools",
-                        "webDriverUrl": "https://example.test/context/webdriver",
-                        "webMcpUrl": "https://example.test/context/mcp",
-                    },
-                },
-            )
-        if method == "POST" and route == "/v1/runtimes/rt_context/stop":
-            return self._json(200, {"runtimeId": "rt_context", "status": "stopped"})
+        if method == "POST" and route == "/v1/browsers":
+            return self._json(201, browser_response("br_context", "run_context", "context/"))
+        if method == "POST" and route == "/v1/browsers/br_context/stop":
+            return self._json(200, {"id": "br_context", "currentRun": None, "status": "idle"})
         if route == "/v1/conversations/conv_test/turns/turn_test" and method == "GET":
             return self._json(200, {"id": "turn_test", "status": "succeeded"})
         if route == "/v1/conversations/conv_test/turns/turn_test/cancel" and method == "POST":
             return self._json(200, {"id": "turn_test", "status": "cancelled"})
         if route == "/v1/tool-calls/call_code/result" and method == "GET":
             return self._json(202, {"id": "call_code", "status": "running"})
-        if self.path == "/v1/runtimes/rt_test/start?wait=0" and method == "POST":
-            return self._json(202, {"runtimeId": "rt_test", "runId": "run_test", "status": "starting"})
-        if method == "POST" and route == "/v1/runtimes/rt_test/start":
-            return self._json(
-                200,
-                {
-                    "runtimeId": "rt_test",
-                    "runId": "run_test",
-                    "status": "active",
-                    "connection": {
-                        "runId": "run_test",
-                        "recording": {"enabled": True},
-                        "cdpUrl": "wss://example.test/devtools",
-                        "webDriverUrl": "https://example.test/webdriver",
-                        "webMcpUrl": "https://example.test/mcp",
-                    },
-                    "started": True,
-                },
-            )
-        if method == "GET" and route == "/v1/runtimes/rt_test":
-            return self._json(200, {"id": "rt_test", "connection": {"cdpUrl": "wss://example.test/devtools"}})
+        if method == "POST" and route == "/v1/browsers/br_test/start":
+            return self._json(200, browser_response("br_test", "run_test"))
+        if method == "GET" and route == "/v1/browsers/br_test":
+            return self._json(200, browser_response("br_test", "run_test"))
+        if method == "GET" and route == "/v1/browsers/br_test/runs":
+            return self._json(200, {"data": [browser_response("br_test", "run_test")["currentRun"]],
+                                    "nextCursor": None, "hasMore": False})
+        if route in ("/v1/browsers/br_test/stop", "/v1/browsers/br_test/connections/revoke") or (
+            route == "/v1/browsers/br_test" and method in ("PATCH", "DELETE")
+        ):
+            return self._json(200, browser_response("br_test", "run_test"))
         if method == "GET" and route == "/v1/runs/run_test":
-            return self._json(200, {"id": "run_test", "connection": {"cdpUrl": "wss://example.test/devtools"}})
+            return self._json(200, browser_response("br_test", "run_test")["currentRun"] )
         if route.startswith("/v1/runs/run_test/files"):
             return self._json(201 if method == "POST" else 200, {"fileId": "file_test", "role": "input"})
         if method == "GET" and route == "/v1/files/file_test/content":
@@ -163,11 +151,11 @@ class MockHandler(BaseHTTPRequestHandler):
 class BctrlPythonSdkTest(unittest.TestCase):
     def test_computer_actions_preserve_vendor_snake_case_fields(self) -> None:
         action = {"action": "scroll", "scroll_direction": "down", "scroll_amount": 2, "coordinate": [20, 30]}
-        self.client.tools.call("computer.use", action, runtime_id="rt_test")
-        self.client.tools.start("computer.use", action, runtime_id="rt_test")
+        self.client.tools.call("computer.use", action, runtime_id="br_test")
+        self.client.tools.start("computer.use", action, runtime_id="br_test")
         for request in MockHandler.requests:
             self.assertEqual(request["body"], action)
-            self.assertEqual(request["headers"]["Bctrl-Runtime-Id"], "rt_test")
+            self.assertEqual(request["headers"]["Bctrl-Runtime-Id"], "br_test")
 
     def setUp(self) -> None:
         MockHandler.requests = []
@@ -191,87 +179,107 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(created["data"]["agent"]["name"], "Invoice bot")
         self.assertIsNone(created["data"]["lastUsedAt"])
 
-    def test_async_waits_preserve_handles_and_use_query_parameters(self) -> None:
-        started = self.client.runtimes.start("rt_test", wait=0, recording=False)
-        self.assertEqual(started, {"runtimeId": "rt_test", "runId": "run_test", "status": "starting"})
-        self.client.runtimes.get("rt_test", wait=60, include="connection")
-        self.client.conversations.turns.get("conv_test", "turn_test", wait=1)
-        self.client.conversations.turns.cancel("conv_test", "turn_test")
-        self.client.tool_calls.result("call_code", wait=0)
-        self.assertEqual(MockHandler.requests[0]["body"], {"recording": False})
-        self.assertEqual([request["path"] for request in MockHandler.requests], [
-            "/v1/runtimes/rt_test/start?wait=0",
-            "/v1/runtimes/rt_test?include=connection&wait=60",
-            "/v1/conversations/conv_test/turns/turn_test?wait=1",
-            "/v1/conversations/conv_test/turns/turn_test/cancel",
-            "/v1/tool-calls/call_code/result?wait=0",
-        ])
-
-    def test_spaces_and_runtime_start_use_current_routes(self) -> None:
+    def test_spaces_and_browser_start_use_current_routes(self) -> None:
         secrets = {"allow": ["prod"], "deny": ["prod/root"],
                    "env": {"OPENAI_API_KEY": "secret:prod/api#value@3"}}
         space = self.client.spaces.create(name="automation", environment={"secrets": secrets})
         self.assertEqual(MockHandler.requests[0]["body"],
                          {"name": "automation", "environment": {"secrets": secrets}})
-        started = self.client.runtimes.start("rt_test", idempotency_key="start-1")
-        runtime = self.client.runtimes.get("rt_test", include="connection")
-        run = self.client.runs.get("run_test", include="connection")
+        started = self.client.browsers.start("br_test", idempotency_key="start-1")
+        runtime = self.client.browsers.get("br_test", wait=2)
+        run = self.client.runs.get("run_test", include="usage")
         self.assertEqual(space["id"], "sp_test")
-        self.assertEqual(started["runId"], "run_test")
+        self.assertEqual(started["currentRun"]["id"], "run_test")
         self.assertEqual(MockHandler.requests[1]["headers"]["Idempotency-Key"], "start-1")
-        self.assertEqual(MockHandler.requests[2]["path"], "/v1/runtimes/rt_test?include=connection")
-        self.assertEqual(MockHandler.requests[3]["path"], "/v1/runs/run_test?include=connection")
-        self.assertIn("connection", runtime)
-        self.assertIn("connection", run)
+        self.assertEqual(MockHandler.requests[2]["path"], "/v1/browsers/br_test?wait=2")
+        self.assertEqual(MockHandler.requests[3]["path"], "/v1/runs/run_test?include=usage")
+        self.assertIn("connections", runtime["currentRun"])
+        self.assertIn("connections", run)
 
     def test_tools_and_conversations_are_first_class(self) -> None:
         result = self.client.tools.call(
             "stagehand.act",
             {"instruction": "Click Continue"},
-            runtime_id="rt_test",
+            runtime_id="br_test",
         )
         conversation = self.client.conversations.update("conv_test", model="openai/gpt-5")
         turn = self.client.conversations.messages.create(
             "conv_test", text="Continue", idempotency_key="message-1"
         )
         self.assertTrue(result["success"])
-        self.assertEqual(MockHandler.requests[0]["headers"]["Bctrl-Runtime-Id"], "rt_test")
+        self.assertEqual(MockHandler.requests[0]["headers"]["Bctrl-Runtime-Id"], "br_test")
         self.assertNotIn("runtimeId", MockHandler.requests[0]["body"])
         self.assertNotIn("agent", conversation)
         self.assertEqual(turn["status"], "queued")
         self.assertEqual(MockHandler.requests[2]["headers"]["Idempotency-Key"], "message-1")
 
     def test_started_browser_uses_create_and_exposes_current_connections(self) -> None:
-        with self.client.runtimes.started_browser(idempotency_key="create-1") as runtime:
-            self.assertEqual(runtime.id, "rt_context")
+        with self.client.browsers.started_browser(idempotency_key="create-1") as runtime:
+            self.assertEqual(runtime.id, "br_context")
             self.assertEqual(runtime.run_id, "run_context")
             self.assertEqual(runtime.cdp_url, "wss://example.test/context/devtools")
-            self.assertEqual(runtime.web_driver_url, "https://example.test/context/webdriver")
-            self.assertEqual(runtime.web_mcp_url, "https://example.test/context/mcp")
+            self.assertEqual(runtime.webdriver_url, "https://example.test/context/webdriver")
+            self.assertEqual(runtime.live_view_url, "https://example.test/context/view")
 
-        self.assertEqual(MockHandler.requests[0]["path"], "/v1/runtimes")
+        self.assertEqual(MockHandler.requests[0]["path"], "/v1/browsers?wait=60")
         self.assertEqual(MockHandler.requests[0]["headers"]["Idempotency-Key"], "create-1")
-        self.assertTrue(MockHandler.requests[0]["body"]["start"])
-        self.assertEqual(MockHandler.requests[1]["path"], "/v1/runtimes/rt_context/stop")
+        self.assertEqual(MockHandler.requests[0]["body"], {})
+        self.assertEqual(MockHandler.requests[1]["path"], "/v1/browsers/br_context/stop")
 
     def test_legacy_execution_namespaces_are_absent(self) -> None:
         self.assertFalse(hasattr(self.client, "invocations"))
         self.assertFalse(hasattr(self.client, "vault"))
-        self.assertFalse(hasattr(self.client.runtimes, "targets"))
-        self.assertFalse(hasattr(self.client.runtimes, "human_actions"))
+        self.assertFalse(hasattr(self.client, "runtimes"))
+        self.assertFalse(hasattr(self.client.browsers, "targets"))
+        self.assertFalse(hasattr(self.client.browsers, "human_actions"))
+
+    def test_browser_lifecycle_keeps_state_controls_and_run_history_separate(self) -> None:
+        self.client.browsers.stop("br_test", discard_state=True, idempotency_key="stop-1")
+        self.client.browsers.update("br_test", recording=False, space_id="default")
+        runs = list(self.client.browsers.iter_runs("br_test", include="usage", status="ended"))
+        self.assertEqual(runs[0]["id"], "run_test")
+        self.client.browsers.revoke_connections("br_test", idempotency_key="revoke-1")
+        self.client.browsers.delete("br_test")
+        self.assertEqual([request["path"] for request in MockHandler.requests], [
+            "/v1/browsers/br_test/stop", "/v1/browsers/br_test?spaceId=default",
+            "/v1/browsers/br_test/runs?include=usage&status=ended",
+            "/v1/browsers/br_test/connections/revoke", "/v1/browsers/br_test",
+        ])
+        self.assertEqual(MockHandler.requests[0]["body"], {"discardState": True})
+        self.assertEqual(MockHandler.requests[0]["headers"]["Idempotency-Key"], "stop-1")
+        self.assertEqual(MockHandler.requests[1]["body"], {"recording": False})
+        self.assertEqual(MockHandler.requests[3]["body"], {})
+        self.assertEqual(MockHandler.requests[3]["headers"]["Idempotency-Key"], "revoke-1")
+
+    def test_browser_context_stops_when_entry_has_no_connection_urls(self) -> None:
+        lifecycle = Mock()
+        lifecycle.create.return_value = {"id": "br_starting", "currentRun": {"id": "run_starting", "connections": None}}
+        with self.assertRaisesRegex(RuntimeError, "did not include connections"):
+            with StartedBrowser(browsers=lifecycle, request={}):
+                self.fail("unavailable connections cannot enter a started context")
+        lifecycle.stop.assert_called_once_with("br_starting")
+
+    def test_browser_context_preserves_the_body_error_when_stop_also_fails(self) -> None:
+        lifecycle = Mock()
+        lifecycle.create.return_value = browser_response("br_context", "run_context")
+        lifecycle.stop.side_effect = RuntimeError("cleanup failed")
+        with self.assertRaisesRegex(ValueError, "body failed"):
+            with StartedBrowser(browsers=lifecycle, request={}):
+                raise ValueError("body failed")
+        lifecycle.stop.assert_called_once_with("br_context")
 
     def test_code_execute_uses_async_tool_call_route(self) -> None:
         result = self.client.tools.start(
             "code.execute",
             {"source": "export default async () => ({ ok: true });", "input": {"value": 1}},
-            runtime_id="rt_test",
+            runtime_id="br_test",
             idempotency_key="code-execute-1",
         )
 
         self.assertEqual(result["id"], "call_code")
         request = MockHandler.requests[0]
         self.assertEqual(request["path"], "/v1/tools/code.execute/calls")
-        self.assertEqual(request["headers"]["Bctrl-Runtime-Id"], "rt_test")
+        self.assertEqual(request["headers"]["Bctrl-Runtime-Id"], "br_test")
         self.assertEqual(request["headers"]["Idempotency-Key"], "code-execute-1")
         self.assertEqual(request["body"]["input"], {"value": 1})
 
@@ -328,7 +336,7 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.client.runs.files.retry("run_test", "file_test")
         self.client.runs.files.remove("run_test", "file_test")
         self.client.runs.files.collect("run_test", "downloads/r.pdf", filename="r.pdf")
-        self.client.runtimes.start("rt_test", files=[{"fileId": "file_test"}])
+        self.client.browsers.stop("br_test", discard_state=True)
 
         self.assertEqual(
             [(request["method"], request["path"]) for request in MockHandler.requests],
@@ -339,7 +347,7 @@ class BctrlPythonSdkTest(unittest.TestCase):
                 ("POST", "/v1/runs/run_test/files/file_test/retry"),
                 ("DELETE", "/v1/runs/run_test/files/file_test"),
                 ("POST", "/v1/runs/run_test/files/collect"),
-                ("POST", "/v1/runtimes/rt_test/start"),
+                ("POST", "/v1/browsers/br_test/stop"),
             ],
         )
         self.assertEqual(MockHandler.requests[1]["body"], {"fileId": "file_test"})
@@ -348,7 +356,7 @@ class BctrlPythonSdkTest(unittest.TestCase):
         self.assertEqual(
             MockHandler.requests[5]["body"], {"runtimePath": "downloads/r.pdf", "filename": "r.pdf"}
         )
-        self.assertEqual(MockHandler.requests[6]["body"], {"files": [{"fileId": "file_test"}]})
+        self.assertEqual(MockHandler.requests[6]["body"], {"discardState": True})
 
     def test_file_upload_scopes_space_in_query(self) -> None:
         uploaded = self.client.files.upload(

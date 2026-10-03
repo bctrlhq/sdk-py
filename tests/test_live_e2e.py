@@ -8,7 +8,7 @@ from typing import Any, Callable
 from bctrl import Bctrl
 
 
-AI_MODEL = "openai/gpt-5.6-luna"
+AI_MODEL = "deepseek/deepseek-v4.1-flash"
 LIVE_E2E = os.environ.get("BCTRL_E2E") == "1" and bool(os.environ.get("BCTRL_API_KEY"))
 
 
@@ -49,19 +49,17 @@ class BctrlLiveE2ETest(unittest.TestCase):
             renamed = client.files.update(file_id, filename="sdk-py-workflow-fixture-renamed.txt")
             self.assertEqual(renamed.get("filename"), "sdk-py-workflow-fixture-renamed.txt")
 
-            runtime = client.runtimes.create(
+            runtime = client.browsers.create(
+                wait=60,
                 space_id=space_id,
-                type="browser",
                 name=f"sdk-py-agent-runtime-{int(time.time() * 1000)}",
-                profile=False,
-                start=False,
-                config={"headless": True},
+                headless=True,
             )
             runtime_id = self._required_string(runtime, "id")
 
-            started = client.runtimes.start(runtime_id)
-            run_id = self._required_string(started, "runId")
-            self.assertEqual(started.get("runtimeId"), runtime_id)
+            started = runtime["currentRun"]
+            run_id = self._required_string(started, "id")
+            self.assertEqual(started.get("resourceId"), runtime_id)
             self.assertEqual(started.get("status"), "active")
 
             opened = client.tools.call(
@@ -106,9 +104,9 @@ class BctrlLiveE2ETest(unittest.TestCase):
                 )
             )
 
-            run = client.runs.get(run_id, include="connection")
+            run = client.runs.get(run_id, include="usage")
             self.assertEqual(run.get("id"), run_id)
-            self.assertEqual(run.get("runtimeId"), runtime_id)
+            self.assertEqual(run.get("resourceId"), runtime_id)
 
             trace = client.runs.trace.list(
                 run_id,
@@ -127,8 +125,8 @@ class BctrlLiveE2ETest(unittest.TestCase):
             if file_id:
                 self._ignore_failure(lambda: client.files.delete(file_id))
             if runtime_id:
-                self._ignore_failure(lambda: client.runtimes.stop(runtime_id))
-                self._ignore_failure(lambda: client.runtimes.delete(runtime_id))
+                self._ignore_failure(lambda: client.browsers.stop(runtime_id))
+                self._ignore_failure(lambda: client.browsers.delete(runtime_id))
             if space_id:
                 self._ignore_failure(lambda: client.spaces.delete(space_id))
 

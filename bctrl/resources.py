@@ -8,7 +8,7 @@ from urllib.parse import quote, urlencode
 
 from .generated.tool_types import BuiltinToolsClient
 from .http import V1HttpClient, make_file_part
-from .runtime_context import StartedRuntime
+from .browser_context import StartedBrowser
 
 JsonObject = dict[str, Any]
 
@@ -91,77 +91,52 @@ class SpacesClient:
     def delete(self, space_id: str) -> JsonObject:
         return self._http.request("DELETE", f"/spaces/{_enc(space_id)}")
 
-class RuntimesClient:
+class BrowsersClient:
     def __init__(self, http: V1HttpClient) -> None:
         self._http = http
 
     def list(self, **params: Any) -> JsonObject:
-        return self._http.request("GET", "/runtimes", params=_body(params))
+        return self._http.request("GET", "/browsers", params=_body(params))
 
     def iter(self, **params: Any) -> Iterator[JsonObject]:
         return _iter_pages(lambda query: self.list(**query), params)
 
-    def create(
-        self, *, idempotency_key: Optional[str] = None, **request: Any
-    ) -> JsonObject:
-        return self._http.request(
-            "POST",
-            "/runtimes",
-            json_body=_body(request),
-            idempotency_key=idempotency_key,
-        )
+    def create(self, *, wait: Optional[int] = None, idempotency_key: Optional[str] = None, **request: Any) -> JsonObject:
+        return self._http.request("POST", "/browsers", json_body=_body(request),
+                                  params=_body({"wait": wait}), idempotency_key=idempotency_key)
 
-    def get(
-        self, runtime_id: str, *, include: Optional[Literal["connection"]] = None, wait: Optional[int] = None
-    ) -> JsonObject:
-        params = _body({"include": include, "wait": wait})
-        return self._http.request("GET", f"/runtimes/{_enc(runtime_id)}", params=params)
+    def get(self, browser_id: str, *, wait: Optional[int] = None, space_id: Optional[str] = None) -> JsonObject:
+        return self._http.request("GET", f"/browsers/{_enc(browser_id)}", params=_body({"wait": wait, "space_id": space_id}))
 
-    def update(self, runtime_id: str, **request: Any) -> JsonObject:
-        return self._http.request(
-            "PATCH", f"/runtimes/{_enc(runtime_id)}", json_body=_body(request)
-        )
+    def update(self, browser_id: str, *, space_id: Optional[str] = None, **request: Any) -> JsonObject:
+        return self._http.request("PATCH", f"/browsers/{_enc(browser_id)}", json_body=_body(request), params=_body({"space_id": space_id}))
 
-    def delete(self, runtime_id: str) -> JsonObject:
-        return self._http.request("DELETE", f"/runtimes/{_enc(runtime_id)}")
+    def delete(self, browser_id: str, *, space_id: Optional[str] = None) -> JsonObject:
+        return self._http.request("DELETE", f"/browsers/{_enc(browser_id)}", params=_body({"space_id": space_id}))
 
-    def start(
-        self,
-        runtime_id: str,
-        *,
-        wait: Optional[int] = None,
-        recording: Optional[bool] = None,
-        files: Optional[list[Mapping[str, str]]] = None,
-        idempotency_key: Optional[str] = None,
-    ) -> JsonObject:
-        """Start a Runtime. ``files`` (``[{"fileId": ...}]``) are Space Files
-        bound to the Run this start opens."""
-        return self._http.request(
-            "POST",
-            f"/runtimes/{_enc(runtime_id)}/start",
-            params=_body({"wait": wait}),
-            json_body=_body({"recording": recording, "files": files}),
-            idempotency_key=idempotency_key,
-        )
+    def start(self, browser_id: str, *, wait: Optional[int] = None, space_id: Optional[str] = None, idempotency_key: Optional[str] = None) -> JsonObject:
+        return self._http.request("POST", f"/browsers/{_enc(browser_id)}/start", json_body={},
+                                  params=_body({"space_id": space_id, "wait": wait}), idempotency_key=idempotency_key)
 
-    def stop(self, runtime_id: str) -> JsonObject:
-        return self._http.request("POST", f"/runtimes/{_enc(runtime_id)}/stop")
+    def stop(self, browser_id: str, *, discard_state: Optional[bool] = None,
+             wait: Optional[int] = None, space_id: Optional[str] = None, idempotency_key: Optional[str] = None) -> JsonObject:
+        return self._http.request("POST", f"/browsers/{_enc(browser_id)}/stop",
+                                  json_body=_body({"discard_state": discard_state}),
+                                  params=_body({"space_id": space_id, "wait": wait}), idempotency_key=idempotency_key)
 
-    def started_browser(
-        self,
-        *,
-        idempotency_key: Optional[str] = None,
-        **request: Any,
-    ) -> StartedRuntime:
-        body = _body(request)
-        body.setdefault("type", "browser")
-        body.setdefault("start", True)
-        return StartedRuntime(
-            runtimes=self,
-            request=body,
-            idempotency_key=idempotency_key,
-        )
+    def list_runs(self, browser_id: str, **params: Any) -> JsonObject:
+        return self._http.request("GET", f"/browsers/{_enc(browser_id)}/runs", params=_body(params))
 
+    def iter_runs(self, browser_id: str, **params: Any) -> Iterator[JsonObject]:
+        return _iter_pages(lambda query: self.list_runs(browser_id, **query), params)
+
+    def revoke_connections(self, browser_id: str, *, space_id: Optional[str] = None,
+                           idempotency_key: Optional[str] = None) -> JsonObject:
+        return self._http.request("POST", f"/browsers/{_enc(browser_id)}/connections/revoke", json_body={},
+                                  params=_body({"space_id": space_id}), idempotency_key=idempotency_key)
+
+    def started_browser(self, *, idempotency_key: Optional[str] = None, **request: Any) -> StartedBrowser:
+        return StartedBrowser(browsers=self, request=_body(request), idempotency_key=idempotency_key)
 
 class RunsClient:
     def __init__(self, http: V1HttpClient) -> None:
@@ -177,10 +152,13 @@ class RunsClient:
         return _iter_pages(lambda query: self.list(**query), params)
 
     def get(
-        self, run_id: str, *, include: Optional[Literal["connection"]] = None
+        self, run_id: str, *, include: Optional[Literal["usage"]] = None, wait: Optional[int] = None
     ) -> JsonObject:
-        params = {"include": include} if include is not None else {}
+        params = _body({"include": include, "wait": wait})
         return self._http.request("GET", f"/runs/{_enc(run_id)}", params=params)
+
+    def delete(self, run_id: str) -> JsonObject:
+        return self._http.request("DELETE", f"/runs/{_enc(run_id)}")
 
     def stream_url(self, run_id: str, **params: Any) -> str:
         return _stream_url(self._http.base_url, f"/runs/{_enc(run_id)}/stream", _body(params))

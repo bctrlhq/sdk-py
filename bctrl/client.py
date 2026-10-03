@@ -16,7 +16,7 @@ from .resources import (
     NotificationRecipientsClient,
     ProxiesClient,
     RunsClient,
-    RuntimesClient,
+    BrowsersClient,
     SecretsClient,
     SpacesClient,
     SubaccountsClient,
@@ -48,7 +48,7 @@ class Bctrl:
         )
         self.locations = LocationsClient(self._http)
         self.spaces = SpacesClient(self._http)
-        self.runtimes = RuntimesClient(self._http)
+        self.browsers = BrowsersClient(self._http)
         self.runs = RunsClient(self._http)
         self.conversations = ConversationsClient(self._http)
         self.files = FilesClient(self._http)

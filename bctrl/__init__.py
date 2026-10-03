@@ -12,12 +12,12 @@ from .errors import (
     BctrlRateLimitError,
     BctrlValidationError,
 )
-from .runtime_context import StartedRuntime
+from .browser_context import StartedBrowser
 from .version import __version__
 
 __all__ = [
     "Bctrl",
-    "StartedRuntime",
+    "StartedBrowser",
     "BctrlApiError",
     "BctrlAuthenticationError",
     "BctrlConflictError",
