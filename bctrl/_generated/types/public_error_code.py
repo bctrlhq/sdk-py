@@ -348,6 +348,8 @@ PublicErrorCode = typing.Union[
         "space.has_active_runtimes",
         "space.name_conflict",
         "space.not_found",
+        "spending_cap.reached",
+        "spending_cap.update_forbidden",
         "space.region_invalid",
         "status.invalid",
         "storage.not_configured",

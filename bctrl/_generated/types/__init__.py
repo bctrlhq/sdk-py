@@ -646,6 +646,16 @@ if typing.TYPE_CHECKING:
     from .space_object import SpaceObject
     from .space_region import SpaceRegion
     from .space_secrets_mount import SpaceSecretsMount
+    from .spending_cap import SpendingCap
+    from .spending_cap_currency import SpendingCapCurrency
+    from .spending_cap_object import SpendingCapObject
+    from .spending_cap_patch_request import SpendingCapPatchRequest
+    from .spending_cap_patch_request_currency import SpendingCapPatchRequestCurrency
+    from .spending_cap_period import SpendingCapPeriod
+    from .spending_cap_scope import SpendingCapScope
+    from .spending_cap_status import SpendingCapStatus
+    from .spending_cap_usage import SpendingCapUsage
+    from .spending_cap_usage_currency import SpendingCapUsageCurrency
     from .start_browsers_request_space_id import StartBrowsersRequestSpaceId
     from .start_browsers_request_space_id_one import StartBrowsersRequestSpaceIdOne
     from .stop_browsers_request_space_id import StopBrowsersRequestSpaceId
@@ -1395,6 +1405,16 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SpaceObject": ".space_object",
     "SpaceRegion": ".space_region",
     "SpaceSecretsMount": ".space_secrets_mount",
+    "SpendingCap": ".spending_cap",
+    "SpendingCapCurrency": ".spending_cap_currency",
+    "SpendingCapObject": ".spending_cap_object",
+    "SpendingCapPatchRequest": ".spending_cap_patch_request",
+    "SpendingCapPatchRequestCurrency": ".spending_cap_patch_request_currency",
+    "SpendingCapPeriod": ".spending_cap_period",
+    "SpendingCapScope": ".spending_cap_scope",
+    "SpendingCapStatus": ".spending_cap_status",
+    "SpendingCapUsage": ".spending_cap_usage",
+    "SpendingCapUsageCurrency": ".spending_cap_usage_currency",
     "StartBrowsersRequestSpaceId": ".start_browsers_request_space_id",
     "StartBrowsersRequestSpaceIdOne": ".start_browsers_request_space_id_one",
     "StopBrowsersRequestSpaceId": ".stop_browsers_request_space_id",
@@ -2168,6 +2188,16 @@ __all__ = [
     "SpaceObject",
     "SpaceRegion",
     "SpaceSecretsMount",
+    "SpendingCap",
+    "SpendingCapCurrency",
+    "SpendingCapObject",
+    "SpendingCapPatchRequest",
+    "SpendingCapPatchRequestCurrency",
+    "SpendingCapPeriod",
+    "SpendingCapScope",
+    "SpendingCapStatus",
+    "SpendingCapUsage",
+    "SpendingCapUsageCurrency",
     "StartBrowsersRequestSpaceId",
     "StartBrowsersRequestSpaceIdOne",
     "StopBrowsersRequestSpaceId",

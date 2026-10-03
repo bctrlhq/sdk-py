@@ -7,7 +7,12 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .types import ListSpacesRequestOrder, SpaceCreateRequestRegion
-_dynamic_imports: typing.Dict[str, str] = {"ListSpacesRequestOrder": ".types", "SpaceCreateRequestRegion": ".types"}
+    from . import spending_cap
+_dynamic_imports: typing.Dict[str, str] = {
+    "ListSpacesRequestOrder": ".types",
+    "SpaceCreateRequestRegion": ".types",
+    "spending_cap": ".spending_cap",
+}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -31,4 +36,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["ListSpacesRequestOrder", "SpaceCreateRequestRegion"]
+__all__ = ["ListSpacesRequestOrder", "SpaceCreateRequestRegion", "spending_cap"]

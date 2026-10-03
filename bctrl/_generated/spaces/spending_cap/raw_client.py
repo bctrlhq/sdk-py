@@ -11,66 +11,138 @@ from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
 from ...errors.bad_request_error import BadRequestError
-from ...errors.conflict_error import ConflictError
 from ...errors.forbidden_error import ForbiddenError
-from ...errors.internal_server_error import InternalServerError
 from ...errors.not_found_error import NotFoundError
-from ...errors.payment_required_error import PaymentRequiredError
-from ...errors.service_unavailable_error import ServiceUnavailableError
 from ...errors.too_many_requests_error import TooManyRequestsError
 from ...errors.unauthorized_error import UnauthorizedError
-from ...types.error_response import ErrorResponse
-from ...types.json_object import JsonObject
-from ...types.tool_call import ToolCall
+from ...types.spending_cap import SpendingCap
+from ...types.spending_cap_patch_request_currency import SpendingCapPatchRequestCurrency
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
 
 
-class RawCallsClient:
+class RawSpendingCapClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
-    def create(
-        self,
-        tool_ref: str,
-        *,
-        request: JsonObject,
-        bctrl_runtime_id: typing.Optional[str] = None,
-        idempotency_key: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[ToolCall]:
+    def get(
+        self, space_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> HttpResponse[SpendingCap]:
         """
-        Start one durable asynchronous tool call.
+        Read this Space’s UTC calendar-month limit and accrued usage in USD cents. Both the organization and Space limits apply. Warning occurs once per month at 80%; at 100%, running work is stopped within at most one minute of additional usage.
 
         Parameters
         ----------
-        tool_ref : str
-
-        request : JsonObject
-
-        bctrl_runtime_id : typing.Optional[str]
-            Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+        space_id : str
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[ToolCall]
-            Accepted
+        HttpResponse[SpendingCap]
+            OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/tools/{encode_path_param(tool_ref)}/calls",
-            method="POST",
-            json=request,
+            f"v1/spaces/{encode_path_param(space_id)}/spending-cap",
+            method="GET",
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    SpendingCap,
+                    parse_obj_as(
+                        type_=SpendingCap,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def update(
+        self,
+        space_id: str,
+        *,
+        currency: SpendingCapPatchRequestCurrency,
+        idempotency_key: typing.Optional[str] = None,
+        amount: typing.Optional[int] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[SpendingCap]:
+        """
+        People may set this Space’s whole-cent USD limit; null disables it and zero refuses new billable starts here. Other Spaces are unaffected. Raising it allows starts when both this limit and the organization limit exceed current usage.
+
+        Parameters
+        ----------
+        space_id : str
+
+        currency : SpendingCapPatchRequestCurrency
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        amount : typing.Optional[int]
+            Monthly limit in USD cents. Null disables the cap; zero refuses new starts.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[SpendingCap]
+            OK
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"v1/spaces/{encode_path_param(space_id)}/spending-cap",
+            method="PATCH",
+            json={
+                "amount": amount,
+                "currency": currency,
+            },
             headers={
                 "content-type": "application/json",
-                "BCTRL-Runtime-Id": str(bctrl_runtime_id) if bctrl_runtime_id is not None else None,
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
             },
             request_options=request_options,
@@ -79,9 +151,9 @@ class RawCallsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ToolCall,
+                    SpendingCap,
                     parse_obj_as(
-                        type_=ToolCall,  # type: ignore
+                        type_=SpendingCap,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -108,8 +180,88 @@ class RawCallsClient:
                         ),
                     ),
                 )
-            if _response.status_code == 402:
-                raise PaymentRequiredError(
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 429:
+                raise TooManyRequestsError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+
+class AsyncRawSpendingCapClient:
+    def __init__(self, *, client_wrapper: AsyncClientWrapper):
+        self._client_wrapper = client_wrapper
+
+    async def get(
+        self, space_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> AsyncHttpResponse[SpendingCap]:
+        """
+        Read this Space’s UTC calendar-month limit and accrued usage in USD cents. Both the organization and Space limits apply. Warning occurs once per month at 80%; at 100%, running work is stopped within at most one minute of additional usage.
+
+        Parameters
+        ----------
+        space_id : str
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[SpendingCap]
+            OK
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"v1/spaces/{encode_path_param(space_id)}/spending-cap",
+            method="GET",
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    SpendingCap,
+                    parse_obj_as(
+                        type_=SpendingCap,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 401:
+                raise UnauthorizedError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -141,50 +293,6 @@ class RawCallsClient:
                         ),
                     ),
                 )
-            if _response.status_code == 409:
-                raise ConflictError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 500:
-                raise InternalServerError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        ErrorResponse,
-                        parse_obj_as(
-                            type_=ErrorResponse,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        ErrorResponse,
-                        parse_obj_as(
-                            type_=ErrorResponse,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
             _response_json = _response.json()
         except JSONDecodeError:
             raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
@@ -194,50 +302,47 @@ class RawCallsClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-
-class AsyncRawCallsClient:
-    def __init__(self, *, client_wrapper: AsyncClientWrapper):
-        self._client_wrapper = client_wrapper
-
-    async def create(
+    async def update(
         self,
-        tool_ref: str,
+        space_id: str,
         *,
-        request: JsonObject,
-        bctrl_runtime_id: typing.Optional[str] = None,
+        currency: SpendingCapPatchRequestCurrency,
         idempotency_key: typing.Optional[str] = None,
+        amount: typing.Optional[int] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[ToolCall]:
+    ) -> AsyncHttpResponse[SpendingCap]:
         """
-        Start one durable asynchronous tool call.
+        People may set this Space’s whole-cent USD limit; null disables it and zero refuses new billable starts here. Other Spaces are unaffected. Raising it allows starts when both this limit and the organization limit exceed current usage.
 
         Parameters
         ----------
-        tool_ref : str
+        space_id : str
 
-        request : JsonObject
-
-        bctrl_runtime_id : typing.Optional[str]
-            Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.
+        currency : SpendingCapPatchRequestCurrency
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        amount : typing.Optional[int]
+            Monthly limit in USD cents. Null disables the cap; zero refuses new starts.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[ToolCall]
-            Accepted
+        AsyncHttpResponse[SpendingCap]
+            OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/tools/{encode_path_param(tool_ref)}/calls",
-            method="POST",
-            json=request,
+            f"v1/spaces/{encode_path_param(space_id)}/spending-cap",
+            method="PATCH",
+            json={
+                "amount": amount,
+                "currency": currency,
+            },
             headers={
                 "content-type": "application/json",
-                "BCTRL-Runtime-Id": str(bctrl_runtime_id) if bctrl_runtime_id is not None else None,
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
             },
             request_options=request_options,
@@ -246,9 +351,9 @@ class AsyncRawCallsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    ToolCall,
+                    SpendingCap,
                     parse_obj_as(
-                        type_=ToolCall,  # type: ignore
+                        type_=SpendingCap,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -275,17 +380,6 @@ class AsyncRawCallsClient:
                         ),
                     ),
                 )
-            if _response.status_code == 402:
-                raise PaymentRequiredError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
             if _response.status_code == 403:
                 raise ForbiddenError(
                     headers=dict(_response.headers),
@@ -308,17 +402,6 @@ class AsyncRawCallsClient:
                         ),
                     ),
                 )
-            if _response.status_code == 409:
-                raise ConflictError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
             if _response.status_code == 429:
                 raise TooManyRequestsError(
                     headers=dict(_response.headers),
@@ -326,28 +409,6 @@ class AsyncRawCallsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 500:
-                raise InternalServerError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        ErrorResponse,
-                        parse_obj_as(
-                            type_=ErrorResponse,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        ErrorResponse,
-                        parse_obj_as(
-                            type_=ErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),

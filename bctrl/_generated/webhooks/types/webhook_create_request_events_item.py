@@ -20,6 +20,9 @@ WebhookCreateRequestEventsItem = typing.Union[
         "runtime.control.changed",
         "runtime.started",
         "runtime.start_failed",
+        "spending_cap.warning",
+        "spending_cap.stop_requested",
+        "spending_cap.stopped",
     ],
     typing.Any,
 ]
