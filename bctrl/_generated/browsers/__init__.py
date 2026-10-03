@@ -21,7 +21,7 @@ if typing.TYPE_CHECKING:
         BrowsersUpdateRequestViewport,
         ListBrowsersRequestOrder,
     )
-    from . import computer, connections, events, runs
+    from . import computer, connections, control, events, runs
     from .computer import BrowsersComputerClickRequestButton, BrowsersComputerScrollRequestDirection
     from .events import StreamEventsRequestActorType
     from .runs import ListRunsRequestInclude, ListRunsRequestOrder
@@ -46,6 +46,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "StreamEventsRequestActorType": ".events",
     "computer": ".computer",
     "connections": ".connections",
+    "control": ".control",
     "events": ".events",
     "runs": ".runs",
 }
@@ -93,6 +94,7 @@ __all__ = [
     "StreamEventsRequestActorType",
     "computer",
     "connections",
+    "control",
     "events",
     "runs",
 ]

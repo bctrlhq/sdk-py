@@ -87,6 +87,14 @@ if typing.TYPE_CHECKING:
     from .branding_patch import BrandingPatch
     from .branding_settings import BrandingSettings
     from .branding_tokens import BrandingTokens
+    from .browser_control import BrowserControl
+    from .browser_control_change_request import BrowserControlChangeRequest
+    from .browser_control_holder import BrowserControlHolder
+    from .browser_control_object import BrowserControlObject
+    from .browser_control_result import BrowserControlResult
+    from .browser_control_result_object import BrowserControlResultObject
+    from .browser_control_result_status import BrowserControlResultStatus
+    from .browser_control_status import BrowserControlStatus
     from .browser_extension import BrowserExtension
     from .browser_extension_create_request2 import BrowserExtensionCreateRequest2
     from .browser_extension_delete_response import BrowserExtensionDeleteResponse
@@ -443,6 +451,8 @@ if typing.TYPE_CHECKING:
     from .forbidden_error_body_error import ForbiddenErrorBodyError
     from .get_browsers_request_space_id import GetBrowsersRequestSpaceId
     from .get_browsers_request_space_id_one import GetBrowsersRequestSpaceIdOne
+    from .get_control_request_space_id import GetControlRequestSpaceId
+    from .get_control_request_space_id_one import GetControlRequestSpaceIdOne
     from .help_api_operation import HelpApiOperation
     from .help_api_operation_method import HelpApiOperationMethod
     from .help_body_discriminator import HelpBodyDiscriminator
@@ -618,6 +628,8 @@ if typing.TYPE_CHECKING:
     from .proxy_test_response import ProxyTestResponse
     from .proxy_test_response_object import ProxyTestResponseObject
     from .public_error_code import PublicErrorCode
+    from .release_control_request_space_id import ReleaseControlRequestSpaceId
+    from .release_control_request_space_id_one import ReleaseControlRequestSpaceIdOne
     from .resolved_branding import ResolvedBranding
     from .resource_name import ResourceName
     from .revoke_connections_request_space_id import RevokeConnectionsRequestSpaceId
@@ -741,6 +753,8 @@ if typing.TYPE_CHECKING:
     from .subaccount_usage_period import SubaccountUsagePeriod
     from .subaccount_usage_runs import SubaccountUsageRuns
     from .subaccount_usage_spaces import SubaccountUsageSpaces
+    from .take_control_request_space_id import TakeControlRequestSpaceId
+    from .take_control_request_space_id_one import TakeControlRequestSpaceIdOne
     from .too_many_requests_error_body import TooManyRequestsErrorBody
     from .too_many_requests_error_body_error import TooManyRequestsErrorBodyError
     from .tool import Tool
@@ -964,6 +978,14 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BrandingPatch": ".branding_patch",
     "BrandingSettings": ".branding_settings",
     "BrandingTokens": ".branding_tokens",
+    "BrowserControl": ".browser_control",
+    "BrowserControlChangeRequest": ".browser_control_change_request",
+    "BrowserControlHolder": ".browser_control_holder",
+    "BrowserControlObject": ".browser_control_object",
+    "BrowserControlResult": ".browser_control_result",
+    "BrowserControlResultObject": ".browser_control_result_object",
+    "BrowserControlResultStatus": ".browser_control_result_status",
+    "BrowserControlStatus": ".browser_control_status",
     "BrowserExtension": ".browser_extension",
     "BrowserExtensionCreateRequest2": ".browser_extension_create_request2",
     "BrowserExtensionDeleteResponse": ".browser_extension_delete_response",
@@ -1262,6 +1284,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ForbiddenErrorBodyError": ".forbidden_error_body_error",
     "GetBrowsersRequestSpaceId": ".get_browsers_request_space_id",
     "GetBrowsersRequestSpaceIdOne": ".get_browsers_request_space_id_one",
+    "GetControlRequestSpaceId": ".get_control_request_space_id",
+    "GetControlRequestSpaceIdOne": ".get_control_request_space_id_one",
     "HelpApiOperation": ".help_api_operation",
     "HelpApiOperationMethod": ".help_api_operation_method",
     "HelpBodyDiscriminator": ".help_body_discriminator",
@@ -1433,6 +1457,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ProxyTestResponse": ".proxy_test_response",
     "ProxyTestResponseObject": ".proxy_test_response_object",
     "PublicErrorCode": ".public_error_code",
+    "ReleaseControlRequestSpaceId": ".release_control_request_space_id",
+    "ReleaseControlRequestSpaceIdOne": ".release_control_request_space_id_one",
     "ResolvedBranding": ".resolved_branding",
     "ResourceName": ".resource_name",
     "RevokeConnectionsRequestSpaceId": ".revoke_connections_request_space_id",
@@ -1554,6 +1580,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SubaccountUsagePeriod": ".subaccount_usage_period",
     "SubaccountUsageRuns": ".subaccount_usage_runs",
     "SubaccountUsageSpaces": ".subaccount_usage_spaces",
+    "TakeControlRequestSpaceId": ".take_control_request_space_id",
+    "TakeControlRequestSpaceIdOne": ".take_control_request_space_id_one",
     "TooManyRequestsErrorBody": ".too_many_requests_error_body",
     "TooManyRequestsErrorBodyError": ".too_many_requests_error_body_error",
     "Tool": ".tool",
@@ -1801,6 +1829,14 @@ __all__ = [
     "BrandingPatch",
     "BrandingSettings",
     "BrandingTokens",
+    "BrowserControl",
+    "BrowserControlChangeRequest",
+    "BrowserControlHolder",
+    "BrowserControlObject",
+    "BrowserControlResult",
+    "BrowserControlResultObject",
+    "BrowserControlResultStatus",
+    "BrowserControlStatus",
     "BrowserExtension",
     "BrowserExtensionCreateRequest2",
     "BrowserExtensionDeleteResponse",
@@ -2099,6 +2135,8 @@ __all__ = [
     "ForbiddenErrorBodyError",
     "GetBrowsersRequestSpaceId",
     "GetBrowsersRequestSpaceIdOne",
+    "GetControlRequestSpaceId",
+    "GetControlRequestSpaceIdOne",
     "HelpApiOperation",
     "HelpApiOperationMethod",
     "HelpBodyDiscriminator",
@@ -2270,6 +2308,8 @@ __all__ = [
     "ProxyTestResponse",
     "ProxyTestResponseObject",
     "PublicErrorCode",
+    "ReleaseControlRequestSpaceId",
+    "ReleaseControlRequestSpaceIdOne",
     "ResolvedBranding",
     "ResourceName",
     "RevokeConnectionsRequestSpaceId",
@@ -2391,6 +2431,8 @@ __all__ = [
     "SubaccountUsagePeriod",
     "SubaccountUsageRuns",
     "SubaccountUsageSpaces",
+    "TakeControlRequestSpaceId",
+    "TakeControlRequestSpaceIdOne",
     "TooManyRequestsErrorBody",
     "TooManyRequestsErrorBodyError",
     "Tool",

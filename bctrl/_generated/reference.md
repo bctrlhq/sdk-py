@@ -11907,6 +11907,284 @@ client.browsers.connections.revoke(
 </dl>
 </details>
 
+## Browsers Control
+<details><summary><code>client.browsers.control.<a href="src/bctrl/browsers/control/client.py">get</a>(...) -> BrowserControl</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Read desired control and native confirmation for the current Browser Run. The holder credential is never returned. A human hold persists across restarts, while old viewer credentials cannot control a newer Run.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.control.get(
+    browser_id="browserId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[GetControlRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.control.<a href="src/bctrl/browsers/control/client.py">release</a>(...) -> BrowserControlResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Release control held by the supplied current viewer. Another viewer cannot release its hold. A stale epoch or ended Run is refused before mutation. Automation remains blocked until the native applied ACK. Interrupted delivery returns unknown with its canonical Event ID and must not be retried automatically.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.control.release(
+    browser_id="browserId",
+    viewer_id="viewerId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `BrowserControlChangeRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[ReleaseControlRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.control.<a href="src/bctrl/browsers/control/client.py">take</a>(...) -> BrowserControlResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Give a current input-enabled viewer human control of the Browser. The viewer credential must belong to this Browser and current Run, and its parent View must still permit input. The hold ends with that viewer. The result names the canonical control Event; an unconfirmed native ACK returns unknown. Reusing the same Idempotency-Key never repeats the transition.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.control.take(
+    browser_id="browserId",
+    viewer_id="viewerId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `BrowserControlChangeRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[TakeControlRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Browsers Events
 <details><summary><code>client.browsers.events.<a href="src/bctrl/browsers/events/client.py">stream</a>(...) -> typing.Iterator[bytes]</code></summary>
 <dl>
