@@ -1,0 +1,13 @@
+{
+  "cliVersion": "5.46.1",
+  "generatorName": "fernapi/fern-python-sdk",
+  "generatorVersion": "5.34.2",
+  "generatorConfig": {
+    "client": {
+      "class_name": "Bctrl"
+    },
+    "package_name": "bctrl"
+  },
+  "invokedBy": "manual",
+  "requestedVersion": "0.1.19"
+}
