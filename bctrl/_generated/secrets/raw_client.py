@@ -6,7 +6,7 @@ from json.decoder import JSONDecodeError
 from ..core.api_error import ApiError
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.http_response import AsyncHttpResponse, HttpResponse
-from ..core.jsonable_encoder import encode_path_param
+from ..core.jsonable_encoder import quote_path_param
 from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
@@ -310,7 +310,7 @@ class RawSecretsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(secret)}",
+            f"v1/secrets/{quote_path_param(secret)}",
             method="GET",
             request_options=request_options,
         )
@@ -397,7 +397,7 @@ class RawSecretsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(secret)}",
+            f"v1/secrets/{quote_path_param(secret)}",
             method="DELETE",
             headers={
                 "If-Match": str(if_match) if if_match is not None else None,
@@ -540,7 +540,7 @@ class RawSecretsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(secret)}",
+            f"v1/secrets/{quote_path_param(secret)}",
             method="PATCH",
             json={
                 "fromVersion": from_version,
@@ -676,7 +676,7 @@ class RawSecretsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(secret)}/reveal",
+            f"v1/secrets/{quote_path_param(secret)}/reveal",
             method="POST",
             json={
                 "version": version,
@@ -795,7 +795,7 @@ class RawSecretsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(secret)}/versions",
+            f"v1/secrets/{quote_path_param(secret)}/versions",
             method="GET",
             params={
                 "cursor": cursor,
@@ -1147,7 +1147,7 @@ class AsyncRawSecretsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(secret)}",
+            f"v1/secrets/{quote_path_param(secret)}",
             method="GET",
             request_options=request_options,
         )
@@ -1234,7 +1234,7 @@ class AsyncRawSecretsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(secret)}",
+            f"v1/secrets/{quote_path_param(secret)}",
             method="DELETE",
             headers={
                 "If-Match": str(if_match) if if_match is not None else None,
@@ -1377,7 +1377,7 @@ class AsyncRawSecretsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(secret)}",
+            f"v1/secrets/{quote_path_param(secret)}",
             method="PATCH",
             json={
                 "fromVersion": from_version,
@@ -1513,7 +1513,7 @@ class AsyncRawSecretsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(secret)}/reveal",
+            f"v1/secrets/{quote_path_param(secret)}/reveal",
             method="POST",
             json={
                 "version": version,
@@ -1632,7 +1632,7 @@ class AsyncRawSecretsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(secret)}/versions",
+            f"v1/secrets/{quote_path_param(secret)}/versions",
             method="GET",
             params={
                 "cursor": cursor,

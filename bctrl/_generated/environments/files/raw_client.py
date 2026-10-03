@@ -6,7 +6,7 @@ from json.decoder import JSONDecodeError
 from ...core.api_error import ApiError
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.http_response import AsyncHttpResponse, HttpResponse
-from ...core.jsonable_encoder import encode_path_param
+from ...core.jsonable_encoder import quote_path_param
 from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
@@ -54,7 +54,7 @@ class RawFilesClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/environments/{encode_path_param(environment_id)}/files",
+            f"v1/environments/{quote_path_param(environment_id)}/files",
             method="GET",
             params={
                 "path": path,
@@ -167,7 +167,7 @@ class RawFilesClient:
             Created
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/environments/{encode_path_param(environment_id)}/files/collect",
+            f"v1/environments/{quote_path_param(environment_id)}/files/collect",
             method="POST",
             json={
                 "name": name,
@@ -301,7 +301,7 @@ class RawFilesClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/environments/{encode_path_param(environment_id)}/files/stage",
+            f"v1/environments/{quote_path_param(environment_id)}/files/stage",
             method="POST",
             json={
                 "fileId": file_id,
@@ -430,7 +430,7 @@ class AsyncRawFilesClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/environments/{encode_path_param(environment_id)}/files",
+            f"v1/environments/{quote_path_param(environment_id)}/files",
             method="GET",
             params={
                 "path": path,
@@ -543,7 +543,7 @@ class AsyncRawFilesClient:
             Created
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/environments/{encode_path_param(environment_id)}/files/collect",
+            f"v1/environments/{quote_path_param(environment_id)}/files/collect",
             method="POST",
             json={
                 "name": name,
@@ -677,7 +677,7 @@ class AsyncRawFilesClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/environments/{encode_path_param(environment_id)}/files/stage",
+            f"v1/environments/{quote_path_param(environment_id)}/files/stage",
             method="POST",
             json={
                 "fileId": file_id,

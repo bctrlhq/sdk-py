@@ -6,7 +6,7 @@ from json.decoder import JSONDecodeError
 from ...core.api_error import ApiError
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.http_response import AsyncHttpResponse, HttpResponse
-from ...core.jsonable_encoder import encode_path_param
+from ...core.jsonable_encoder import quote_path_param
 from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
@@ -46,7 +46,7 @@ class RawSpendingCapClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/spaces/{encode_path_param(space_id)}/spending-cap",
+            f"v1/spaces/{quote_path_param(space_id)}/spending-cap",
             method="GET",
             request_options=request_options,
         )
@@ -135,7 +135,7 @@ class RawSpendingCapClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/spaces/{encode_path_param(space_id)}/spending-cap",
+            f"v1/spaces/{quote_path_param(space_id)}/spending-cap",
             method="PATCH",
             json={
                 "amount": amount,
@@ -246,7 +246,7 @@ class AsyncRawSpendingCapClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/spaces/{encode_path_param(space_id)}/spending-cap",
+            f"v1/spaces/{quote_path_param(space_id)}/spending-cap",
             method="GET",
             request_options=request_options,
         )
@@ -335,7 +335,7 @@ class AsyncRawSpendingCapClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/spaces/{encode_path_param(space_id)}/spending-cap",
+            f"v1/spaces/{quote_path_param(space_id)}/spending-cap",
             method="PATCH",
             json={
                 "amount": amount,

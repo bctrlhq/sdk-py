@@ -10,7 +10,7 @@ from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.datetime_utils import serialize_datetime
 from ...core.http_response import AsyncHttpResponse, HttpResponse
 from ...core.http_sse._api import EventSource
-from ...core.jsonable_encoder import encode_path_param
+from ...core.jsonable_encoder import quote_path_param
 from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as, parse_sse_obj
 from ...core.request_options import RequestOptions
@@ -89,7 +89,7 @@ class RawEventsClient:
             Server-Sent Events from the selected Run with Event IDs and complete Event objects; heartbeats are comments.
         """
         with self._client_wrapper.httpx_client.stream(
-            f"v1/browsers/{encode_path_param(browser_id)}/events/stream",
+            f"v1/browsers/{quote_path_param(browser_id)}/events/stream",
             method="GET",
             params={
                 "category": convert_and_respect_annotation_metadata(
@@ -279,7 +279,7 @@ class AsyncRawEventsClient:
             Server-Sent Events from the selected Run with Event IDs and complete Event objects; heartbeats are comments.
         """
         async with self._client_wrapper.httpx_client.stream(
-            f"v1/browsers/{encode_path_param(browser_id)}/events/stream",
+            f"v1/browsers/{quote_path_param(browser_id)}/events/stream",
             method="GET",
             params={
                 "category": convert_and_respect_annotation_metadata(

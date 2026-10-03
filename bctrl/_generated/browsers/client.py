@@ -33,6 +33,7 @@ from .types.browsers_update_request_viewport import BrowsersUpdateRequestViewpor
 from .types.list_browsers_request_order import ListBrowsersRequestOrder
 
 if typing.TYPE_CHECKING:
+    from .computer.client import AsyncComputerClient, ComputerClient
     from .connections.client import AsyncConnectionsClient, ConnectionsClient
     from .events.client import AsyncEventsClient, EventsClient
     from .runs.client import AsyncRunsClient, RunsClient
@@ -44,6 +45,7 @@ class BrowsersClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._raw_client = RawBrowsersClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
+        self._computer: typing.Optional[ComputerClient] = None
         self._connections: typing.Optional[ConnectionsClient] = None
         self._events: typing.Optional[EventsClient] = None
         self._runs: typing.Optional[RunsClient] = None
@@ -566,6 +568,14 @@ class BrowsersClient:
         return _response.data
 
     @property
+    def computer(self):
+        if self._computer is None:
+            from .computer.client import ComputerClient  # noqa: E402
+
+            self._computer = ComputerClient(client_wrapper=self._client_wrapper)
+        return self._computer
+
+    @property
     def connections(self):
         if self._connections is None:
             from .connections.client import ConnectionsClient  # noqa: E402
@@ -594,6 +604,7 @@ class AsyncBrowsersClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._raw_client = AsyncRawBrowsersClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
+        self._computer: typing.Optional[AsyncComputerClient] = None
         self._connections: typing.Optional[AsyncConnectionsClient] = None
         self._events: typing.Optional[AsyncEventsClient] = None
         self._runs: typing.Optional[AsyncRunsClient] = None
@@ -1172,6 +1183,14 @@ class AsyncBrowsersClient:
             request_options=request_options,
         )
         return _response.data
+
+    @property
+    def computer(self):
+        if self._computer is None:
+            from .computer.client import AsyncComputerClient  # noqa: E402
+
+            self._computer = AsyncComputerClient(client_wrapper=self._client_wrapper)
+        return self._computer
 
     @property
     def connections(self):

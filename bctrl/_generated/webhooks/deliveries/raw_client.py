@@ -6,7 +6,7 @@ from json.decoder import JSONDecodeError
 from ...core.api_error import ApiError
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.http_response import AsyncHttpResponse, HttpResponse
-from ...core.jsonable_encoder import encode_path_param
+from ...core.jsonable_encoder import quote_path_param
 from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
@@ -56,7 +56,7 @@ class RawDeliveriesClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}/deliveries",
+            f"v1/webhooks/{quote_path_param(webhook_id)}/deliveries",
             method="GET",
             params={
                 "cursor": cursor,
@@ -147,7 +147,7 @@ class RawDeliveriesClient:
             Accepted
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}/deliveries/{encode_path_param(delivery_id)}/redeliver",
+            f"v1/webhooks/{quote_path_param(webhook_id)}/deliveries/{quote_path_param(delivery_id)}/redeliver",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -254,7 +254,7 @@ class AsyncRawDeliveriesClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}/deliveries",
+            f"v1/webhooks/{quote_path_param(webhook_id)}/deliveries",
             method="GET",
             params={
                 "cursor": cursor,
@@ -345,7 +345,7 @@ class AsyncRawDeliveriesClient:
             Accepted
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}/deliveries/{encode_path_param(delivery_id)}/redeliver",
+            f"v1/webhooks/{quote_path_param(webhook_id)}/deliveries/{quote_path_param(delivery_id)}/redeliver",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,

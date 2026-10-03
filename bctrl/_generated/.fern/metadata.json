@@ -6,7 +6,8 @@
     "client": {
       "class_name": "Bctrl"
     },
-    "package_name": "bctrl"
+    "package_name": "bctrl",
+    "encode_path_params": true
   },
   "invokedBy": "manual",
   "requestedVersion": "0.1.5"

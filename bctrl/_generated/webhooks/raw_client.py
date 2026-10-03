@@ -6,7 +6,7 @@ from json.decoder import JSONDecodeError
 from ..core.api_error import ApiError
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.http_response import AsyncHttpResponse, HttpResponse
-from ..core.jsonable_encoder import encode_path_param
+from ..core.jsonable_encoder import quote_path_param
 from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
@@ -238,7 +238,7 @@ class RawWebhooksClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}",
+            f"v1/webhooks/{quote_path_param(webhook_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -320,7 +320,7 @@ class RawWebhooksClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}",
+            f"v1/webhooks/{quote_path_param(webhook_id)}",
             method="DELETE",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -428,7 +428,7 @@ class RawWebhooksClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}",
+            f"v1/webhooks/{quote_path_param(webhook_id)}",
             method="PATCH",
             json={
                 "enabled": enabled,
@@ -543,7 +543,7 @@ class RawWebhooksClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}/rotate-secret",
+            f"v1/webhooks/{quote_path_param(webhook_id)}/rotate-secret",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -639,7 +639,7 @@ class RawWebhooksClient:
             Accepted
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}/test",
+            f"v1/webhooks/{quote_path_param(webhook_id)}/test",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -921,7 +921,7 @@ class AsyncRawWebhooksClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}",
+            f"v1/webhooks/{quote_path_param(webhook_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -1003,7 +1003,7 @@ class AsyncRawWebhooksClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}",
+            f"v1/webhooks/{quote_path_param(webhook_id)}",
             method="DELETE",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -1111,7 +1111,7 @@ class AsyncRawWebhooksClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}",
+            f"v1/webhooks/{quote_path_param(webhook_id)}",
             method="PATCH",
             json={
                 "enabled": enabled,
@@ -1226,7 +1226,7 @@ class AsyncRawWebhooksClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}/rotate-secret",
+            f"v1/webhooks/{quote_path_param(webhook_id)}/rotate-secret",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -1322,7 +1322,7 @@ class AsyncRawWebhooksClient:
             Accepted
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{encode_path_param(webhook_id)}/test",
+            f"v1/webhooks/{quote_path_param(webhook_id)}/test",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,

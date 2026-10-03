@@ -110,6 +110,7 @@ PublicErrorCode = typing.Union[
         "browser.name_conflict",
         "browser.changed",
         "browser.not_running",
+        "browser.control_held",
         "browser.connections_unavailable",
         "browser.already_started",
         "browser.identity_in_use",

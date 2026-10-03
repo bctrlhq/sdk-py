@@ -9,7 +9,7 @@ from ...core.api_error import ApiError
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.http_response import AsyncHttpResponse, HttpResponse
 from ...core.http_sse._api import EventSource
-from ...core.jsonable_encoder import encode_path_param
+from ...core.jsonable_encoder import quote_path_param
 from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as, parse_sse_obj
 from ...core.request_options import RequestOptions
@@ -53,7 +53,7 @@ class RawExecsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/environment-execs/{encode_path_param(exec_id)}",
+            f"v1/environment-execs/{quote_path_param(exec_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -136,7 +136,7 @@ class RawExecsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/environment-execs/{encode_path_param(exec_id)}/cancel",
+            f"v1/environment-execs/{quote_path_param(exec_id)}/cancel",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -248,7 +248,7 @@ class RawExecsClient:
             Server-Sent Events stream of execution output and completion
         """
         with self._client_wrapper.httpx_client.stream(
-            f"v1/environment-execs/{encode_path_param(exec_id)}/stream",
+            f"v1/environment-execs/{quote_path_param(exec_id)}/stream",
             method="GET",
             params={
                 "after": after,
@@ -388,7 +388,7 @@ class RawExecsClient:
             Accepted
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/environments/{encode_path_param(environment_id)}/execs",
+            f"v1/environments/{quote_path_param(environment_id)}/execs",
             method="POST",
             json={
                 "command": command,
@@ -523,7 +523,7 @@ class AsyncRawExecsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/environment-execs/{encode_path_param(exec_id)}",
+            f"v1/environment-execs/{quote_path_param(exec_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -606,7 +606,7 @@ class AsyncRawExecsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/environment-execs/{encode_path_param(exec_id)}/cancel",
+            f"v1/environment-execs/{quote_path_param(exec_id)}/cancel",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -718,7 +718,7 @@ class AsyncRawExecsClient:
             Server-Sent Events stream of execution output and completion
         """
         async with self._client_wrapper.httpx_client.stream(
-            f"v1/environment-execs/{encode_path_param(exec_id)}/stream",
+            f"v1/environment-execs/{quote_path_param(exec_id)}/stream",
             method="GET",
             params={
                 "after": after,
@@ -858,7 +858,7 @@ class AsyncRawExecsClient:
             Accepted
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/environments/{encode_path_param(environment_id)}/execs",
+            f"v1/environments/{quote_path_param(environment_id)}/execs",
             method="POST",
             json={
                 "command": command,

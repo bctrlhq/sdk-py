@@ -6,7 +6,7 @@ from json.decoder import JSONDecodeError
 from ..core.api_error import ApiError
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.http_response import AsyncHttpResponse, HttpResponse
-from ..core.jsonable_encoder import encode_path_param
+from ..core.jsonable_encoder import quote_path_param
 from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
@@ -155,7 +155,7 @@ class RawToolCallsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/tool-calls/{encode_path_param(tool_call_id)}",
+            f"v1/tool-calls/{quote_path_param(tool_call_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -238,7 +238,7 @@ class RawToolCallsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/tool-calls/{encode_path_param(tool_call_id)}/cancel",
+            f"v1/tool-calls/{quote_path_param(tool_call_id)}/cancel",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -349,7 +349,7 @@ class RawToolCallsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/tool-calls/{encode_path_param(tool_call_id)}/respond",
+            f"v1/tool-calls/{quote_path_param(tool_call_id)}/respond",
             method="POST",
             json=request,
             headers={
@@ -470,7 +470,7 @@ class RawToolCallsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/tool-calls/{encode_path_param(tool_call_id)}/result",
+            f"v1/tool-calls/{quote_path_param(tool_call_id)}/result",
             method="GET",
             params={
                 "wait": wait,
@@ -660,7 +660,7 @@ class AsyncRawToolCallsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/tool-calls/{encode_path_param(tool_call_id)}",
+            f"v1/tool-calls/{quote_path_param(tool_call_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -743,7 +743,7 @@ class AsyncRawToolCallsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/tool-calls/{encode_path_param(tool_call_id)}/cancel",
+            f"v1/tool-calls/{quote_path_param(tool_call_id)}/cancel",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -854,7 +854,7 @@ class AsyncRawToolCallsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/tool-calls/{encode_path_param(tool_call_id)}/respond",
+            f"v1/tool-calls/{quote_path_param(tool_call_id)}/respond",
             method="POST",
             json=request,
             headers={
@@ -975,7 +975,7 @@ class AsyncRawToolCallsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/tool-calls/{encode_path_param(tool_call_id)}/result",
+            f"v1/tool-calls/{quote_path_param(tool_call_id)}/result",
             method="GET",
             params={
                 "wait": wait,

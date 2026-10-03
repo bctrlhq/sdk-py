@@ -7,7 +7,7 @@ from ... import core
 from ...core.api_error import ApiError
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.http_response import AsyncHttpResponse, HttpResponse
-from ...core.jsonable_encoder import encode_path_param
+from ...core.jsonable_encoder import quote_path_param
 from ...core.parse_error import ParsingError
 from ...core.pydantic_utilities import parse_obj_as
 from ...core.request_options import RequestOptions
@@ -70,7 +70,7 @@ class RawFilesClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files",
+            f"v1/runs/{quote_path_param(run_id)}/files",
             method="GET",
             params={
                 "cursor": cursor,
@@ -174,7 +174,7 @@ class RawFilesClient:
             Created
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files",
+            f"v1/runs/{quote_path_param(run_id)}/files",
             method="POST",
             json={
                 "fileId": file_id,
@@ -294,7 +294,7 @@ class RawFilesClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files/{encode_path_param(file_id)}",
+            f"v1/runs/{quote_path_param(run_id)}/files/{quote_path_param(file_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -381,7 +381,7 @@ class RawFilesClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files/{encode_path_param(file_id)}",
+            f"v1/runs/{quote_path_param(run_id)}/files/{quote_path_param(file_id)}",
             method="DELETE",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -493,7 +493,7 @@ class RawFilesClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files/{encode_path_param(file_id)}/retry",
+            f"v1/runs/{quote_path_param(run_id)}/files/{quote_path_param(file_id)}/retry",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -610,7 +610,7 @@ class RawFilesClient:
             Created
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files/collect",
+            f"v1/runs/{quote_path_param(run_id)}/files/collect",
             method="POST",
             json={
                 "filename": filename,
@@ -770,7 +770,7 @@ class RawFilesClient:
             Created
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files/upload",
+            f"v1/runs/{quote_path_param(run_id)}/files/upload",
             method="POST",
             data={
                 "filename": filename,
@@ -934,7 +934,7 @@ class AsyncRawFilesClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files",
+            f"v1/runs/{quote_path_param(run_id)}/files",
             method="GET",
             params={
                 "cursor": cursor,
@@ -1038,7 +1038,7 @@ class AsyncRawFilesClient:
             Created
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files",
+            f"v1/runs/{quote_path_param(run_id)}/files",
             method="POST",
             json={
                 "fileId": file_id,
@@ -1158,7 +1158,7 @@ class AsyncRawFilesClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files/{encode_path_param(file_id)}",
+            f"v1/runs/{quote_path_param(run_id)}/files/{quote_path_param(file_id)}",
             method="GET",
             request_options=request_options,
         )
@@ -1245,7 +1245,7 @@ class AsyncRawFilesClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files/{encode_path_param(file_id)}",
+            f"v1/runs/{quote_path_param(run_id)}/files/{quote_path_param(file_id)}",
             method="DELETE",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -1357,7 +1357,7 @@ class AsyncRawFilesClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files/{encode_path_param(file_id)}/retry",
+            f"v1/runs/{quote_path_param(run_id)}/files/{quote_path_param(file_id)}/retry",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -1474,7 +1474,7 @@ class AsyncRawFilesClient:
             Created
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files/collect",
+            f"v1/runs/{quote_path_param(run_id)}/files/collect",
             method="POST",
             json={
                 "filename": filename,
@@ -1634,7 +1634,7 @@ class AsyncRawFilesClient:
             Created
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}/files/upload",
+            f"v1/runs/{quote_path_param(run_id)}/files/upload",
             method="POST",
             data={
                 "filename": filename,

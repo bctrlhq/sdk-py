@@ -9,7 +9,7 @@ from ..core.api_error import ApiError
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.http_response import AsyncHttpResponse, HttpResponse
 from ..core.http_sse._api import EventSource
-from ..core.jsonable_encoder import encode_path_param
+from ..core.jsonable_encoder import quote_path_param
 from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as, parse_sse_obj
 from ..core.request_options import RequestOptions
@@ -301,7 +301,7 @@ class RawConversationsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/conversations/{encode_path_param(conversation_id)}",
+            f"v1/conversations/{quote_path_param(conversation_id)}",
             method="GET",
             params={
                 "messageCursor": message_cursor,
@@ -398,7 +398,7 @@ class RawConversationsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/conversations/{encode_path_param(conversation_id)}",
+            f"v1/conversations/{quote_path_param(conversation_id)}",
             method="PATCH",
             json={
                 "model": model,
@@ -524,7 +524,7 @@ class RawConversationsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/conversations/{encode_path_param(conversation_id)}/cancel",
+            f"v1/conversations/{quote_path_param(conversation_id)}/cancel",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -636,7 +636,7 @@ class RawConversationsClient:
             Server-Sent Events stream of normalized conversation frames
         """
         with self._client_wrapper.httpx_client.stream(
-            f"v1/conversations/{encode_path_param(conversation_id)}/stream",
+            f"v1/conversations/{quote_path_param(conversation_id)}/stream",
             method="GET",
             params={
                 "after": after,
@@ -1197,7 +1197,7 @@ class AsyncRawConversationsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/conversations/{encode_path_param(conversation_id)}",
+            f"v1/conversations/{quote_path_param(conversation_id)}",
             method="GET",
             params={
                 "messageCursor": message_cursor,
@@ -1294,7 +1294,7 @@ class AsyncRawConversationsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/conversations/{encode_path_param(conversation_id)}",
+            f"v1/conversations/{quote_path_param(conversation_id)}",
             method="PATCH",
             json={
                 "model": model,
@@ -1420,7 +1420,7 @@ class AsyncRawConversationsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/conversations/{encode_path_param(conversation_id)}/cancel",
+            f"v1/conversations/{quote_path_param(conversation_id)}/cancel",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -1532,7 +1532,7 @@ class AsyncRawConversationsClient:
             Server-Sent Events stream of normalized conversation frames
         """
         async with self._client_wrapper.httpx_client.stream(
-            f"v1/conversations/{encode_path_param(conversation_id)}/stream",
+            f"v1/conversations/{quote_path_param(conversation_id)}/stream",
             method="GET",
             params={
                 "after": after,

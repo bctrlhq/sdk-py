@@ -81,6 +81,8 @@ if typing.TYPE_CHECKING:
     from .auth_whoami_response_scope import AuthWhoamiResponseScope
     from .bad_request_error_body import BadRequestErrorBody
     from .bad_request_error_body_error import BadRequestErrorBodyError
+    from .batch_computer_request_space_id import BatchComputerRequestSpaceId
+    from .batch_computer_request_space_id_one import BatchComputerRequestSpaceIdOne
     from .branding_config import BrandingConfig
     from .branding_patch import BrandingPatch
     from .branding_settings import BrandingSettings
@@ -247,6 +249,44 @@ if typing.TYPE_CHECKING:
     from .builtin_tool_object import BuiltinToolObject
     from .builtin_tool_runtime_types_item import BuiltinToolRuntimeTypesItem
     from .byte_count import ByteCount
+    from .click_computer_request_space_id import ClickComputerRequestSpaceId
+    from .click_computer_request_space_id_one import ClickComputerRequestSpaceIdOne
+    from .computer_action_request import (
+        ComputerActionRequest,
+        ComputerActionRequest_Click,
+        ComputerActionRequest_Cursor,
+        ComputerActionRequest_DoubleClick,
+        ComputerActionRequest_Drag,
+        ComputerActionRequest_Key,
+        ComputerActionRequest_Move,
+        ComputerActionRequest_Screenshot,
+        ComputerActionRequest_Scroll,
+        ComputerActionRequest_Type,
+        ComputerActionRequest_Wait,
+    )
+    from .computer_action_request_click import ComputerActionRequestClick
+    from .computer_action_request_click_button import ComputerActionRequestClickButton
+    from .computer_action_request_cursor import ComputerActionRequestCursor
+    from .computer_action_request_double_click import ComputerActionRequestDoubleClick
+    from .computer_action_request_drag import ComputerActionRequestDrag
+    from .computer_action_request_key import ComputerActionRequestKey
+    from .computer_action_request_move import ComputerActionRequestMove
+    from .computer_action_request_screenshot import ComputerActionRequestScreenshot
+    from .computer_action_request_scroll import ComputerActionRequestScroll
+    from .computer_action_request_scroll_direction import ComputerActionRequestScrollDirection
+    from .computer_action_request_type import ComputerActionRequestType
+    from .computer_action_request_wait import ComputerActionRequestWait
+    from .computer_batch_result import ComputerBatchResult
+    from .computer_batch_result_data import ComputerBatchResultData
+    from .computer_batch_result_object import ComputerBatchResultObject
+    from .computer_batch_result_status import ComputerBatchResultStatus
+    from .computer_result import ComputerResult
+    from .computer_result_object import ComputerResultObject
+    from .computer_result_status import ComputerResultStatus
+    from .computer_use_output import ComputerUseOutput
+    from .computer_use_output_action import ComputerUseOutputAction
+    from .computer_use_output_image import ComputerUseOutputImage
+    from .computer_use_output_image_mime_type import ComputerUseOutputImageMimeType
     from .conflict_error_body import ConflictErrorBody
     from .conflict_error_body_error import ConflictErrorBodyError
     from .conversation import Conversation
@@ -302,6 +342,8 @@ if typing.TYPE_CHECKING:
     from .conversation_status import ConversationStatus
     from .conversation_variables import ConversationVariables
     from .conversation_variables_value import ConversationVariablesValue
+    from .cursor_computer_request_space_id import CursorComputerRequestSpaceId
+    from .cursor_computer_request_space_id_one import CursorComputerRequestSpaceIdOne
     from .custom_tool import CustomTool
     from .custom_tool_implementation import (
         CustomToolImplementation,
@@ -318,6 +360,10 @@ if typing.TYPE_CHECKING:
     from .custom_tool_runtime_types_item import CustomToolRuntimeTypesItem
     from .delete_browsers_request_space_id import DeleteBrowsersRequestSpaceId
     from .delete_browsers_request_space_id_one import DeleteBrowsersRequestSpaceIdOne
+    from .double_click_computer_request_space_id import DoubleClickComputerRequestSpaceId
+    from .double_click_computer_request_space_id_one import DoubleClickComputerRequestSpaceIdOne
+    from .drag_computer_request_space_id import DragComputerRequestSpaceId
+    from .drag_computer_request_space_id_one import DragComputerRequestSpaceIdOne
     from .embedded_view import EmbeddedView
     from .embedded_view_bootstrap import EmbeddedViewBootstrap
     from .embedded_view_bootstrap_object import EmbeddedViewBootstrapObject
@@ -434,6 +480,8 @@ if typing.TYPE_CHECKING:
     from .hosted_view_presentation_mode import HostedViewPresentationMode
     from .json_object import JsonObject
     from .json_value import JsonValue
+    from .key_computer_request_space_id import KeyComputerRequestSpaceId
+    from .key_computer_request_space_id_one import KeyComputerRequestSpaceIdOne
     from .list_browsers_request_space_id import ListBrowsersRequestSpaceId
     from .list_browsers_request_space_id_one import ListBrowsersRequestSpaceIdOne
     from .list_browsers_request_status import ListBrowsersRequestStatus
@@ -471,6 +519,8 @@ if typing.TYPE_CHECKING:
     from .message import Message
     from .message_object import MessageObject
     from .message_role import MessageRole
+    from .move_computer_request_space_id import MoveComputerRequestSpaceId
+    from .move_computer_request_space_id_one import MoveComputerRequestSpaceIdOne
     from .non_negative_count import NonNegativeCount
     from .not_found_error_body import NotFoundErrorBody
     from .not_found_error_body_error import NotFoundErrorBodyError
@@ -621,6 +671,10 @@ if typing.TYPE_CHECKING:
     from .run_usage import RunUsage
     from .run_usage_billing_status import RunUsageBillingStatus
     from .runs_delete_response import RunsDeleteResponse
+    from .screenshot_computer_request_space_id import ScreenshotComputerRequestSpaceId
+    from .screenshot_computer_request_space_id_one import ScreenshotComputerRequestSpaceIdOne
+    from .scroll_computer_request_space_id import ScrollComputerRequestSpaceId
+    from .scroll_computer_request_space_id_one import ScrollComputerRequestSpaceIdOne
     from .secret import Secret
     from .secret_delete_response import SecretDeleteResponse
     from .secret_delete_response_object import SecretDeleteResponseObject
@@ -777,6 +831,8 @@ if typing.TYPE_CHECKING:
     from .trace_span_object import TraceSpanObject
     from .trace_span_resource_type import TraceSpanResourceType
     from .trace_span_status import TraceSpanStatus
+    from .type_computer_request_space_id import TypeComputerRequestSpaceId
+    from .type_computer_request_space_id_one import TypeComputerRequestSpaceIdOne
     from .unauthorized_error_body import UnauthorizedErrorBody
     from .unauthorized_error_body_error import UnauthorizedErrorBodyError
     from .update_browsers_request_space_id import UpdateBrowsersRequestSpaceId
@@ -808,6 +864,8 @@ if typing.TYPE_CHECKING:
     from .view_session_surface import ViewSessionSurface
     from .view_session_unavailable_reason import ViewSessionUnavailableReason
     from .views_list_response import ViewsListResponse
+    from .wait_computer_request_space_id import WaitComputerRequestSpaceId
+    from .wait_computer_request_space_id_one import WaitComputerRequestSpaceIdOne
     from .webhook import Webhook
     from .webhook_create_response import WebhookCreateResponse
     from .webhook_create_response_object import WebhookCreateResponseObject
@@ -900,6 +958,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AuthWhoamiResponseScope": ".auth_whoami_response_scope",
     "BadRequestErrorBody": ".bad_request_error_body",
     "BadRequestErrorBodyError": ".bad_request_error_body_error",
+    "BatchComputerRequestSpaceId": ".batch_computer_request_space_id",
+    "BatchComputerRequestSpaceIdOne": ".batch_computer_request_space_id_one",
     "BrandingConfig": ".branding_config",
     "BrandingPatch": ".branding_patch",
     "BrandingSettings": ".branding_settings",
@@ -1018,6 +1078,42 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BuiltinToolObject": ".builtin_tool_object",
     "BuiltinToolRuntimeTypesItem": ".builtin_tool_runtime_types_item",
     "ByteCount": ".byte_count",
+    "ClickComputerRequestSpaceId": ".click_computer_request_space_id",
+    "ClickComputerRequestSpaceIdOne": ".click_computer_request_space_id_one",
+    "ComputerActionRequest": ".computer_action_request",
+    "ComputerActionRequestClick": ".computer_action_request_click",
+    "ComputerActionRequestClickButton": ".computer_action_request_click_button",
+    "ComputerActionRequestCursor": ".computer_action_request_cursor",
+    "ComputerActionRequestDoubleClick": ".computer_action_request_double_click",
+    "ComputerActionRequestDrag": ".computer_action_request_drag",
+    "ComputerActionRequestKey": ".computer_action_request_key",
+    "ComputerActionRequestMove": ".computer_action_request_move",
+    "ComputerActionRequestScreenshot": ".computer_action_request_screenshot",
+    "ComputerActionRequestScroll": ".computer_action_request_scroll",
+    "ComputerActionRequestScrollDirection": ".computer_action_request_scroll_direction",
+    "ComputerActionRequestType": ".computer_action_request_type",
+    "ComputerActionRequestWait": ".computer_action_request_wait",
+    "ComputerActionRequest_Click": ".computer_action_request",
+    "ComputerActionRequest_Cursor": ".computer_action_request",
+    "ComputerActionRequest_DoubleClick": ".computer_action_request",
+    "ComputerActionRequest_Drag": ".computer_action_request",
+    "ComputerActionRequest_Key": ".computer_action_request",
+    "ComputerActionRequest_Move": ".computer_action_request",
+    "ComputerActionRequest_Screenshot": ".computer_action_request",
+    "ComputerActionRequest_Scroll": ".computer_action_request",
+    "ComputerActionRequest_Type": ".computer_action_request",
+    "ComputerActionRequest_Wait": ".computer_action_request",
+    "ComputerBatchResult": ".computer_batch_result",
+    "ComputerBatchResultData": ".computer_batch_result_data",
+    "ComputerBatchResultObject": ".computer_batch_result_object",
+    "ComputerBatchResultStatus": ".computer_batch_result_status",
+    "ComputerResult": ".computer_result",
+    "ComputerResultObject": ".computer_result_object",
+    "ComputerResultStatus": ".computer_result_status",
+    "ComputerUseOutput": ".computer_use_output",
+    "ComputerUseOutputAction": ".computer_use_output_action",
+    "ComputerUseOutputImage": ".computer_use_output_image",
+    "ComputerUseOutputImageMimeType": ".computer_use_output_image_mime_type",
     "ConflictErrorBody": ".conflict_error_body",
     "ConflictErrorBodyError": ".conflict_error_body_error",
     "Conversation": ".conversation",
@@ -1071,6 +1167,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ConversationStatus": ".conversation_status",
     "ConversationVariables": ".conversation_variables",
     "ConversationVariablesValue": ".conversation_variables_value",
+    "CursorComputerRequestSpaceId": ".cursor_computer_request_space_id",
+    "CursorComputerRequestSpaceIdOne": ".cursor_computer_request_space_id_one",
     "CustomTool": ".custom_tool",
     "CustomToolImplementation": ".custom_tool_implementation",
     "CustomToolImplementationCode": ".custom_tool_implementation_code",
@@ -1085,6 +1183,10 @@ _dynamic_imports: typing.Dict[str, str] = {
     "CustomToolRuntimeTypesItem": ".custom_tool_runtime_types_item",
     "DeleteBrowsersRequestSpaceId": ".delete_browsers_request_space_id",
     "DeleteBrowsersRequestSpaceIdOne": ".delete_browsers_request_space_id_one",
+    "DoubleClickComputerRequestSpaceId": ".double_click_computer_request_space_id",
+    "DoubleClickComputerRequestSpaceIdOne": ".double_click_computer_request_space_id_one",
+    "DragComputerRequestSpaceId": ".drag_computer_request_space_id",
+    "DragComputerRequestSpaceIdOne": ".drag_computer_request_space_id_one",
     "EmbeddedView": ".embedded_view",
     "EmbeddedViewBootstrap": ".embedded_view_bootstrap",
     "EmbeddedViewBootstrapObject": ".embedded_view_bootstrap_object",
@@ -1199,6 +1301,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "HostedViewPresentationMode": ".hosted_view_presentation_mode",
     "JsonObject": ".json_object",
     "JsonValue": ".json_value",
+    "KeyComputerRequestSpaceId": ".key_computer_request_space_id",
+    "KeyComputerRequestSpaceIdOne": ".key_computer_request_space_id_one",
     "ListBrowsersRequestSpaceId": ".list_browsers_request_space_id",
     "ListBrowsersRequestSpaceIdOne": ".list_browsers_request_space_id_one",
     "ListBrowsersRequestStatus": ".list_browsers_request_status",
@@ -1236,6 +1340,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "Message": ".message",
     "MessageObject": ".message_object",
     "MessageRole": ".message_role",
+    "MoveComputerRequestSpaceId": ".move_computer_request_space_id",
+    "MoveComputerRequestSpaceIdOne": ".move_computer_request_space_id_one",
     "NonNegativeCount": ".non_negative_count",
     "NotFoundErrorBody": ".not_found_error_body",
     "NotFoundErrorBodyError": ".not_found_error_body_error",
@@ -1378,6 +1484,10 @@ _dynamic_imports: typing.Dict[str, str] = {
     "RunUsage": ".run_usage",
     "RunUsageBillingStatus": ".run_usage_billing_status",
     "RunsDeleteResponse": ".runs_delete_response",
+    "ScreenshotComputerRequestSpaceId": ".screenshot_computer_request_space_id",
+    "ScreenshotComputerRequestSpaceIdOne": ".screenshot_computer_request_space_id_one",
+    "ScrollComputerRequestSpaceId": ".scroll_computer_request_space_id",
+    "ScrollComputerRequestSpaceIdOne": ".scroll_computer_request_space_id_one",
     "Secret": ".secret",
     "SecretDeleteResponse": ".secret_delete_response",
     "SecretDeleteResponseObject": ".secret_delete_response_object",
@@ -1532,6 +1642,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TraceSpanObject": ".trace_span_object",
     "TraceSpanResourceType": ".trace_span_resource_type",
     "TraceSpanStatus": ".trace_span_status",
+    "TypeComputerRequestSpaceId": ".type_computer_request_space_id",
+    "TypeComputerRequestSpaceIdOne": ".type_computer_request_space_id_one",
     "UnauthorizedErrorBody": ".unauthorized_error_body",
     "UnauthorizedErrorBodyError": ".unauthorized_error_body_error",
     "UpdateBrowsersRequestSpaceId": ".update_browsers_request_space_id",
@@ -1565,6 +1677,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ViewSessionSurface": ".view_session_surface",
     "ViewSessionUnavailableReason": ".view_session_unavailable_reason",
     "ViewsListResponse": ".views_list_response",
+    "WaitComputerRequestSpaceId": ".wait_computer_request_space_id",
+    "WaitComputerRequestSpaceIdOne": ".wait_computer_request_space_id_one",
     "Webhook": ".webhook",
     "WebhookCreateResponse": ".webhook_create_response",
     "WebhookCreateResponseObject": ".webhook_create_response_object",
@@ -1681,6 +1795,8 @@ __all__ = [
     "AuthWhoamiResponseScope",
     "BadRequestErrorBody",
     "BadRequestErrorBodyError",
+    "BatchComputerRequestSpaceId",
+    "BatchComputerRequestSpaceIdOne",
     "BrandingConfig",
     "BrandingPatch",
     "BrandingSettings",
@@ -1799,6 +1915,42 @@ __all__ = [
     "BuiltinToolObject",
     "BuiltinToolRuntimeTypesItem",
     "ByteCount",
+    "ClickComputerRequestSpaceId",
+    "ClickComputerRequestSpaceIdOne",
+    "ComputerActionRequest",
+    "ComputerActionRequestClick",
+    "ComputerActionRequestClickButton",
+    "ComputerActionRequestCursor",
+    "ComputerActionRequestDoubleClick",
+    "ComputerActionRequestDrag",
+    "ComputerActionRequestKey",
+    "ComputerActionRequestMove",
+    "ComputerActionRequestScreenshot",
+    "ComputerActionRequestScroll",
+    "ComputerActionRequestScrollDirection",
+    "ComputerActionRequestType",
+    "ComputerActionRequestWait",
+    "ComputerActionRequest_Click",
+    "ComputerActionRequest_Cursor",
+    "ComputerActionRequest_DoubleClick",
+    "ComputerActionRequest_Drag",
+    "ComputerActionRequest_Key",
+    "ComputerActionRequest_Move",
+    "ComputerActionRequest_Screenshot",
+    "ComputerActionRequest_Scroll",
+    "ComputerActionRequest_Type",
+    "ComputerActionRequest_Wait",
+    "ComputerBatchResult",
+    "ComputerBatchResultData",
+    "ComputerBatchResultObject",
+    "ComputerBatchResultStatus",
+    "ComputerResult",
+    "ComputerResultObject",
+    "ComputerResultStatus",
+    "ComputerUseOutput",
+    "ComputerUseOutputAction",
+    "ComputerUseOutputImage",
+    "ComputerUseOutputImageMimeType",
     "ConflictErrorBody",
     "ConflictErrorBodyError",
     "Conversation",
@@ -1852,6 +2004,8 @@ __all__ = [
     "ConversationStatus",
     "ConversationVariables",
     "ConversationVariablesValue",
+    "CursorComputerRequestSpaceId",
+    "CursorComputerRequestSpaceIdOne",
     "CustomTool",
     "CustomToolImplementation",
     "CustomToolImplementationCode",
@@ -1866,6 +2020,10 @@ __all__ = [
     "CustomToolRuntimeTypesItem",
     "DeleteBrowsersRequestSpaceId",
     "DeleteBrowsersRequestSpaceIdOne",
+    "DoubleClickComputerRequestSpaceId",
+    "DoubleClickComputerRequestSpaceIdOne",
+    "DragComputerRequestSpaceId",
+    "DragComputerRequestSpaceIdOne",
     "EmbeddedView",
     "EmbeddedViewBootstrap",
     "EmbeddedViewBootstrapObject",
@@ -1980,6 +2138,8 @@ __all__ = [
     "HostedViewPresentationMode",
     "JsonObject",
     "JsonValue",
+    "KeyComputerRequestSpaceId",
+    "KeyComputerRequestSpaceIdOne",
     "ListBrowsersRequestSpaceId",
     "ListBrowsersRequestSpaceIdOne",
     "ListBrowsersRequestStatus",
@@ -2017,6 +2177,8 @@ __all__ = [
     "Message",
     "MessageObject",
     "MessageRole",
+    "MoveComputerRequestSpaceId",
+    "MoveComputerRequestSpaceIdOne",
     "NonNegativeCount",
     "NotFoundErrorBody",
     "NotFoundErrorBodyError",
@@ -2159,6 +2321,10 @@ __all__ = [
     "RunUsage",
     "RunUsageBillingStatus",
     "RunsDeleteResponse",
+    "ScreenshotComputerRequestSpaceId",
+    "ScreenshotComputerRequestSpaceIdOne",
+    "ScrollComputerRequestSpaceId",
+    "ScrollComputerRequestSpaceIdOne",
     "Secret",
     "SecretDeleteResponse",
     "SecretDeleteResponseObject",
@@ -2313,6 +2479,8 @@ __all__ = [
     "TraceSpanObject",
     "TraceSpanResourceType",
     "TraceSpanStatus",
+    "TypeComputerRequestSpaceId",
+    "TypeComputerRequestSpaceIdOne",
     "UnauthorizedErrorBody",
     "UnauthorizedErrorBodyError",
     "UpdateBrowsersRequestSpaceId",
@@ -2346,6 +2514,8 @@ __all__ = [
     "ViewSessionSurface",
     "ViewSessionUnavailableReason",
     "ViewsListResponse",
+    "WaitComputerRequestSpaceId",
+    "WaitComputerRequestSpaceIdOne",
     "Webhook",
     "WebhookCreateResponse",
     "WebhookCreateResponseObject",

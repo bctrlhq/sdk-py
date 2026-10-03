@@ -21,7 +21,8 @@ if typing.TYPE_CHECKING:
         BrowsersUpdateRequestViewport,
         ListBrowsersRequestOrder,
     )
-    from . import connections, events, runs
+    from . import computer, connections, events, runs
+    from .computer import BrowsersComputerClickRequestButton, BrowsersComputerScrollRequestDirection
     from .events import StreamEventsRequestActorType
     from .runs import ListRunsRequestInclude, ListRunsRequestOrder
 _dynamic_imports: typing.Dict[str, str] = {
@@ -32,6 +33,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BrowserCreateRequestSpaceIdOne": ".types",
     "BrowserCreateRequestStealth": ".types",
     "BrowserCreateRequestViewport": ".types",
+    "BrowsersComputerClickRequestButton": ".computer",
+    "BrowsersComputerScrollRequestDirection": ".computer",
     "BrowsersUpdateRequestCaptcha": ".types",
     "BrowsersUpdateRequestProxy": ".types",
     "BrowsersUpdateRequestProxyId": ".types",
@@ -41,6 +44,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ListRunsRequestInclude": ".runs",
     "ListRunsRequestOrder": ".runs",
     "StreamEventsRequestActorType": ".events",
+    "computer": ".computer",
     "connections": ".connections",
     "events": ".events",
     "runs": ".runs",
@@ -76,6 +80,8 @@ __all__ = [
     "BrowserCreateRequestSpaceIdOne",
     "BrowserCreateRequestStealth",
     "BrowserCreateRequestViewport",
+    "BrowsersComputerClickRequestButton",
+    "BrowsersComputerScrollRequestDirection",
     "BrowsersUpdateRequestCaptcha",
     "BrowsersUpdateRequestProxy",
     "BrowsersUpdateRequestProxyId",
@@ -85,6 +91,7 @@ __all__ = [
     "ListRunsRequestInclude",
     "ListRunsRequestOrder",
     "StreamEventsRequestActorType",
+    "computer",
     "connections",
     "events",
     "runs",

@@ -13,6 +13,51 @@ UNKNOWN = {"error": {"code": "runtime.unknown", "message": "Lost acknowledgment"
     "reasonClass": "outcome_unknown", "details": {"status": "unknown"}}}
 
 
+def test_generated_computer_click_preserves_unknown_event_without_retry():
+    requests = []
+    outcome = {"object": "computer.result", "status": "unknown", "eventId": "evt_lost_click", "data": None}
+
+    def send(request):
+        requests.append(request)
+        return httpx.Response(200, json=outcome)
+
+    with httpx.Client(transport=httpx.MockTransport(send)) as transport:
+        client = Bctrl(token="test", max_retries=5, httpx_client=transport)
+        result = client.browsers.computer.click("checkout / europe", coordinate=[12, 34], idempotency_key="click-once",
+            request_options={"max_retries": 4})
+        assert result.status == "unknown"
+        assert result.event_id == outcome["eventId"]
+        assert result.data is None
+    assert len(requests) == 1
+    assert requests[0].url.raw_path == b"/v1/browsers/checkout%20%2F%20europe/computer/click"
+    assert requests[0].headers["Idempotency-Key"] == "click-once"
+    assert json.loads(requests[0].content) == {"coordinate": [12, 34]}
+
+
+def test_async_generated_computer_click_preserves_unknown_event_without_retry():
+    async def run():
+        requests = []
+        outcome = {"object": "computer.result", "status": "unknown", "eventId": "evt_lost_click", "data": None}
+
+        async def send(request):
+            requests.append(request)
+            return httpx.Response(200, json=outcome)
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(send)) as transport:
+            client = AsyncBctrl(token="test", max_retries=5, httpx_client=transport)
+            result = await client.browsers.computer.click("checkout / europe", coordinate=[12, 34], idempotency_key="click-once",
+                request_options={"max_retries": 4})
+            assert result.status == "unknown"
+            assert result.event_id == outcome["eventId"]
+            assert result.data is None
+        assert len(requests) == 1
+        assert requests[0].url.raw_path == b"/v1/browsers/checkout%20%2F%20europe/computer/click"
+        assert requests[0].headers["Idempotency-Key"] == "click-once"
+        assert json.loads(requests[0].content) == {"coordinate": [12, 34]}
+
+    asyncio.run(run())
+
+
 def test_generated_retries_preserve_one_key_and_the_version_header():
     requests = []
 

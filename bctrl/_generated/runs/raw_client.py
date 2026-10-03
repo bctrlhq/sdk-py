@@ -10,7 +10,7 @@ from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.datetime_utils import serialize_datetime
 from ..core.http_response import AsyncHttpResponse, HttpResponse
 from ..core.http_sse._api import EventSource
-from ..core.jsonable_encoder import encode_path_param
+from ..core.jsonable_encoder import quote_path_param
 from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as, parse_sse_obj
 from ..core.request_options import RequestOptions
@@ -188,7 +188,7 @@ class RawRunsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}",
+            f"v1/runs/{quote_path_param(run_id)}",
             method="GET",
             params={
                 "include": include,
@@ -275,7 +275,7 @@ class RawRunsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}",
+            f"v1/runs/{quote_path_param(run_id)}",
             method="DELETE",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -390,7 +390,7 @@ class RawRunsClient:
             Server-Sent Events stream of normalized run trace and runtime event frames
         """
         with self._client_wrapper.httpx_client.stream(
-            f"v1/runs/{encode_path_param(run_id)}/stream",
+            f"v1/runs/{quote_path_param(run_id)}/stream",
             method="GET",
             params={
                 "include": convert_and_respect_annotation_metadata(
@@ -652,7 +652,7 @@ class AsyncRawRunsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}",
+            f"v1/runs/{quote_path_param(run_id)}",
             method="GET",
             params={
                 "include": include,
@@ -739,7 +739,7 @@ class AsyncRawRunsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/runs/{encode_path_param(run_id)}",
+            f"v1/runs/{quote_path_param(run_id)}",
             method="DELETE",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -854,7 +854,7 @@ class AsyncRawRunsClient:
             Server-Sent Events stream of normalized run trace and runtime event frames
         """
         async with self._client_wrapper.httpx_client.stream(
-            f"v1/runs/{encode_path_param(run_id)}/stream",
+            f"v1/runs/{quote_path_param(run_id)}/stream",
             method="GET",
             params={
                 "include": convert_and_respect_annotation_metadata(

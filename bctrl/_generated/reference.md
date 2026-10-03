@@ -10676,6 +10676,1147 @@ client.browser.extensions.update(
 </dl>
 </details>
 
+## Browsers Computer
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">batch</a>(...) -> ComputerBatchResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Execute up to twenty desktop actions in order on one current Browser Run. Every action is validated before acceptance. Execution stops at the first uncertain result and returns unknown with null data; earlier actions may have taken effect. Reusing the same Idempotency-Key replays the terminal result without repeating the batch.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl, ComputerActionRequest_Screenshot
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.batch(
+    browser_id="browserId",
+    actions=[
+        ComputerActionRequest_Screenshot()
+    ],
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actions:** `typing.List[ComputerActionRequest]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[BatchComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">click</a>(...) -> ComputerResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Click the current Browser Run at screenshot-pixel coordinates, or at the cursor when omitted. Button defaults to left; two or three clicks require the left button. An interrupted action returns unknown and must not be repeated automatically.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.click(
+    browser_id="browserId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[ClickComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**button:** `typing.Optional[BrowsersComputerClickRequestButton]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**click_count:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**coordinate:** `typing.Optional[typing.List[typing.Any]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**modifiers:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">cursor</a>(...) -> ComputerResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Read the cursor position and desktop dimensions of the current Browser Run. The result carries its canonical Event ID. Human control blocks automation; interrupted execution returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.cursor(
+    browser_id="browserId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[CursorComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">double_click</a>(...) -> ComputerResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Double-click the left mouse button in the current Browser Run. Coordinates use screenshot pixels; omission uses the current cursor. An interrupted action returns unknown with its accepted Event ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.double_click(
+    browser_id="browserId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[DoubleClickComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**coordinate:** `typing.Optional[typing.List[typing.Any]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**modifiers:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">drag</a>(...) -> ComputerResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Drag the left mouse button in the current Browser Run to the requested coordinates, with an optional starting position and bounded path. Human control blocks automation. An interrupted action returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.drag(
+    browser_id="browserId",
+    coordinate=[],
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**coordinate:** `typing.List[typing.Any]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[DragComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**modifiers:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**path:** `typing.Optional[typing.List[typing.List[typing.Any]]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**start_coordinate:** `typing.Optional[typing.List[typing.Any]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">key</a>(...) -> ComputerResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Send one bounded key chord to the current Browser Run, with an optional repeat count. Human control blocks automation. An interrupted action returns unknown with its accepted Event ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.key(
+    browser_id="browserId",
+    keys="keys",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**keys:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[KeyComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**repeat:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">move</a>(...) -> ComputerResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Move the cursor in the current Browser Run to screenshot-pixel coordinates. Human control blocks automation. An interrupted action returns unknown with its accepted Event ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.move(
+    browser_id="browserId",
+    coordinate=[],
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**coordinate:** `typing.List[typing.Any]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[MoveComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">screenshot</a>(...) -> ComputerResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Capture the headed desktop of the current Browser Run as a JPEG. The result carries its canonical Event ID. An interrupted capture returns unknown with null data.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.screenshot(
+    browser_id="browserId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[ScreenshotComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">scroll</a>(...) -> ComputerResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Scroll the current Browser Run in the requested direction by a bounded amount, optionally at screenshot-pixel coordinates. Human control blocks automation. An interrupted action returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.scroll(
+    browser_id="browserId",
+    amount=1,
+    direction="up",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**amount:** `int` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**direction:** `BrowsersComputerScrollRequestDirection` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[ScrollComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**coordinate:** `typing.Optional[typing.List[typing.Any]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**modifiers:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">type</a>(...) -> ComputerResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Type text into the focused control in the current Browser Run. Text is excluded from canonical capability Events and replay results are encrypted. Human control blocks automation; an interrupted action returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.type(
+    browser_id="browserId",
+    text="text",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**text:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[TypeComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.<a href="src/bctrl/browsers/computer/client.py">wait</a>(...) -> ComputerResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Wait up to ten seconds in the current Browser Run. Human control blocks automation. The result carries its canonical Event ID; interrupted execution returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.wait(
+    browser_id="browserId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[WaitComputerRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**duration:** `typing.Optional[float]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Browsers Connections
 <details><summary><code>client.browsers.connections.<a href="src/bctrl/browsers/connections/client.py">revoke</a>(...) -> BrowserResource</code></summary>
 <dl>
