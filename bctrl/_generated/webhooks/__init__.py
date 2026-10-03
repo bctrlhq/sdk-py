@@ -6,14 +6,12 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import ListWebhooksRequestOrder, WebhookCreateRequestEventsItem, WebhookUpdateRequestEventsItem
+    from .types import ListWebhooksRequestOrder
     from . import deliveries
     from .deliveries import ListDeliveriesRequestOrder
 _dynamic_imports: typing.Dict[str, str] = {
     "ListDeliveriesRequestOrder": ".deliveries",
     "ListWebhooksRequestOrder": ".types",
-    "WebhookCreateRequestEventsItem": ".types",
-    "WebhookUpdateRequestEventsItem": ".types",
     "deliveries": ".deliveries",
 }
 
@@ -39,10 +37,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = [
-    "ListDeliveriesRequestOrder",
-    "ListWebhooksRequestOrder",
-    "WebhookCreateRequestEventsItem",
-    "WebhookUpdateRequestEventsItem",
-    "deliveries",
-]
+__all__ = ["ListDeliveriesRequestOrder", "ListWebhooksRequestOrder", "deliveries"]

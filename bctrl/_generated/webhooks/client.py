@@ -15,8 +15,6 @@ from ..types.webhook_rotate_secret_response import WebhookRotateSecretResponse
 from ..types.webhooks_list_response import WebhooksListResponse
 from .raw_client import AsyncRawWebhooksClient, RawWebhooksClient
 from .types.list_webhooks_request_order import ListWebhooksRequestOrder
-from .types.webhook_create_request_events_item import WebhookCreateRequestEventsItem
-from .types.webhook_update_request_events_item import WebhookUpdateRequestEventsItem
 
 if typing.TYPE_CHECKING:
     from .deliveries.client import AsyncDeliveriesClient, DeliveriesClient
@@ -86,7 +84,7 @@ class WebhooksClient:
     def create(
         self,
         *,
-        events: typing.Sequence[WebhookCreateRequestEventsItem],
+        events: typing.Sequence[str],
         url: str,
         idempotency_key: typing.Optional[str] = None,
         name: typing.Optional[ResourceName] = OMIT,
@@ -97,7 +95,7 @@ class WebhooksClient:
 
         Parameters
         ----------
-        events : typing.Sequence[WebhookCreateRequestEventsItem]
+        events : typing.Sequence[str]
 
         url : str
 
@@ -124,7 +122,7 @@ class WebhooksClient:
             token="YOUR_TOKEN",
         )
         client.webhooks.create(
-            events=["run.started"],
+            events=["events"],
             url="url",
         )
         """
@@ -214,7 +212,7 @@ class WebhooksClient:
         *,
         idempotency_key: typing.Optional[str] = None,
         enabled: typing.Optional[bool] = OMIT,
-        events: typing.Optional[typing.Sequence[WebhookUpdateRequestEventsItem]] = OMIT,
+        events: typing.Optional[typing.Sequence[str]] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
         url: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -231,7 +229,7 @@ class WebhooksClient:
 
         enabled : typing.Optional[bool]
 
-        events : typing.Optional[typing.Sequence[WebhookUpdateRequestEventsItem]]
+        events : typing.Optional[typing.Sequence[str]]
 
         name : typing.Optional[ResourceName]
 
@@ -434,7 +432,7 @@ class AsyncWebhooksClient:
     async def create(
         self,
         *,
-        events: typing.Sequence[WebhookCreateRequestEventsItem],
+        events: typing.Sequence[str],
         url: str,
         idempotency_key: typing.Optional[str] = None,
         name: typing.Optional[ResourceName] = OMIT,
@@ -445,7 +443,7 @@ class AsyncWebhooksClient:
 
         Parameters
         ----------
-        events : typing.Sequence[WebhookCreateRequestEventsItem]
+        events : typing.Sequence[str]
 
         url : str
 
@@ -477,7 +475,7 @@ class AsyncWebhooksClient:
 
         async def main() -> None:
             await client.webhooks.create(
-                events=["run.started"],
+                events=["events"],
                 url="url",
             )
 
@@ -586,7 +584,7 @@ class AsyncWebhooksClient:
         *,
         idempotency_key: typing.Optional[str] = None,
         enabled: typing.Optional[bool] = OMIT,
-        events: typing.Optional[typing.Sequence[WebhookUpdateRequestEventsItem]] = OMIT,
+        events: typing.Optional[typing.Sequence[str]] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
         url: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -603,7 +601,7 @@ class AsyncWebhooksClient:
 
         enabled : typing.Optional[bool]
 
-        events : typing.Optional[typing.Sequence[WebhookUpdateRequestEventsItem]]
+        events : typing.Optional[typing.Sequence[str]]
 
         name : typing.Optional[ResourceName]
 

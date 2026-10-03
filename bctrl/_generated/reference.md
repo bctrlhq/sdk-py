@@ -8886,7 +8886,7 @@ client = Bctrl(
 
 client.webhooks.create(
     events=[
-        "run.started"
+        "events"
     ],
     url="url",
 )
@@ -8905,7 +8905,7 @@ client.webhooks.create(
 <dl>
 <dd>
 
-**events:** `typing.List[WebhookCreateRequestEventsItem]` 
+**events:** `typing.List[str]` 
     
 </dd>
 </dl>
@@ -9180,7 +9180,7 @@ client.webhooks.update(
 <dl>
 <dd>
 
-**events:** `typing.Optional[typing.List[WebhookUpdateRequestEventsItem]]` 
+**events:** `typing.Optional[typing.List[str]]` 
     
 </dd>
 </dl>

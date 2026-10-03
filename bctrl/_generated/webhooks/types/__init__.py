@@ -7,13 +7,7 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .list_webhooks_request_order import ListWebhooksRequestOrder
-    from .webhook_create_request_events_item import WebhookCreateRequestEventsItem
-    from .webhook_update_request_events_item import WebhookUpdateRequestEventsItem
-_dynamic_imports: typing.Dict[str, str] = {
-    "ListWebhooksRequestOrder": ".list_webhooks_request_order",
-    "WebhookCreateRequestEventsItem": ".webhook_create_request_events_item",
-    "WebhookUpdateRequestEventsItem": ".webhook_update_request_events_item",
-}
+_dynamic_imports: typing.Dict[str, str] = {"ListWebhooksRequestOrder": ".list_webhooks_request_order"}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -37,4 +31,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["ListWebhooksRequestOrder", "WebhookCreateRequestEventsItem", "WebhookUpdateRequestEventsItem"]
+__all__ = ["ListWebhooksRequestOrder"]

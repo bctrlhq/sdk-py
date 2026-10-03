@@ -23,8 +23,6 @@ from ..types.webhook_delivery import WebhookDelivery
 from ..types.webhook_rotate_secret_response import WebhookRotateSecretResponse
 from ..types.webhooks_list_response import WebhooksListResponse
 from .types.list_webhooks_request_order import ListWebhooksRequestOrder
-from .types.webhook_create_request_events_item import WebhookCreateRequestEventsItem
-from .types.webhook_update_request_events_item import WebhookUpdateRequestEventsItem
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -117,7 +115,7 @@ class RawWebhooksClient:
     def create(
         self,
         *,
-        events: typing.Sequence[WebhookCreateRequestEventsItem],
+        events: typing.Sequence[str],
         url: str,
         idempotency_key: typing.Optional[str] = None,
         name: typing.Optional[ResourceName] = OMIT,
@@ -128,7 +126,7 @@ class RawWebhooksClient:
 
         Parameters
         ----------
-        events : typing.Sequence[WebhookCreateRequestEventsItem]
+        events : typing.Sequence[str]
 
         url : str
 
@@ -398,7 +396,7 @@ class RawWebhooksClient:
         *,
         idempotency_key: typing.Optional[str] = None,
         enabled: typing.Optional[bool] = OMIT,
-        events: typing.Optional[typing.Sequence[WebhookUpdateRequestEventsItem]] = OMIT,
+        events: typing.Optional[typing.Sequence[str]] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
         url: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -415,7 +413,7 @@ class RawWebhooksClient:
 
         enabled : typing.Optional[bool]
 
-        events : typing.Optional[typing.Sequence[WebhookUpdateRequestEventsItem]]
+        events : typing.Optional[typing.Sequence[str]]
 
         name : typing.Optional[ResourceName]
 
@@ -798,7 +796,7 @@ class AsyncRawWebhooksClient:
     async def create(
         self,
         *,
-        events: typing.Sequence[WebhookCreateRequestEventsItem],
+        events: typing.Sequence[str],
         url: str,
         idempotency_key: typing.Optional[str] = None,
         name: typing.Optional[ResourceName] = OMIT,
@@ -809,7 +807,7 @@ class AsyncRawWebhooksClient:
 
         Parameters
         ----------
-        events : typing.Sequence[WebhookCreateRequestEventsItem]
+        events : typing.Sequence[str]
 
         url : str
 
@@ -1081,7 +1079,7 @@ class AsyncRawWebhooksClient:
         *,
         idempotency_key: typing.Optional[str] = None,
         enabled: typing.Optional[bool] = OMIT,
-        events: typing.Optional[typing.Sequence[WebhookUpdateRequestEventsItem]] = OMIT,
+        events: typing.Optional[typing.Sequence[str]] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
         url: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -1098,7 +1096,7 @@ class AsyncRawWebhooksClient:
 
         enabled : typing.Optional[bool]
 
-        events : typing.Optional[typing.Sequence[WebhookUpdateRequestEventsItem]]
+        events : typing.Optional[typing.Sequence[str]]
 
         name : typing.Optional[ResourceName]
 

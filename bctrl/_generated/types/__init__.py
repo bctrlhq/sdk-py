@@ -810,7 +810,6 @@ if typing.TYPE_CHECKING:
     from .views_list_response import ViewsListResponse
     from .webhook import Webhook
     from .webhook_create_response import WebhookCreateResponse
-    from .webhook_create_response_events_item import WebhookCreateResponseEventsItem
     from .webhook_create_response_object import WebhookCreateResponseObject
     from .webhook_delete_response import WebhookDeleteResponse
     from .webhook_delete_response_object import WebhookDeleteResponseObject
@@ -818,7 +817,6 @@ if typing.TYPE_CHECKING:
     from .webhook_delivery import WebhookDelivery
     from .webhook_delivery_object import WebhookDeliveryObject
     from .webhook_delivery_status import WebhookDeliveryStatus
-    from .webhook_events_item import WebhookEventsItem
     from .webhook_object import WebhookObject
     from .webhook_rotate_secret_response import WebhookRotateSecretResponse
     from .webhook_rotate_secret_response_object import WebhookRotateSecretResponseObject
@@ -1569,7 +1567,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ViewsListResponse": ".views_list_response",
     "Webhook": ".webhook",
     "WebhookCreateResponse": ".webhook_create_response",
-    "WebhookCreateResponseEventsItem": ".webhook_create_response_events_item",
     "WebhookCreateResponseObject": ".webhook_create_response_object",
     "WebhookDeleteResponse": ".webhook_delete_response",
     "WebhookDeleteResponseObject": ".webhook_delete_response_object",
@@ -1577,7 +1574,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WebhookDelivery": ".webhook_delivery",
     "WebhookDeliveryObject": ".webhook_delivery_object",
     "WebhookDeliveryStatus": ".webhook_delivery_status",
-    "WebhookEventsItem": ".webhook_events_item",
     "WebhookObject": ".webhook_object",
     "WebhookRotateSecretResponse": ".webhook_rotate_secret_response",
     "WebhookRotateSecretResponseObject": ".webhook_rotate_secret_response_object",
@@ -2352,7 +2348,6 @@ __all__ = [
     "ViewsListResponse",
     "Webhook",
     "WebhookCreateResponse",
-    "WebhookCreateResponseEventsItem",
     "WebhookCreateResponseObject",
     "WebhookDeleteResponse",
     "WebhookDeleteResponseObject",
@@ -2360,7 +2355,6 @@ __all__ = [
     "WebhookDelivery",
     "WebhookDeliveryObject",
     "WebhookDeliveryStatus",
-    "WebhookEventsItem",
     "WebhookObject",
     "WebhookRotateSecretResponse",
     "WebhookRotateSecretResponseObject",
