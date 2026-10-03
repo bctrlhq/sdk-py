@@ -240,6 +240,7 @@ PublicErrorCode = typing.Union[
         "proxy.url_invalid",
         "rate_limit.exceeded",
         "rate_limited",
+        "recording.not_found",
         "recording.run_not_ready",
         "request.failed",
         "request.invalid",

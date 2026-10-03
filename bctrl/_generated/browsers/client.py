@@ -37,6 +37,7 @@ if typing.TYPE_CHECKING:
     from .connections.client import AsyncConnectionsClient, ConnectionsClient
     from .control.client import AsyncControlClient, ControlClient
     from .events.client import AsyncEventsClient, EventsClient
+    from .recording.client import AsyncRecordingClient, RecordingClient
     from .runs.client import AsyncRunsClient, RunsClient
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -50,6 +51,7 @@ class BrowsersClient:
         self._connections: typing.Optional[ConnectionsClient] = None
         self._control: typing.Optional[ControlClient] = None
         self._events: typing.Optional[EventsClient] = None
+        self._recording: typing.Optional[RecordingClient] = None
         self._runs: typing.Optional[RunsClient] = None
 
     @property
@@ -602,6 +604,14 @@ class BrowsersClient:
         return self._events
 
     @property
+    def recording(self):
+        if self._recording is None:
+            from .recording.client import RecordingClient  # noqa: E402
+
+            self._recording = RecordingClient(client_wrapper=self._client_wrapper)
+        return self._recording
+
+    @property
     def runs(self):
         if self._runs is None:
             from .runs.client import RunsClient  # noqa: E402
@@ -618,6 +628,7 @@ class AsyncBrowsersClient:
         self._connections: typing.Optional[AsyncConnectionsClient] = None
         self._control: typing.Optional[AsyncControlClient] = None
         self._events: typing.Optional[AsyncEventsClient] = None
+        self._recording: typing.Optional[AsyncRecordingClient] = None
         self._runs: typing.Optional[AsyncRunsClient] = None
 
     @property
@@ -1226,6 +1237,14 @@ class AsyncBrowsersClient:
 
             self._events = AsyncEventsClient(client_wrapper=self._client_wrapper)
         return self._events
+
+    @property
+    def recording(self):
+        if self._recording is None:
+            from .recording.client import AsyncRecordingClient  # noqa: E402
+
+            self._recording = AsyncRecordingClient(client_wrapper=self._client_wrapper)
+        return self._recording
 
     @property
     def runs(self):

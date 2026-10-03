@@ -22,6 +22,7 @@ from .types.list_runs_request_status_item import ListRunsRequestStatusItem
 if typing.TYPE_CHECKING:
     from .events.client import AsyncEventsClient, EventsClient
     from .files.client import AsyncFilesClient, FilesClient
+    from .recordings.client import AsyncRecordingsClient, RecordingsClient
     from .trace.client import AsyncTraceClient, TraceClient
 
 
@@ -31,6 +32,7 @@ class RunsClient:
         self._client_wrapper = client_wrapper
         self._events: typing.Optional[EventsClient] = None
         self._files: typing.Optional[FilesClient] = None
+        self._recordings: typing.Optional[RecordingsClient] = None
         self._trace: typing.Optional[TraceClient] = None
 
     @property
@@ -286,6 +288,14 @@ class RunsClient:
         return self._files
 
     @property
+    def recordings(self):
+        if self._recordings is None:
+            from .recordings.client import RecordingsClient  # noqa: E402
+
+            self._recordings = RecordingsClient(client_wrapper=self._client_wrapper)
+        return self._recordings
+
+    @property
     def trace(self):
         if self._trace is None:
             from .trace.client import TraceClient  # noqa: E402
@@ -300,6 +310,7 @@ class AsyncRunsClient:
         self._client_wrapper = client_wrapper
         self._events: typing.Optional[AsyncEventsClient] = None
         self._files: typing.Optional[AsyncFilesClient] = None
+        self._recordings: typing.Optional[AsyncRecordingsClient] = None
         self._trace: typing.Optional[AsyncTraceClient] = None
 
     @property
@@ -587,6 +598,14 @@ class AsyncRunsClient:
 
             self._files = AsyncFilesClient(client_wrapper=self._client_wrapper)
         return self._files
+
+    @property
+    def recordings(self):
+        if self._recordings is None:
+            from .recordings.client import AsyncRecordingsClient  # noqa: E402
+
+            self._recordings = AsyncRecordingsClient(client_wrapper=self._client_wrapper)
+        return self._recordings
 
     @property
     def trace(self):
