@@ -8,11 +8,13 @@ from ..types.secret import Secret
 from ..types.secret_delete_response import SecretDeleteResponse
 from ..types.secret_list import SecretList
 from ..types.secret_reveal_response import SecretRevealResponse
+from ..types.secret_version_list import SecretVersionList
 from .raw_client import AsyncRawSecretsClient, RawSecretsClient
 from .types.list_secrets_request_delimiter import ListSecretsRequestDelimiter
 from .types.list_secrets_request_order import ListSecretsRequestOrder
 from .types.list_secrets_request_type import ListSecretsRequestType
-from .types.secret_put_request_type import SecretPutRequestType
+from .types.secret_create_request_type import SecretCreateRequestType
+from .types.versions_secrets_request_order import VersionsSecretsRequestOrder
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -94,35 +96,61 @@ class SecretsClient:
         )
         return _response.data
 
-    def reveal(
+    def create(
         self,
         *,
         path: str,
+        type: SecretCreateRequestType,
         idempotency_key: typing.Optional[str] = None,
-        version: typing.Optional[int] = OMIT,
+        label: typing.Optional[str] = OMIT,
+        notes: typing.Optional[str] = OMIT,
+        origins: typing.Optional[typing.Sequence[str]] = OMIT,
+        password: typing.Optional[str] = OMIT,
+        totp: typing.Optional[str] = OMIT,
+        username: typing.Optional[str] = OMIT,
+        value: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> SecretRevealResponse:
+    ) -> Secret:
         """
-        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+        Create a Secret at a new path. The returned ID addresses it; paths remain reference keys.
 
         Parameters
         ----------
         path : str
             Secret path, for example `prod/github/bot`. May contain `/`.
 
+        type : SecretCreateRequestType
+            `login`: username, password and TOTP seed for a site. `value`: one opaque value.
+
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
 
-        version : typing.Optional[int]
-            Defaults to the current version.
+        label : typing.Optional[str]
+
+        notes : typing.Optional[str]
+            Free-form notes. Write-only.
+
+        origins : typing.Optional[typing.Sequence[str]]
+            Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.
+
+        password : typing.Optional[str]
+            Password of a `login`. Write-only.
+
+        totp : typing.Optional[str]
+            TOTP seed (base32) of a `login`. Write-only.
+
+        username : typing.Optional[str]
+
+        value : typing.Optional[str]
+            The value of a `value` secret. Write-only.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        SecretRevealResponse
-            OK
+        Secret
+            Created
 
         Examples
         --------
@@ -133,23 +161,34 @@ class SecretsClient:
             bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
             token="YOUR_TOKEN",
         )
-        client.secrets.reveal(
+        client.secrets.create(
             path="path",
+            type="login",
         )
         """
-        _response = self._raw_client.reveal(
-            path=path, idempotency_key=idempotency_key, version=version, request_options=request_options
+        _response = self._raw_client.create(
+            path=path,
+            type=type,
+            idempotency_key=idempotency_key,
+            label=label,
+            notes=notes,
+            origins=origins,
+            password=password,
+            totp=totp,
+            username=username,
+            value=value,
+            request_options=request_options,
         )
         return _response.data
 
-    def get(self, path: str, *, request_options: typing.Optional[RequestOptions] = None) -> Secret:
+    def get(self, secret: str, *, request_options: typing.Optional[RequestOptions] = None) -> Secret:
         """
-        Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets:reveal` to read values.
+        Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets/{secret}/reveal` to read values.
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -169,109 +208,15 @@ class SecretsClient:
             token="YOUR_TOKEN",
         )
         client.secrets.get(
-            path="path",
+            secret="secret",
         )
         """
-        _response = self._raw_client.get(path, request_options=request_options)
-        return _response.data
-
-    def put(
-        self,
-        path: str,
-        *,
-        if_match: typing.Optional[str] = None,
-        idempotency_key: typing.Optional[str] = None,
-        from_version: typing.Optional[int] = OMIT,
-        label: typing.Optional[str] = OMIT,
-        notes: typing.Optional[str] = OMIT,
-        origins: typing.Optional[typing.Sequence[str]] = OMIT,
-        password: typing.Optional[str] = OMIT,
-        totp: typing.Optional[str] = OMIT,
-        type: typing.Optional[SecretPutRequestType] = OMIT,
-        username: typing.Optional[str] = OMIT,
-        value: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> Secret:
-        """
-        Create or replace a Secret. Every write is a new version, returned as `version` and the `ETag` header. Send `If-Match` to write only over a known version. Send `{fromVersion}` alone to roll back to an earlier version.
-
-        Parameters
-        ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
-
-        if_match : typing.Optional[str]
-            Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        from_version : typing.Optional[int]
-            Rollback: make the values of this earlier version the new version. Send it alone.
-
-        label : typing.Optional[str]
-
-        notes : typing.Optional[str]
-            Free-form notes. Write-only.
-
-        origins : typing.Optional[typing.Sequence[str]]
-            Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.
-
-        password : typing.Optional[str]
-            Password of a `login`. Write-only.
-
-        totp : typing.Optional[str]
-            TOTP seed (base32) of a `login`. Write-only.
-
-        type : typing.Optional[SecretPutRequestType]
-            `login`: username, password and TOTP seed for a site. `value`: one opaque value.
-
-        username : typing.Optional[str]
-
-        value : typing.Optional[str]
-            The value of a `value` secret. Write-only.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        Secret
-            OK
-
-        Examples
-        --------
-        from bctrl import Bctrl
-
-        client = Bctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-        client.secrets.put(
-            path="path",
-        )
-        """
-        _response = self._raw_client.put(
-            path,
-            if_match=if_match,
-            idempotency_key=idempotency_key,
-            from_version=from_version,
-            label=label,
-            notes=notes,
-            origins=origins,
-            password=password,
-            totp=totp,
-            type=type,
-            username=username,
-            value=value,
-            request_options=request_options,
-        )
+        _response = self._raw_client.get(secret, request_options=request_options)
         return _response.data
 
     def delete(
         self,
-        path: str,
+        secret: str,
         *,
         if_match: typing.Optional[str] = None,
         idempotency_key: typing.Optional[str] = None,
@@ -282,8 +227,8 @@ class SecretsClient:
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         if_match : typing.Optional[str]
             Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
@@ -309,20 +254,21 @@ class SecretsClient:
             token="YOUR_TOKEN",
         )
         client.secrets.delete(
-            path="path",
+            secret="secret",
         )
         """
         _response = self._raw_client.delete(
-            path, if_match=if_match, idempotency_key=idempotency_key, request_options=request_options
+            secret, if_match=if_match, idempotency_key=idempotency_key, request_options=request_options
         )
         return _response.data
 
     def update(
         self,
-        path: str,
+        secret: str,
         *,
         if_match: typing.Optional[str] = None,
         idempotency_key: typing.Optional[str] = None,
+        from_version: typing.Optional[int] = OMIT,
         label: typing.Optional[str] = OMIT,
         notes: typing.Optional[str] = OMIT,
         origins: typing.Optional[typing.Sequence[str]] = OMIT,
@@ -337,14 +283,17 @@ class SecretsClient:
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         if_match : typing.Optional[str]
             Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        from_version : typing.Optional[int]
+            Restore values of this version; send alone.
 
         label : typing.Optional[str]
 
@@ -383,13 +332,14 @@ class SecretsClient:
             token="YOUR_TOKEN",
         )
         client.secrets.update(
-            path="path",
+            secret="secret",
         )
         """
         _response = self._raw_client.update(
-            path,
+            secret,
             if_match=if_match,
             idempotency_key=idempotency_key,
+            from_version=from_version,
             label=label,
             notes=notes,
             origins=origins,
@@ -398,6 +348,104 @@ class SecretsClient:
             username=username,
             value=value,
             request_options=request_options,
+        )
+        return _response.data
+
+    def reveal(
+        self,
+        secret: str,
+        *,
+        idempotency_key: typing.Optional[str] = None,
+        version: typing.Optional[int] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> SecretRevealResponse:
+        """
+        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+
+        Parameters
+        ----------
+        secret : str
+            Unique secret identifier generated by BCTRL.
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        version : typing.Optional[int]
+            Defaults to the current version.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        SecretRevealResponse
+            OK
+
+        Examples
+        --------
+        from bctrl import Bctrl
+
+        client = Bctrl(
+            bctrl_space="YOUR_BCTRL_SPACE",
+            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
+            token="YOUR_TOKEN",
+        )
+        client.secrets.reveal(
+            secret="secret",
+        )
+        """
+        _response = self._raw_client.reveal(
+            secret, idempotency_key=idempotency_key, version=version, request_options=request_options
+        )
+        return _response.data
+
+    def versions(
+        self,
+        secret: str,
+        *,
+        cursor: typing.Optional[str] = None,
+        order: typing.Optional[VersionsSecretsRequestOrder] = None,
+        limit: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> SecretVersionList:
+        """
+        List version metadata by secret ID. Values and ciphertext are never returned.
+
+        Parameters
+        ----------
+        secret : str
+            Unique secret identifier generated by BCTRL.
+
+        cursor : typing.Optional[str]
+
+        order : typing.Optional[VersionsSecretsRequestOrder]
+            Order by createdAt and ID. Defaults to desc.
+
+        limit : typing.Optional[int]
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        SecretVersionList
+            OK
+
+        Examples
+        --------
+        from bctrl import Bctrl
+
+        client = Bctrl(
+            bctrl_space="YOUR_BCTRL_SPACE",
+            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
+            token="YOUR_TOKEN",
+        )
+        client.secrets.versions(
+            secret="secret",
+        )
+        """
+        _response = self._raw_client.versions(
+            secret, cursor=cursor, order=order, limit=limit, request_options=request_options
         )
         return _response.data
 
@@ -486,35 +534,61 @@ class AsyncSecretsClient:
         )
         return _response.data
 
-    async def reveal(
+    async def create(
         self,
         *,
         path: str,
+        type: SecretCreateRequestType,
         idempotency_key: typing.Optional[str] = None,
-        version: typing.Optional[int] = OMIT,
+        label: typing.Optional[str] = OMIT,
+        notes: typing.Optional[str] = OMIT,
+        origins: typing.Optional[typing.Sequence[str]] = OMIT,
+        password: typing.Optional[str] = OMIT,
+        totp: typing.Optional[str] = OMIT,
+        username: typing.Optional[str] = OMIT,
+        value: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> SecretRevealResponse:
+    ) -> Secret:
         """
-        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+        Create a Secret at a new path. The returned ID addresses it; paths remain reference keys.
 
         Parameters
         ----------
         path : str
             Secret path, for example `prod/github/bot`. May contain `/`.
 
+        type : SecretCreateRequestType
+            `login`: username, password and TOTP seed for a site. `value`: one opaque value.
+
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
 
-        version : typing.Optional[int]
-            Defaults to the current version.
+        label : typing.Optional[str]
+
+        notes : typing.Optional[str]
+            Free-form notes. Write-only.
+
+        origins : typing.Optional[typing.Sequence[str]]
+            Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.
+
+        password : typing.Optional[str]
+            Password of a `login`. Write-only.
+
+        totp : typing.Optional[str]
+            TOTP seed (base32) of a `login`. Write-only.
+
+        username : typing.Optional[str]
+
+        value : typing.Optional[str]
+            The value of a `value` secret. Write-only.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        SecretRevealResponse
-            OK
+        Secret
+            Created
 
         Examples
         --------
@@ -530,26 +604,37 @@ class AsyncSecretsClient:
 
 
         async def main() -> None:
-            await client.secrets.reveal(
+            await client.secrets.create(
                 path="path",
+                type="login",
             )
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.reveal(
-            path=path, idempotency_key=idempotency_key, version=version, request_options=request_options
+        _response = await self._raw_client.create(
+            path=path,
+            type=type,
+            idempotency_key=idempotency_key,
+            label=label,
+            notes=notes,
+            origins=origins,
+            password=password,
+            totp=totp,
+            username=username,
+            value=value,
+            request_options=request_options,
         )
         return _response.data
 
-    async def get(self, path: str, *, request_options: typing.Optional[RequestOptions] = None) -> Secret:
+    async def get(self, secret: str, *, request_options: typing.Optional[RequestOptions] = None) -> Secret:
         """
-        Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets:reveal` to read values.
+        Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets/{secret}/reveal` to read values.
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -574,120 +659,18 @@ class AsyncSecretsClient:
 
         async def main() -> None:
             await client.secrets.get(
-                path="path",
+                secret="secret",
             )
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.get(path, request_options=request_options)
-        return _response.data
-
-    async def put(
-        self,
-        path: str,
-        *,
-        if_match: typing.Optional[str] = None,
-        idempotency_key: typing.Optional[str] = None,
-        from_version: typing.Optional[int] = OMIT,
-        label: typing.Optional[str] = OMIT,
-        notes: typing.Optional[str] = OMIT,
-        origins: typing.Optional[typing.Sequence[str]] = OMIT,
-        password: typing.Optional[str] = OMIT,
-        totp: typing.Optional[str] = OMIT,
-        type: typing.Optional[SecretPutRequestType] = OMIT,
-        username: typing.Optional[str] = OMIT,
-        value: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> Secret:
-        """
-        Create or replace a Secret. Every write is a new version, returned as `version` and the `ETag` header. Send `If-Match` to write only over a known version. Send `{fromVersion}` alone to roll back to an earlier version.
-
-        Parameters
-        ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
-
-        if_match : typing.Optional[str]
-            Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        from_version : typing.Optional[int]
-            Rollback: make the values of this earlier version the new version. Send it alone.
-
-        label : typing.Optional[str]
-
-        notes : typing.Optional[str]
-            Free-form notes. Write-only.
-
-        origins : typing.Optional[typing.Sequence[str]]
-            Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.
-
-        password : typing.Optional[str]
-            Password of a `login`. Write-only.
-
-        totp : typing.Optional[str]
-            TOTP seed (base32) of a `login`. Write-only.
-
-        type : typing.Optional[SecretPutRequestType]
-            `login`: username, password and TOTP seed for a site. `value`: one opaque value.
-
-        username : typing.Optional[str]
-
-        value : typing.Optional[str]
-            The value of a `value` secret. Write-only.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        Secret
-            OK
-
-        Examples
-        --------
-        import asyncio
-
-        from bctrl import AsyncBctrl
-
-        client = AsyncBctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-
-
-        async def main() -> None:
-            await client.secrets.put(
-                path="path",
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.put(
-            path,
-            if_match=if_match,
-            idempotency_key=idempotency_key,
-            from_version=from_version,
-            label=label,
-            notes=notes,
-            origins=origins,
-            password=password,
-            totp=totp,
-            type=type,
-            username=username,
-            value=value,
-            request_options=request_options,
-        )
+        _response = await self._raw_client.get(secret, request_options=request_options)
         return _response.data
 
     async def delete(
         self,
-        path: str,
+        secret: str,
         *,
         if_match: typing.Optional[str] = None,
         idempotency_key: typing.Optional[str] = None,
@@ -698,8 +681,8 @@ class AsyncSecretsClient:
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         if_match : typing.Optional[str]
             Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
@@ -730,23 +713,24 @@ class AsyncSecretsClient:
 
         async def main() -> None:
             await client.secrets.delete(
-                path="path",
+                secret="secret",
             )
 
 
         asyncio.run(main())
         """
         _response = await self._raw_client.delete(
-            path, if_match=if_match, idempotency_key=idempotency_key, request_options=request_options
+            secret, if_match=if_match, idempotency_key=idempotency_key, request_options=request_options
         )
         return _response.data
 
     async def update(
         self,
-        path: str,
+        secret: str,
         *,
         if_match: typing.Optional[str] = None,
         idempotency_key: typing.Optional[str] = None,
+        from_version: typing.Optional[int] = OMIT,
         label: typing.Optional[str] = OMIT,
         notes: typing.Optional[str] = OMIT,
         origins: typing.Optional[typing.Sequence[str]] = OMIT,
@@ -761,14 +745,17 @@ class AsyncSecretsClient:
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         if_match : typing.Optional[str]
             Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        from_version : typing.Optional[int]
+            Restore values of this version; send alone.
 
         label : typing.Optional[str]
 
@@ -812,16 +799,17 @@ class AsyncSecretsClient:
 
         async def main() -> None:
             await client.secrets.update(
-                path="path",
+                secret="secret",
             )
 
 
         asyncio.run(main())
         """
         _response = await self._raw_client.update(
-            path,
+            secret,
             if_match=if_match,
             idempotency_key=idempotency_key,
+            from_version=from_version,
             label=label,
             notes=notes,
             origins=origins,
@@ -830,5 +818,119 @@ class AsyncSecretsClient:
             username=username,
             value=value,
             request_options=request_options,
+        )
+        return _response.data
+
+    async def reveal(
+        self,
+        secret: str,
+        *,
+        idempotency_key: typing.Optional[str] = None,
+        version: typing.Optional[int] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> SecretRevealResponse:
+        """
+        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+
+        Parameters
+        ----------
+        secret : str
+            Unique secret identifier generated by BCTRL.
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        version : typing.Optional[int]
+            Defaults to the current version.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        SecretRevealResponse
+            OK
+
+        Examples
+        --------
+        import asyncio
+
+        from bctrl import AsyncBctrl
+
+        client = AsyncBctrl(
+            bctrl_space="YOUR_BCTRL_SPACE",
+            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
+            token="YOUR_TOKEN",
+        )
+
+
+        async def main() -> None:
+            await client.secrets.reveal(
+                secret="secret",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.reveal(
+            secret, idempotency_key=idempotency_key, version=version, request_options=request_options
+        )
+        return _response.data
+
+    async def versions(
+        self,
+        secret: str,
+        *,
+        cursor: typing.Optional[str] = None,
+        order: typing.Optional[VersionsSecretsRequestOrder] = None,
+        limit: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> SecretVersionList:
+        """
+        List version metadata by secret ID. Values and ciphertext are never returned.
+
+        Parameters
+        ----------
+        secret : str
+            Unique secret identifier generated by BCTRL.
+
+        cursor : typing.Optional[str]
+
+        order : typing.Optional[VersionsSecretsRequestOrder]
+            Order by createdAt and ID. Defaults to desc.
+
+        limit : typing.Optional[int]
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        SecretVersionList
+            OK
+
+        Examples
+        --------
+        import asyncio
+
+        from bctrl import AsyncBctrl
+
+        client = AsyncBctrl(
+            bctrl_space="YOUR_BCTRL_SPACE",
+            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
+            token="YOUR_TOKEN",
+        )
+
+
+        async def main() -> None:
+            await client.secrets.versions(
+                secret="secret",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.versions(
+            secret, cursor=cursor, order=order, limit=limit, request_options=request_options
         )
         return _response.data

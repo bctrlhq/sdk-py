@@ -22,6 +22,7 @@ if typing.TYPE_CHECKING:
     from .browsers.client import AsyncBrowsersClient, BrowsersClient
     from .conversations.client import AsyncConversationsClient, ConversationsClient
     from .environments.client import AsyncEnvironmentsClient, EnvironmentsClient
+    from .events.client import AsyncEventsClient, EventsClient
     from .files.client import AsyncFilesClient, FilesClient
     from .locations.client import AsyncLocationsClient, LocationsClient
     from .notification_recipients.client import AsyncNotificationRecipientsClient, NotificationRecipientsClient
@@ -137,6 +138,7 @@ class Bctrl:
         self._browsers: typing.Optional[BrowsersClient] = None
         self._conversations: typing.Optional[ConversationsClient] = None
         self._environments: typing.Optional[EnvironmentsClient] = None
+        self._events: typing.Optional[EventsClient] = None
         self._files: typing.Optional[FilesClient] = None
         self._locations: typing.Optional[LocationsClient] = None
         self._notification_recipients: typing.Optional[NotificationRecipientsClient] = None
@@ -250,6 +252,14 @@ class Bctrl:
 
             self._environments = EnvironmentsClient(client_wrapper=self._client_wrapper)
         return self._environments
+
+    @property
+    def events(self):
+        if self._events is None:
+            from .events.client import EventsClient  # noqa: E402
+
+            self._events = EventsClient(client_wrapper=self._client_wrapper)
+        return self._events
 
     @property
     def files(self):
@@ -500,6 +510,7 @@ class AsyncBctrl:
         self._browsers: typing.Optional[AsyncBrowsersClient] = None
         self._conversations: typing.Optional[AsyncConversationsClient] = None
         self._environments: typing.Optional[AsyncEnvironmentsClient] = None
+        self._events: typing.Optional[AsyncEventsClient] = None
         self._files: typing.Optional[AsyncFilesClient] = None
         self._locations: typing.Optional[AsyncLocationsClient] = None
         self._notification_recipients: typing.Optional[AsyncNotificationRecipientsClient] = None
@@ -621,6 +632,14 @@ class AsyncBctrl:
 
             self._environments = AsyncEnvironmentsClient(client_wrapper=self._client_wrapper)
         return self._environments
+
+    @property
+    def events(self):
+        if self._events is None:
+            from .events.client import AsyncEventsClient  # noqa: E402
+
+            self._events = AsyncEventsClient(client_wrapper=self._client_wrapper)
+        return self._events
 
     @property
     def files(self):

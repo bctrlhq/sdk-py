@@ -7,11 +7,12 @@ from .browser_helpers import Browsers, AsyncBrowsers
 from .generated_surface import DEFAULT_API_VERSION
 from .pagination import paginate, async_paginate
 from .retries import SafeHttpClient, AsyncSafeHttpClient
+from .waits import wait_for, async_wait_for
 
 
 class Bctrl(GeneratedBctrl):
     def __init__(self, *, max_retries: int = 2, api_version: str = DEFAULT_API_VERSION, **kwargs: Any):
-        headers = {"BCTRL-Version": api_version, **kwargs.pop("headers", {})}
+        headers = {"BCTRL-Version": api_version, **(kwargs.pop("headers", None) or {})}
         super().__init__(max_retries=0, headers=headers, **kwargs)
         wrapper = self._client_wrapper
         wrapper.httpx_client = SafeHttpClient(wrapper.httpx_client, max_retries)
@@ -23,11 +24,12 @@ class Bctrl(GeneratedBctrl):
         return self._browsers
 
     paginate = staticmethod(paginate)
+    wait_for = staticmethod(wait_for)
 
 
 class AsyncBctrl(GeneratedAsyncBctrl):
     def __init__(self, *, max_retries: int = 2, api_version: str = DEFAULT_API_VERSION, **kwargs: Any):
-        headers = {"BCTRL-Version": api_version, **kwargs.pop("headers", {})}
+        headers = {"BCTRL-Version": api_version, **(kwargs.pop("headers", None) or {})}
         super().__init__(max_retries=0, headers=headers, **kwargs)
         wrapper = self._client_wrapper
         wrapper.httpx_client = AsyncSafeHttpClient(wrapper.httpx_client, max_retries)
@@ -39,3 +41,4 @@ class AsyncBctrl(GeneratedAsyncBctrl):
         return self._browsers
 
     paginate = staticmethod(async_paginate)
+    wait_for = staticmethod(async_wait_for)

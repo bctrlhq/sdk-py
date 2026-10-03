@@ -21,7 +21,8 @@ if typing.TYPE_CHECKING:
         BrowsersUpdateRequestViewport,
         ListBrowsersRequestOrder,
     )
-    from . import connections, runs
+    from . import connections, events, runs
+    from .events import StreamEventsRequestActorType
     from .runs import ListRunsRequestInclude, ListRunsRequestOrder
 _dynamic_imports: typing.Dict[str, str] = {
     "BrowserCreateRequestCaptcha": ".types",
@@ -39,7 +40,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ListBrowsersRequestOrder": ".types",
     "ListRunsRequestInclude": ".runs",
     "ListRunsRequestOrder": ".runs",
+    "StreamEventsRequestActorType": ".events",
     "connections": ".connections",
+    "events": ".events",
     "runs": ".runs",
 }
 
@@ -81,6 +84,8 @@ __all__ = [
     "ListBrowsersRequestOrder",
     "ListRunsRequestInclude",
     "ListRunsRequestOrder",
+    "StreamEventsRequestActorType",
     "connections",
+    "events",
     "runs",
 ]

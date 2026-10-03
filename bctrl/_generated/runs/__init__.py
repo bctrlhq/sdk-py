@@ -14,7 +14,12 @@ if typing.TYPE_CHECKING:
         ListRunsRequestStatusItem,
     )
     from . import events, files, trace
-    from .events import ListEventsRequestOrder, ListEventsRequestSourceItem
+    from .events import (
+        ListEventsRequestActorType,
+        ListEventsRequestOrder,
+        ListEventsRequestSourceItem,
+        StreamEventsRequestActorType,
+    )
     from .files import ListFilesRequestOrder
     from .trace import (
         ListTraceRequestKindItem,
@@ -24,6 +29,7 @@ if typing.TYPE_CHECKING:
     )
 _dynamic_imports: typing.Dict[str, str] = {
     "GetRunsRequestInclude": ".types",
+    "ListEventsRequestActorType": ".events",
     "ListEventsRequestOrder": ".events",
     "ListEventsRequestSourceItem": ".events",
     "ListFilesRequestOrder": ".files",
@@ -35,6 +41,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ListTraceRequestOrder": ".trace",
     "ListTraceRequestResourceType": ".trace",
     "ListTraceRequestStatusItem": ".trace",
+    "StreamEventsRequestActorType": ".events",
     "events": ".events",
     "files": ".files",
     "trace": ".trace",
@@ -64,6 +71,7 @@ def __dir__():
 
 __all__ = [
     "GetRunsRequestInclude",
+    "ListEventsRequestActorType",
     "ListEventsRequestOrder",
     "ListEventsRequestSourceItem",
     "ListFilesRequestOrder",
@@ -75,6 +83,7 @@ __all__ = [
     "ListTraceRequestOrder",
     "ListTraceRequestResourceType",
     "ListTraceRequestStatusItem",
+    "StreamEventsRequestActorType",
     "events",
     "files",
     "trace",

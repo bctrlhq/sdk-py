@@ -1,0 +1,712 @@
+{
+  "GET /v1/api-keys": {
+    "data": [
+      {
+        "createdAt": "2026-07-26T12:00:00Z",
+        "expiresAt": "expiresAt",
+        "id": "id",
+        "keyPrefix": "keyPrefix",
+        "lastUsedAt": "2026-07-26T12:00:00Z",
+        "name": "name",
+        "object": "api_key",
+        "scopes": [
+          "*"
+        ],
+        "subaccountId": "V1StGXR8_Z5jdHi6B-myT",
+        "updatedAt": "2026-07-26T12:00:00Z",
+        "usageCount": 0,
+        "type": "organization"
+      }
+    ],
+    "hasMore": true,
+    "nextCursor": "nextCursor"
+  },
+  "POST /v1/api-keys": {
+    "data": {
+      "createdAt": "2026-07-26T12:00:00Z",
+      "expiresAt": "expiresAt",
+      "id": "id",
+      "keyPrefix": "keyPrefix",
+      "lastUsedAt": "2026-07-26T12:00:00Z",
+      "name": "name",
+      "object": "api_key",
+      "scopes": [
+        "*"
+      ],
+      "subaccountId": "V1StGXR8_Z5jdHi6B-myT",
+      "updatedAt": "2026-07-26T12:00:00Z",
+      "usageCount": 0,
+      "type": "organization"
+    },
+    "secret": "secret"
+  },
+  "GET /v1/conversations/{conversationId}": {
+    "activeTurnId": "turn_uAAAAAAAAAAAAAAAAAAAAAA",
+    "createdAt": "2026-07-26T12:00:00Z",
+    "environmentId": "env_uAAAAAAAAAAAAAAAAAAAAAA",
+    "id": "conv_uAAAAAAAAAAAAAAAAAAAAAA",
+    "messages": [
+      {
+        "conversationId": "conv_uAAAAAAAAAAAAAAAAAAAAAA",
+        "createdAt": "2026-07-26T12:00:00Z",
+        "fileIds": [
+          "file_uAAAAAAAAAAAAAAAAAAAAAA"
+        ],
+        "id": "msg_uAAAAAAAAAAAAAAAAAAAAAA",
+        "metadata": {},
+        "model": "model",
+        "object": "message",
+        "role": "system",
+        "runId": "run_uAAAAAAAAAAAAAAAAAAAAAA",
+        "sequence": 1,
+        "spanId": "span_uAAAAAAAAAAAAAAAAAAAAAA",
+        "text": "text",
+        "turnId": "turn_uAAAAAAAAAAAAAAAAAAAAAA",
+        "updatedAt": "2026-07-26T12:00:00Z"
+      }
+    ],
+    "model": "model",
+    "nextMessageCursor": "nextMessageCursor",
+    "object": "conversation",
+    "runtimeId": "br_uAAAAAAAAAAAAAAAAAAAAAA",
+    "spaceId": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
+    "status": "idle",
+    "streamCursor": "streamCursor",
+    "title": "title",
+    "toolsetId": "tset_uAAAAAAAAAAAAAAAAAAAAAA",
+    "updatedAt": "2026-07-26T12:00:00Z"
+  },
+  "PATCH /v1/conversations/{conversationId}": {
+    "activeTurnId": "turn_uAAAAAAAAAAAAAAAAAAAAAA",
+    "createdAt": "2026-07-26T12:00:00Z",
+    "environmentId": "env_uAAAAAAAAAAAAAAAAAAAAAA",
+    "id": "conv_uAAAAAAAAAAAAAAAAAAAAAA",
+    "model": "model",
+    "object": "conversation",
+    "runtimeId": "br_uAAAAAAAAAAAAAAAAAAAAAA",
+    "spaceId": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
+    "status": "idle",
+    "title": "title",
+    "toolsetId": "tset_uAAAAAAAAAAAAAAAAAAAAAA",
+    "updatedAt": "2026-07-26T12:00:00Z"
+  },
+  "GET /v1/files": {
+    "data": [
+      {
+        "canDelete": true,
+        "contentType": "contentType",
+        "createdAt": "2026-07-26T12:00:00Z",
+        "downloadUrl": "downloadUrl",
+        "expiresAt": "2026-07-26T12:00:00Z",
+        "filename": "filename",
+        "id": "file_uAAAAAAAAAAAAAAAAAAAAAA",
+        "object": "file",
+        "path": "path",
+        "runId": "run_uAAAAAAAAAAAAAAAAAAAAAA",
+        "runtimeId": "br_uAAAAAAAAAAAAAAAAAAAAAA",
+        "sizeBytes": 1024,
+        "source": "upload",
+        "spaceId": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
+        "type": "type",
+        "updatedAt": "2026-07-26T12:00:00Z"
+      }
+    ],
+    "folders": [
+      {
+        "fileCount": 0,
+        "lastCreatedAt": "2026-07-26T12:00:00Z",
+        "path": "path",
+        "segment": "segment",
+        "totalBytes": 1024
+      }
+    ],
+    "hasMore": true,
+    "nextCursor": "nextCursor"
+  },
+  "POST /v1/files": {
+    "canDelete": true,
+    "contentType": "contentType",
+    "createdAt": "2026-07-26T12:00:00Z",
+    "downloadUrl": "downloadUrl",
+    "expiresAt": "2026-07-26T12:00:00Z",
+    "filename": "filename",
+    "id": "file_uAAAAAAAAAAAAAAAAAAAAAA",
+    "metadata": {
+      "key": {
+        "key": "value"
+      }
+    },
+    "object": "file",
+    "path": "path",
+    "runId": "run_uAAAAAAAAAAAAAAAAAAAAAA",
+    "runtimeId": "br_uAAAAAAAAAAAAAAAAAAAAAA",
+    "sizeBytes": 1024,
+    "source": "upload",
+    "spaceId": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
+    "type": "type",
+    "updatedAt": "2026-07-26T12:00:00Z"
+  },
+  "GET /v1/locations": {
+    "data": [
+      {
+        "homeRegions": [
+          "us"
+        ],
+        "id": "us-east",
+        "name": "name",
+        "object": "location",
+        "status": "available"
+      }
+    ],
+    "hasMore": true,
+    "nextCursor": "nextCursor"
+  },
+  "GET /v1/notification-recipients": {
+    "data": [
+      {
+        "createdAt": "createdAt",
+        "enabled": true,
+        "id": "nrec_uAAAAAAAAAAAAAAAAAAAAAA",
+        "name": "name",
+        "object": "notification_recipient",
+        "subaccountId": "V1StGXR8_Z5jdHi6B-myT",
+        "type": "email",
+        "updatedAt": "updatedAt",
+        "value": "value"
+      }
+    ],
+    "hasMore": true,
+    "nextCursor": "nextCursor"
+  },
+  "POST /v1/notification-recipients": {
+    "createdAt": "createdAt",
+    "enabled": true,
+    "id": "nrec_uAAAAAAAAAAAAAAAAAAAAAA",
+    "name": "name",
+    "object": "notification_recipient",
+    "subaccountId": "V1StGXR8_Z5jdHi6B-myT",
+    "type": "email",
+    "updatedAt": "updatedAt",
+    "value": "value"
+  },
+  "DELETE /v1/notification-recipients/{recipientId}": {
+    "deleted": true,
+    "id": "nrec_uAAAAAAAAAAAAAAAAAAAAAA",
+    "object": "notification_recipient"
+  },
+  "PATCH /v1/notification-recipients/{recipientId}": {
+    "createdAt": "createdAt",
+    "enabled": true,
+    "id": "nrec_uAAAAAAAAAAAAAAAAAAAAAA",
+    "name": "name",
+    "object": "notification_recipient",
+    "subaccountId": "V1StGXR8_Z5jdHi6B-myT",
+    "type": "email",
+    "updatedAt": "updatedAt",
+    "value": "value"
+  },
+  "GET /v1/secrets": {
+    "data": [
+      {
+        "createdAt": "2026-07-26T12:00:00Z",
+        "hasNotes": true,
+        "hasPassword": true,
+        "hasTotp": true,
+        "hasValue": true,
+        "id": "sec_uAAAAAAAAAAAAAAAAAAAAAA",
+        "label": "label",
+        "lastUsedAt": "2026-07-26T12:00:00Z",
+        "object": "secret",
+        "origins": [
+          "origins"
+        ],
+        "path": "path",
+        "subaccountId": "V1StGXR8_Z5jdHi6B-myT",
+        "type": "login",
+        "updatedAt": "2026-07-26T12:00:00Z",
+        "username": "username",
+        "version": 1
+      }
+    ],
+    "folders": [
+      "folders"
+    ],
+    "hasMore": true,
+    "nextCursor": "nextCursor"
+  },
+  "POST /v1/secrets": {
+    "createdAt": "2026-07-26T12:00:00Z",
+    "hasNotes": true,
+    "hasPassword": true,
+    "hasTotp": true,
+    "hasValue": true,
+    "id": "sec_uAAAAAAAAAAAAAAAAAAAAAA",
+    "label": "label",
+    "lastUsedAt": "2026-07-26T12:00:00Z",
+    "object": "secret",
+    "origins": [
+      "origins"
+    ],
+    "path": "path",
+    "subaccountId": "V1StGXR8_Z5jdHi6B-myT",
+    "type": "login",
+    "updatedAt": "2026-07-26T12:00:00Z",
+    "username": "username",
+    "version": 1
+  },
+  "GET /v1/secrets/{secret}": {
+    "createdAt": "2026-07-26T12:00:00Z",
+    "hasNotes": true,
+    "hasPassword": true,
+    "hasTotp": true,
+    "hasValue": true,
+    "id": "sec_uAAAAAAAAAAAAAAAAAAAAAA",
+    "label": "label",
+    "lastUsedAt": "2026-07-26T12:00:00Z",
+    "object": "secret",
+    "origins": [
+      "origins"
+    ],
+    "path": "path",
+    "subaccountId": "V1StGXR8_Z5jdHi6B-myT",
+    "type": "login",
+    "updatedAt": "2026-07-26T12:00:00Z",
+    "username": "username",
+    "version": 1
+  },
+  "DELETE /v1/secrets/{secret}": {
+    "createdAt": "2026-07-26T12:00:00Z",
+    "deleted": true,
+    "hasNotes": true,
+    "hasPassword": true,
+    "hasTotp": true,
+    "hasValue": true,
+    "id": "sec_uAAAAAAAAAAAAAAAAAAAAAA",
+    "label": "label",
+    "lastUsedAt": "2026-07-26T12:00:00Z",
+    "object": "secret",
+    "origins": [
+      "origins"
+    ],
+    "path": "path",
+    "subaccountId": "V1StGXR8_Z5jdHi6B-myT",
+    "type": "login",
+    "updatedAt": "2026-07-26T12:00:00Z",
+    "username": "username",
+    "version": 1
+  },
+  "PATCH /v1/secrets/{secret}": {
+    "createdAt": "2026-07-26T12:00:00Z",
+    "hasNotes": true,
+    "hasPassword": true,
+    "hasTotp": true,
+    "hasValue": true,
+    "id": "sec_uAAAAAAAAAAAAAAAAAAAAAA",
+    "label": "label",
+    "lastUsedAt": "2026-07-26T12:00:00Z",
+    "object": "secret",
+    "origins": [
+      "origins"
+    ],
+    "path": "path",
+    "subaccountId": "V1StGXR8_Z5jdHi6B-myT",
+    "type": "login",
+    "updatedAt": "2026-07-26T12:00:00Z",
+    "username": "username",
+    "version": 1
+  },
+  "POST /v1/secrets/{secret}/reveal": {
+    "id": "sec_uAAAAAAAAAAAAAAAAAAAAAA",
+    "notes": "notes",
+    "object": "secret.reveal_result",
+    "password": "password",
+    "path": "path",
+    "totp": "totp",
+    "username": "username",
+    "value": "value",
+    "version": 1
+  },
+  "GET /v1/secrets/{secret}/versions": {
+    "data": [
+      {
+        "createdAt": "2026-07-26T12:00:00Z",
+        "createdBy": "createdBy",
+        "hasNotes": true,
+        "hasPassword": true,
+        "hasTotp": true,
+        "hasValue": true,
+        "id": "id",
+        "object": "secret.version",
+        "secretId": "sec_uAAAAAAAAAAAAAAAAAAAAAA",
+        "updatedAt": "2026-07-26T12:00:00Z",
+        "version": 1
+      }
+    ],
+    "hasMore": true,
+    "nextCursor": "nextCursor"
+  },
+  "GET /v1/spaces": {
+    "data": [
+      {
+        "createdAt": "2026-07-26T12:00:00Z",
+        "environment": {},
+        "expireAfterIdleDays": 1,
+        "id": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
+        "isDefault": true,
+        "name": "Production browser",
+        "object": "space",
+        "region": "us-east-1",
+        "updatedAt": "2026-07-26T12:00:00Z"
+      }
+    ],
+    "hasMore": true,
+    "nextCursor": "nextCursor"
+  },
+  "POST /v1/spaces": {
+    "createdAt": "2026-07-26T12:00:00Z",
+    "environment": {
+      "ai": {
+        "credentialIds": [
+          "credentialIds"
+        ],
+        "default": "default"
+      },
+      "network": {
+        "allow": [
+          "allow"
+        ],
+        "deny": [
+          "deny"
+        ]
+      },
+      "secrets": {
+        "allow": [
+          "allow"
+        ],
+        "deny": [
+          "deny"
+        ],
+        "env": {
+          "key": "value"
+        }
+      },
+      "storage": {
+        "namespace": "namespace"
+      }
+    },
+    "expireAfterIdleDays": 1,
+    "id": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
+    "isDefault": true,
+    "name": "Production browser",
+    "object": "space",
+    "region": "us-east-1",
+    "updatedAt": "2026-07-26T12:00:00Z"
+  },
+  "GET /v1/subaccounts/{subaccountId}": {
+    "archivedAt": "archivedAt",
+    "createdAt": "createdAt",
+    "defaultSpaceId": "defaultSpaceId",
+    "externalId": "externalId",
+    "id": "V1StGXR8_Z5jdHi6B-myT",
+    "limits": {
+      "maxActiveRuns": 1,
+      "maxSpaces": 1,
+      "monthlyCreditLimit": 1.1
+    },
+    "metadata": {
+      "key": {
+        "key": "value"
+      }
+    },
+    "name": "Production browser",
+    "object": "subaccount",
+    "status": "active",
+    "updatedAt": "updatedAt",
+    "usage": {
+      "computedAt": "2026-07-26T12:00:00Z",
+      "credits": {
+        "limit": 1.1,
+        "used": 1.1
+      },
+      "period": {
+        "endsAt": "2026-07-26T12:00:00Z",
+        "startedAt": "2026-07-26T12:00:00Z"
+      },
+      "runs": {
+        "active": 1,
+        "limit": 1
+      },
+      "spaces": {
+        "limit": 1,
+        "used": 1
+      },
+      "subaccountId": "V1StGXR8_Z5jdHi6B-myT"
+    }
+  },
+  "PATCH /v1/subaccounts/{subaccountId}": {
+    "archivedAt": "archivedAt",
+    "createdAt": "createdAt",
+    "defaultSpaceId": "defaultSpaceId",
+    "externalId": "externalId",
+    "id": "V1StGXR8_Z5jdHi6B-myT",
+    "limits": {
+      "maxActiveRuns": 1,
+      "maxSpaces": 1,
+      "monthlyCreditLimit": 1.1
+    },
+    "metadata": {
+      "key": {
+        "key": "value"
+      }
+    },
+    "name": "Production browser",
+    "object": "subaccount",
+    "status": "active",
+    "updatedAt": "updatedAt",
+    "usage": {
+      "computedAt": "2026-07-26T12:00:00Z",
+      "credits": {
+        "limit": 1.1,
+        "used": 1.1
+      },
+      "period": {
+        "endsAt": "2026-07-26T12:00:00Z",
+        "startedAt": "2026-07-26T12:00:00Z"
+      },
+      "runs": {
+        "active": 1,
+        "limit": 1
+      },
+      "spaces": {
+        "limit": 1,
+        "used": 1
+      },
+      "subaccountId": "V1StGXR8_Z5jdHi6B-myT"
+    }
+  },
+  "POST /v1/conversations/{conversationId}/messages": {
+    "messageId": "msg_uAAAAAAAAAAAAAAAAAAAAAA",
+    "object": "agent_turn",
+    "runId": "run_uAAAAAAAAAAAAAAAAAAAAAA",
+    "spanId": "span_uAAAAAAAAAAAAAAAAAAAAAA",
+    "status": "queued",
+    "streamCursor": "streamCursor",
+    "turnId": "turn_uAAAAAAAAAAAAAAAAAAAAAA"
+  },
+  "GET /v1/proxies/geo": {
+    "data": [
+      {
+        "availableFor": [
+          "managed-rotating"
+        ],
+        "country": "country",
+        "geoId": "geoId",
+        "name": "name",
+        "object": "proxy_location",
+        "pools": [
+          "pool1"
+        ],
+        "region": "region",
+        "subdivision": "subdivision",
+        "type": "country"
+      }
+    ],
+    "hasMore": true,
+    "nextCursor": "nextCursor"
+  },
+  "GET /v1/proxies/locations": {
+    "data": [
+      {
+        "availableFor": [
+          "managed-rotating"
+        ],
+        "country": "country",
+        "geoId": "geoId",
+        "name": "name",
+        "object": "proxy_location",
+        "pools": [
+          "pool1"
+        ],
+        "region": "region",
+        "subdivision": "subdivision",
+        "type": "country"
+      }
+    ],
+    "hasMore": true,
+    "nextCursor": "nextCursor"
+  },
+  "GET /v1/runs/{runId}/files": {
+    "data": [
+      {
+        "binding": {
+          "failure": null,
+          "state": "pending",
+          "updatedAt": "2026-07-26T12:00:00Z"
+        },
+        "createdAt": "2026-07-26T12:00:00Z",
+        "fileId": "file_uAAAAAAAAAAAAAAAAAAAAAA",
+        "filename": "filename",
+        "object": "run.file",
+        "role": "input",
+        "runtimePath": "runtimePath",
+        "size": 1,
+        "sourcePath": "sourcePath",
+        "spacePath": "spacePath",
+        "updatedAt": "2026-07-26T12:00:00Z"
+      }
+    ],
+    "hasMore": true,
+    "nextCursor": "nextCursor"
+  },
+  "POST /v1/runs/{runId}/files": {
+    "binding": {
+      "failure": {
+        "code": "code",
+        "detail": "detail",
+        "retryable": true
+      },
+      "state": "pending",
+      "updatedAt": "2026-07-26T12:00:00Z"
+    },
+    "createdAt": "2026-07-26T12:00:00Z",
+    "fileId": "file_uAAAAAAAAAAAAAAAAAAAAAA",
+    "filename": "filename",
+    "object": "run.file",
+    "role": "input",
+    "runtimePath": "runtimePath",
+    "size": 1,
+    "sourcePath": "sourcePath",
+    "spacePath": "spacePath",
+    "updatedAt": "2026-07-26T12:00:00Z"
+  },
+  "GET /v1/runs/{runId}/files/{fileId}": {
+    "binding": {
+      "failure": {
+        "code": "code",
+        "detail": "detail",
+        "retryable": true
+      },
+      "state": "pending",
+      "updatedAt": "2026-07-26T12:00:00Z"
+    },
+    "createdAt": "2026-07-26T12:00:00Z",
+    "fileId": "file_uAAAAAAAAAAAAAAAAAAAAAA",
+    "filename": "filename",
+    "object": "run.file",
+    "role": "input",
+    "runtimePath": "runtimePath",
+    "size": 1,
+    "sourcePath": "sourcePath",
+    "spacePath": "spacePath",
+    "updatedAt": "2026-07-26T12:00:00Z"
+  },
+  "DELETE /v1/runs/{runId}/files/{fileId}": {
+    "binding": {
+      "failure": {
+        "code": "code",
+        "detail": "detail",
+        "retryable": true
+      },
+      "state": "pending",
+      "updatedAt": "2026-07-26T12:00:00Z"
+    },
+    "createdAt": "2026-07-26T12:00:00Z",
+    "fileId": "file_uAAAAAAAAAAAAAAAAAAAAAA",
+    "filename": "filename",
+    "object": "run.file",
+    "role": "input",
+    "runtimePath": "runtimePath",
+    "size": 1,
+    "sourcePath": "sourcePath",
+    "spacePath": "spacePath",
+    "updatedAt": "2026-07-26T12:00:00Z"
+  },
+  "POST /v1/runs/{runId}/files/{fileId}/retry": {
+    "binding": {
+      "failure": {
+        "code": "code",
+        "detail": "detail",
+        "retryable": true
+      },
+      "state": "pending",
+      "updatedAt": "2026-07-26T12:00:00Z"
+    },
+    "createdAt": "2026-07-26T12:00:00Z",
+    "fileId": "file_uAAAAAAAAAAAAAAAAAAAAAA",
+    "filename": "filename",
+    "object": "run.file",
+    "role": "input",
+    "runtimePath": "runtimePath",
+    "size": 1,
+    "sourcePath": "sourcePath",
+    "spacePath": "spacePath",
+    "updatedAt": "2026-07-26T12:00:00Z"
+  },
+  "POST /v1/runs/{runId}/files/collect": {
+    "binding": {
+      "failure": {
+        "code": "code",
+        "detail": "detail",
+        "retryable": true
+      },
+      "state": "pending",
+      "updatedAt": "2026-07-26T12:00:00Z"
+    },
+    "createdAt": "2026-07-26T12:00:00Z",
+    "fileId": "file_uAAAAAAAAAAAAAAAAAAAAAA",
+    "filename": "filename",
+    "object": "run.file",
+    "role": "input",
+    "runtimePath": "runtimePath",
+    "size": 1,
+    "sourcePath": "sourcePath",
+    "spacePath": "spacePath",
+    "updatedAt": "2026-07-26T12:00:00Z"
+  },
+  "POST /v1/runs/{runId}/files/upload": {
+    "binding": {
+      "failure": {
+        "code": "code",
+        "detail": "detail",
+        "retryable": true
+      },
+      "state": "pending",
+      "updatedAt": "2026-07-26T12:00:00Z"
+    },
+    "createdAt": "2026-07-26T12:00:00Z",
+    "fileId": "file_uAAAAAAAAAAAAAAAAAAAAAA",
+    "filename": "filename",
+    "object": "run.file",
+    "role": "input",
+    "runtimePath": "runtimePath",
+    "size": 1,
+    "sourcePath": "sourcePath",
+    "spacePath": "spacePath",
+    "updatedAt": "2026-07-26T12:00:00Z"
+  },
+  "POST /v1/tools/{toolRef}/calls": {
+    "callerType": "api",
+    "createdAt": "2026-07-26T12:00:00Z",
+    "error": {
+      "key": "value"
+    },
+    "finishedAt": {
+      "key": "value"
+    },
+    "id": "tc_uAAAAAAAAAAAAAAAAAAAAAA",
+    "inputRequest": {
+      "key": "value"
+    },
+    "object": "tool_call",
+    "parentId": "tc_uAAAAAAAAAAAAAAAAAAAAAA",
+    "resultAvailable": true,
+    "runId": "run_uAAAAAAAAAAAAAAAAAAAAAA",
+    "runtimeId": "br_uAAAAAAAAAAAAAAAAAAAAAA",
+    "spanId": "span_uAAAAAAAAAAAAAAAAAAAAAA",
+    "startedAt": "2026-07-26T12:00:00Z",
+    "tool": "stagehand.act",
+    "turnId": "turn_uAAAAAAAAAAAAAAAAAAAAAA",
+    "updatedAt": "2026-07-26T12:00:00Z",
+    "status": "queued"
+  }
+}

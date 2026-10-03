@@ -60,6 +60,11 @@ class SafeHttpClient:
     def __getattr__(self, name: str) -> Any:
         return getattr(self._delegate, name)
 
+    def stream(self, *args: Any, **kwargs: Any) -> Any:
+        # A stream cannot be replayed safely. Also neutralize per-request Fern retries.
+        request, _ = _request(kwargs, self._max_retries)
+        return self._delegate.stream(*args, **request)
+
     def request(self, *args: Any, **kwargs: Any) -> Any:
         request, limit = _request(kwargs, self._max_retries)
         attempt = 0

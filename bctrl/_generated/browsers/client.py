@@ -34,6 +34,7 @@ from .types.list_browsers_request_order import ListBrowsersRequestOrder
 
 if typing.TYPE_CHECKING:
     from .connections.client import AsyncConnectionsClient, ConnectionsClient
+    from .events.client import AsyncEventsClient, EventsClient
     from .runs.client import AsyncRunsClient, RunsClient
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -44,6 +45,7 @@ class BrowsersClient:
         self._raw_client = RawBrowsersClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
         self._connections: typing.Optional[ConnectionsClient] = None
+        self._events: typing.Optional[EventsClient] = None
         self._runs: typing.Optional[RunsClient] = None
 
     @property
@@ -572,6 +574,14 @@ class BrowsersClient:
         return self._connections
 
     @property
+    def events(self):
+        if self._events is None:
+            from .events.client import EventsClient  # noqa: E402
+
+            self._events = EventsClient(client_wrapper=self._client_wrapper)
+        return self._events
+
+    @property
     def runs(self):
         if self._runs is None:
             from .runs.client import RunsClient  # noqa: E402
@@ -585,6 +595,7 @@ class AsyncBrowsersClient:
         self._raw_client = AsyncRawBrowsersClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
         self._connections: typing.Optional[AsyncConnectionsClient] = None
+        self._events: typing.Optional[AsyncEventsClient] = None
         self._runs: typing.Optional[AsyncRunsClient] = None
 
     @property
@@ -1169,6 +1180,14 @@ class AsyncBrowsersClient:
 
             self._connections = AsyncConnectionsClient(client_wrapper=self._client_wrapper)
         return self._connections
+
+    @property
+    def events(self):
+        if self._events is None:
+            from .events.client import AsyncEventsClient  # noqa: E402
+
+            self._events = AsyncEventsClient(client_wrapper=self._client_wrapper)
+        return self._events
 
     @property
     def runs(self):

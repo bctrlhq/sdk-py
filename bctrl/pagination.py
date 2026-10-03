@@ -4,10 +4,10 @@ from __future__ import annotations
 from typing import Any, Callable, Iterator, AsyncIterator
 
 
-def paginate(list_page: Callable[..., Any], **kwargs: Any) -> Iterator[Any]:
+def paginate(list_page: Callable[..., Any], *args: Any, **kwargs: Any) -> Iterator[Any]:
     seen: set[str] = set()
     while True:
-        page = list_page(**kwargs)
+        page = list_page(*args, **kwargs)
         yield from page.data
         cursor = page.next_cursor
         if not cursor:
@@ -18,10 +18,10 @@ def paginate(list_page: Callable[..., Any], **kwargs: Any) -> Iterator[Any]:
         kwargs["cursor"] = cursor
 
 
-async def async_paginate(list_page: Callable[..., Any], **kwargs: Any) -> AsyncIterator[Any]:
+async def async_paginate(list_page: Callable[..., Any], *args: Any, **kwargs: Any) -> AsyncIterator[Any]:
     seen: set[str] = set()
     while True:
-        page = await list_page(**kwargs)
+        page = await list_page(*args, **kwargs)
         for item in page.data:
             yield item
         cursor = page.next_cursor

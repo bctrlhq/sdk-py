@@ -108,3 +108,33 @@ def test_async_generated_retries_and_unknown_outcomes():
             assert len(requests) == 3
 
     asyncio.run(run())
+
+def test_sync_and_async_streams_do_not_retry_unknown_with_request_overrides():
+    import asyncio
+    import httpx
+    import pytest
+    from bctrl import Bctrl, AsyncBctrl, ApiError
+
+    calls = []
+
+    def transport(request):
+        calls.append(request)
+        return httpx.Response(503, json={"error": {"code": "effect.unknown", "reasonClass": "unknown"}})
+
+    client = Bctrl(token="test", httpx_client=httpx.Client(transport=httpx.MockTransport(transport)), max_retries=4)
+    with pytest.raises(ApiError) as failure:
+        list(client.files.content("file_test", request_options={"max_retries": 4}))
+    assert failure.value.status_code == 503
+    assert len(calls) == 1
+
+    async def run():
+        http = httpx.AsyncClient(transport=httpx.MockTransport(transport))
+        async_client = AsyncBctrl(token="test", httpx_client=http, max_retries=4)
+        try:
+            with pytest.raises(ApiError):
+                _ = [chunk async for chunk in async_client.files.content("file_test", request_options={"max_retries": 4})]
+        finally:
+            await http.aclose()
+
+    asyncio.run(run())
+    assert len(calls) == 2

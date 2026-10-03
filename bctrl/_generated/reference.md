@@ -2779,6 +2779,178 @@ client.environments.stop(
 </dl>
 </details>
 
+## events
+<details><summary><code>client.events.<a href="src/bctrl/events/client.py">list</a>(...) -> EventsListResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List immutable Events visible in the organization, subaccount and selected Space. Filter by Run, browser, event metadata or occurrence time.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+import datetime
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.events.list(
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**category:** `typing.Optional[ListEventsRequestCategory]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type:** `typing.Optional[typing.Union[str, typing.Sequence[str]]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor:** `typing.Optional[str]` — Actor ID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor_type:** `typing.Optional[ListEventsRequestActorType]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**channel:** `typing.Optional[ListEventsRequestChannel]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**outcome:** `typing.Optional[ListEventsRequestOutcome]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**from:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**to:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cursor:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**order:** `typing.Optional[ListEventsRequestOrder]` — Order by createdAt and ID. Defaults to desc.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**run_id:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**runtime_id:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## files
 <details><summary><code>client.files.<a href="src/bctrl/files/client.py">list</a>(...) -> FileListResponse</code></summary>
 <dl>
@@ -5067,7 +5239,7 @@ client.secrets.list()
 </dl>
 </details>
 
-<details><summary><code>client.secrets.<a href="src/bctrl/secrets/client.py">reveal</a>(...) -> SecretRevealResponse</code></summary>
+<details><summary><code>client.secrets.<a href="src/bctrl/secrets/client.py">create</a>(...) -> Secret</code></summary>
 <dl>
 <dd>
 
@@ -5079,7 +5251,7 @@ client.secrets.list()
 <dl>
 <dd>
 
-Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+Create a Secret at a new path. The returned ID addresses it; paths remain reference keys.
 </dd>
 </dl>
 </dd>
@@ -5102,8 +5274,9 @@ client = Bctrl(
     environment=BctrlEnvironment.PRODUCTION,
 )
 
-client.secrets.reveal(
+client.secrets.create(
     path="path",
+    type="login",
 )
 
 ```
@@ -5121,6 +5294,14 @@ client.secrets.reveal(
 <dd>
 
 **path:** `str` — Secret path, for example `prod/github/bot`. May contain `/`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type:** `SecretCreateRequestType` — `login`: username, password and TOTP seed for a site. `value`: one opaque value.
     
 </dd>
 </dl>
@@ -5129,184 +5310,6 @@ client.secrets.reveal(
 <dd>
 
 **idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**version:** `typing.Optional[int]` — Defaults to the current version.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.secrets.<a href="src/bctrl/secrets/client.py">get</a>(...) -> Secret</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets:reveal` to read values.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.secrets.get(
-    path="path",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**path:** `str` — Secret path, for example `prod/github/bot`. May contain `/`.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.secrets.<a href="src/bctrl/secrets/client.py">put</a>(...) -> Secret</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Create or replace a Secret. Every write is a new version, returned as `version` and the `ETag` header. Send `If-Match` to write only over a known version. Send `{fromVersion}` alone to roll back to an earlier version.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.secrets.put(
-    path="path",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**path:** `str` — Secret path, for example `prod/github/bot`. May contain `/`.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**if_match:** `typing.Optional[str]` — Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**from_version:** `typing.Optional[int]` — Rollback: make the values of this earlier version the new version. Send it alone.
     
 </dd>
 </dl>
@@ -5354,14 +5357,6 @@ client.secrets.put(
 <dl>
 <dd>
 
-**type:** `typing.Optional[SecretPutRequestType]` — `login`: username, password and TOTP seed for a site. `value`: one opaque value.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **username:** `typing.Optional[str]` 
     
 </dd>
@@ -5371,6 +5366,79 @@ client.secrets.put(
 <dd>
 
 **value:** `typing.Optional[str]` — The value of a `value` secret. Write-only.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.secrets.<a href="src/bctrl/secrets/client.py">get</a>(...) -> Secret</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets/{secret}/reveal` to read values.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.secrets.get(
+    secret="secret",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**secret:** `str` — Unique secret identifier generated by BCTRL.
     
 </dd>
 </dl>
@@ -5426,7 +5494,7 @@ client = Bctrl(
 )
 
 client.secrets.delete(
-    path="path",
+    secret="secret",
 )
 
 ```
@@ -5443,7 +5511,7 @@ client.secrets.delete(
 <dl>
 <dd>
 
-**path:** `str` — Secret path, for example `prod/github/bot`. May contain `/`.
+**secret:** `str` — Unique secret identifier generated by BCTRL.
     
 </dd>
 </dl>
@@ -5515,7 +5583,7 @@ client = Bctrl(
 )
 
 client.secrets.update(
-    path="path",
+    secret="secret",
 )
 
 ```
@@ -5532,7 +5600,7 @@ client.secrets.update(
 <dl>
 <dd>
 
-**path:** `str` — Secret path, for example `prod/github/bot`. May contain `/`.
+**secret:** `str` — Unique secret identifier generated by BCTRL.
     
 </dd>
 </dl>
@@ -5549,6 +5617,14 @@ client.secrets.update(
 <dd>
 
 **idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**from_version:** `typing.Optional[int]` — Restore values of this version; send alone.
     
 </dd>
 </dl>
@@ -5605,6 +5681,192 @@ client.secrets.update(
 <dd>
 
 **value:** `typing.Optional[str]` — The value of a `value` secret. Write-only.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.secrets.<a href="src/bctrl/secrets/client.py">reveal</a>(...) -> SecretRevealResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.secrets.reveal(
+    secret="secret",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**secret:** `str` — Unique secret identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**version:** `typing.Optional[int]` — Defaults to the current version.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.secrets.<a href="src/bctrl/secrets/client.py">versions</a>(...) -> SecretVersionList</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List version metadata by secret ID. Values and ciphertext are never returned.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.secrets.versions(
+    secret="secret",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**secret:** `str` — Unique secret identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cursor:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**order:** `typing.Optional[VersionsSecretsRequestOrder]` — Order by createdAt and ID. Defaults to desc.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` 
     
 </dd>
 </dl>
@@ -10359,6 +10621,164 @@ client.browsers.connections.revoke(
 </dl>
 </details>
 
+## Browsers Events
+<details><summary><code>client.browsers.events.<a href="src/bctrl/browsers/events/client.py">stream</a>(...) -> typing.Iterator[bytes]</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Stream immutable Events from the browser’s current Run, selected when the connection opens. The stream stays on that Run across browser restarts. Resume using an Event ID from the selected Run.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+import datetime
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.events.stream(
+    browser_id="browserId",
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    after="evt_uAAAAAAAAAAAAAAAAAAAAAA",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**category:** `typing.Optional[StreamEventsRequestCategory]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type:** `typing.Optional[typing.Union[str, typing.Sequence[str]]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor:** `typing.Optional[str]` — Actor ID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor_type:** `typing.Optional[StreamEventsRequestActorType]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**channel:** `typing.Optional[StreamEventsRequestChannel]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**outcome:** `typing.Optional[StreamEventsRequestOutcome]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**from:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**to:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**after:** `typing.Optional[str]` — Resume after this Event ID from the same Run.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**last_event_id:** `typing.Optional[str]` — Optional last delivered event identifier used to resume an SSE stream.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Browsers Runs
 <details><summary><code>client.browsers.runs.<a href="src/bctrl/browsers/runs/client.py">list</a>(...) -> BrowsersRunsListResponse</code></summary>
 <dl>
@@ -12250,6 +12670,7 @@ List raw machine-readable runtime events for a run.
 ```python
 from bctrl import Bctrl
 from bctrl.environment import BctrlEnvironment
+import datetime
 
 client = Bctrl(
     token="<token>",
@@ -12258,6 +12679,8 @@ client = Bctrl(
 
 client.runs.events.list(
     run_id="runId",
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
 )
 
 ```
@@ -12282,7 +12705,63 @@ client.runs.events.list(
 <dl>
 <dd>
 
+**category:** `typing.Optional[ListEventsRequestCategory]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **type:** `typing.Optional[typing.Union[str, typing.Sequence[str]]]` — Filter by one or more namespaced event types. Repeat the query parameter for multiple values.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor:** `typing.Optional[str]` — Actor ID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor_type:** `typing.Optional[ListEventsRequestActorType]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**channel:** `typing.Optional[ListEventsRequestChannel]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**outcome:** `typing.Optional[ListEventsRequestOutcome]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**from:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**to:** `typing.Optional[Rfc3339Timestamp]` 
     
 </dd>
 </dl>
@@ -12331,6 +12810,163 @@ client.runs.events.list(
 <dd>
 
 **limit:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.runs.events.<a href="src/bctrl/runs/events/client.py">stream</a>(...) -> typing.Iterator[bytes]</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Stream immutable Events from one Run. Resume after an Event ID using Last-Event-ID or after; ended Runs remain open for late finalization events.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+import datetime
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.runs.events.stream(
+    run_id="runId",
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    after="evt_uAAAAAAAAAAAAAAAAAAAAAA",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**run_id:** `str` — Unique run identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**category:** `typing.Optional[StreamEventsRequestCategory]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type:** `typing.Optional[typing.Union[str, typing.Sequence[str]]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor:** `typing.Optional[str]` — Actor ID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor_type:** `typing.Optional[StreamEventsRequestActorType]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**channel:** `typing.Optional[StreamEventsRequestChannel]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**outcome:** `typing.Optional[StreamEventsRequestOutcome]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**from:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**to:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**after:** `typing.Optional[str]` — Resume after this Event ID from the same Run.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**last_event_id:** `typing.Optional[str]` — Optional last delivered event identifier used to resume an SSE stream.
     
 </dd>
 </dl>

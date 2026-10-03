@@ -375,6 +375,16 @@ if typing.TYPE_CHECKING:
     from .error_response import ErrorResponse
     from .error_response_error import ErrorResponseError
     from .error_response_error_reason_class import ErrorResponseErrorReasonClass
+    from .event import Event
+    from .event_actor import EventActor
+    from .event_actor_type import EventActorType
+    from .event_category import EventCategory
+    from .event_channel import EventChannel
+    from .event_object import EventObject
+    from .event_outcome import EventOutcome
+    from .event_source import EventSource
+    from .event_target import EventTarget
+    from .events_list_response import EventsListResponse
     from .extension_id import ExtensionId
     from .file import File
     from .file_delete_response import FileDeleteResponse
@@ -429,6 +439,15 @@ if typing.TYPE_CHECKING:
     from .list_browsers_request_status import ListBrowsersRequestStatus
     from .list_browsers_request_status_one_item import ListBrowsersRequestStatusOneItem
     from .list_browsers_request_status_zero import ListBrowsersRequestStatusZero
+    from .list_events_request_category import ListEventsRequestCategory
+    from .list_events_request_category_one_item import ListEventsRequestCategoryOneItem
+    from .list_events_request_category_zero import ListEventsRequestCategoryZero
+    from .list_events_request_channel import ListEventsRequestChannel
+    from .list_events_request_channel_one_item import ListEventsRequestChannelOneItem
+    from .list_events_request_channel_zero import ListEventsRequestChannelZero
+    from .list_events_request_outcome import ListEventsRequestOutcome
+    from .list_events_request_outcome_one_item import ListEventsRequestOutcomeOneItem
+    from .list_events_request_outcome_zero import ListEventsRequestOutcomeZero
     from .list_runs_request_space_id import ListRunsRequestSpaceId
     from .list_runs_request_space_id_one import ListRunsRequestSpaceIdOne
     from .list_runs_request_status import ListRunsRequestStatus
@@ -559,10 +578,15 @@ if typing.TYPE_CHECKING:
     from .run_control import RunControl
     from .run_control_holder import RunControlHolder
     from .run_event import RunEvent
+    from .run_event_actor import RunEventActor
+    from .run_event_actor_type import RunEventActorType
+    from .run_event_category import RunEventCategory
+    from .run_event_channel import RunEventChannel
     from .run_event_list_response import RunEventListResponse
     from .run_event_object import RunEventObject
+    from .run_event_outcome import RunEventOutcome
     from .run_event_source import RunEventSource
-    from .run_event_type import RunEventType
+    from .run_event_target import RunEventTarget
     from .run_file import RunFile
     from .run_file_binding import RunFileBinding
     from .run_file_binding_failure import RunFileBindingFailure
@@ -600,12 +624,16 @@ if typing.TYPE_CHECKING:
     from .secret import Secret
     from .secret_delete_response import SecretDeleteResponse
     from .secret_delete_response_object import SecretDeleteResponseObject
+    from .secret_delete_response_type import SecretDeleteResponseType
     from .secret_environment_mounts import SecretEnvironmentMounts
     from .secret_list import SecretList
     from .secret_object import SecretObject
     from .secret_reveal_response import SecretRevealResponse
     from .secret_reveal_response_object import SecretRevealResponseObject
     from .secret_type import SecretType
+    from .secret_version import SecretVersion
+    from .secret_version_list import SecretVersionList
+    from .secret_version_object import SecretVersionObject
     from .sha256digest import Sha256Digest
     from .space import Space
     from .space_delete_response import SpaceDeleteResponse
@@ -622,6 +650,15 @@ if typing.TYPE_CHECKING:
     from .start_browsers_request_space_id_one import StartBrowsersRequestSpaceIdOne
     from .stop_browsers_request_space_id import StopBrowsersRequestSpaceId
     from .stop_browsers_request_space_id_one import StopBrowsersRequestSpaceIdOne
+    from .stream_events_request_category import StreamEventsRequestCategory
+    from .stream_events_request_category_one_item import StreamEventsRequestCategoryOneItem
+    from .stream_events_request_category_zero import StreamEventsRequestCategoryZero
+    from .stream_events_request_channel import StreamEventsRequestChannel
+    from .stream_events_request_channel_one_item import StreamEventsRequestChannelOneItem
+    from .stream_events_request_channel_zero import StreamEventsRequestChannelZero
+    from .stream_events_request_outcome import StreamEventsRequestOutcome
+    from .stream_events_request_outcome_one_item import StreamEventsRequestOutcomeOneItem
+    from .stream_events_request_outcome_zero import StreamEventsRequestOutcomeZero
     from .stream_runs_request_include import StreamRunsRequestInclude
     from .stream_runs_request_include_one_item import StreamRunsRequestIncludeOneItem
     from .stream_runs_request_include_zero import StreamRunsRequestIncludeZero
@@ -1093,6 +1130,16 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ErrorResponse": ".error_response",
     "ErrorResponseError": ".error_response_error",
     "ErrorResponseErrorReasonClass": ".error_response_error_reason_class",
+    "Event": ".event",
+    "EventActor": ".event_actor",
+    "EventActorType": ".event_actor_type",
+    "EventCategory": ".event_category",
+    "EventChannel": ".event_channel",
+    "EventObject": ".event_object",
+    "EventOutcome": ".event_outcome",
+    "EventSource": ".event_source",
+    "EventTarget": ".event_target",
+    "EventsListResponse": ".events_list_response",
     "ExtensionId": ".extension_id",
     "File": ".file",
     "FileDeleteResponse": ".file_delete_response",
@@ -1149,6 +1196,15 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ListBrowsersRequestStatus": ".list_browsers_request_status",
     "ListBrowsersRequestStatusOneItem": ".list_browsers_request_status_one_item",
     "ListBrowsersRequestStatusZero": ".list_browsers_request_status_zero",
+    "ListEventsRequestCategory": ".list_events_request_category",
+    "ListEventsRequestCategoryOneItem": ".list_events_request_category_one_item",
+    "ListEventsRequestCategoryZero": ".list_events_request_category_zero",
+    "ListEventsRequestChannel": ".list_events_request_channel",
+    "ListEventsRequestChannelOneItem": ".list_events_request_channel_one_item",
+    "ListEventsRequestChannelZero": ".list_events_request_channel_zero",
+    "ListEventsRequestOutcome": ".list_events_request_outcome",
+    "ListEventsRequestOutcomeOneItem": ".list_events_request_outcome_one_item",
+    "ListEventsRequestOutcomeZero": ".list_events_request_outcome_zero",
     "ListRunsRequestSpaceId": ".list_runs_request_space_id",
     "ListRunsRequestSpaceIdOne": ".list_runs_request_space_id_one",
     "ListRunsRequestStatus": ".list_runs_request_status",
@@ -1273,10 +1329,15 @@ _dynamic_imports: typing.Dict[str, str] = {
     "RunControl": ".run_control",
     "RunControlHolder": ".run_control_holder",
     "RunEvent": ".run_event",
+    "RunEventActor": ".run_event_actor",
+    "RunEventActorType": ".run_event_actor_type",
+    "RunEventCategory": ".run_event_category",
+    "RunEventChannel": ".run_event_channel",
     "RunEventListResponse": ".run_event_list_response",
     "RunEventObject": ".run_event_object",
+    "RunEventOutcome": ".run_event_outcome",
     "RunEventSource": ".run_event_source",
-    "RunEventType": ".run_event_type",
+    "RunEventTarget": ".run_event_target",
     "RunFile": ".run_file",
     "RunFileBinding": ".run_file_binding",
     "RunFileBindingFailure": ".run_file_binding_failure",
@@ -1312,12 +1373,16 @@ _dynamic_imports: typing.Dict[str, str] = {
     "Secret": ".secret",
     "SecretDeleteResponse": ".secret_delete_response",
     "SecretDeleteResponseObject": ".secret_delete_response_object",
+    "SecretDeleteResponseType": ".secret_delete_response_type",
     "SecretEnvironmentMounts": ".secret_environment_mounts",
     "SecretList": ".secret_list",
     "SecretObject": ".secret_object",
     "SecretRevealResponse": ".secret_reveal_response",
     "SecretRevealResponseObject": ".secret_reveal_response_object",
     "SecretType": ".secret_type",
+    "SecretVersion": ".secret_version",
+    "SecretVersionList": ".secret_version_list",
+    "SecretVersionObject": ".secret_version_object",
     "Sha256Digest": ".sha256digest",
     "Space": ".space",
     "SpaceDeleteResponse": ".space_delete_response",
@@ -1334,6 +1399,15 @@ _dynamic_imports: typing.Dict[str, str] = {
     "StartBrowsersRequestSpaceIdOne": ".start_browsers_request_space_id_one",
     "StopBrowsersRequestSpaceId": ".stop_browsers_request_space_id",
     "StopBrowsersRequestSpaceIdOne": ".stop_browsers_request_space_id_one",
+    "StreamEventsRequestCategory": ".stream_events_request_category",
+    "StreamEventsRequestCategoryOneItem": ".stream_events_request_category_one_item",
+    "StreamEventsRequestCategoryZero": ".stream_events_request_category_zero",
+    "StreamEventsRequestChannel": ".stream_events_request_channel",
+    "StreamEventsRequestChannelOneItem": ".stream_events_request_channel_one_item",
+    "StreamEventsRequestChannelZero": ".stream_events_request_channel_zero",
+    "StreamEventsRequestOutcome": ".stream_events_request_outcome",
+    "StreamEventsRequestOutcomeOneItem": ".stream_events_request_outcome_one_item",
+    "StreamEventsRequestOutcomeZero": ".stream_events_request_outcome_zero",
     "StreamRunsRequestInclude": ".stream_runs_request_include",
     "StreamRunsRequestIncludeOneItem": ".stream_runs_request_include_one_item",
     "StreamRunsRequestIncludeZero": ".stream_runs_request_include_zero",
@@ -1829,6 +1903,16 @@ __all__ = [
     "ErrorResponse",
     "ErrorResponseError",
     "ErrorResponseErrorReasonClass",
+    "Event",
+    "EventActor",
+    "EventActorType",
+    "EventCategory",
+    "EventChannel",
+    "EventObject",
+    "EventOutcome",
+    "EventSource",
+    "EventTarget",
+    "EventsListResponse",
     "ExtensionId",
     "File",
     "FileDeleteResponse",
@@ -1885,6 +1969,15 @@ __all__ = [
     "ListBrowsersRequestStatus",
     "ListBrowsersRequestStatusOneItem",
     "ListBrowsersRequestStatusZero",
+    "ListEventsRequestCategory",
+    "ListEventsRequestCategoryOneItem",
+    "ListEventsRequestCategoryZero",
+    "ListEventsRequestChannel",
+    "ListEventsRequestChannelOneItem",
+    "ListEventsRequestChannelZero",
+    "ListEventsRequestOutcome",
+    "ListEventsRequestOutcomeOneItem",
+    "ListEventsRequestOutcomeZero",
     "ListRunsRequestSpaceId",
     "ListRunsRequestSpaceIdOne",
     "ListRunsRequestStatus",
@@ -2009,10 +2102,15 @@ __all__ = [
     "RunControl",
     "RunControlHolder",
     "RunEvent",
+    "RunEventActor",
+    "RunEventActorType",
+    "RunEventCategory",
+    "RunEventChannel",
     "RunEventListResponse",
     "RunEventObject",
+    "RunEventOutcome",
     "RunEventSource",
-    "RunEventType",
+    "RunEventTarget",
     "RunFile",
     "RunFileBinding",
     "RunFileBindingFailure",
@@ -2048,12 +2146,16 @@ __all__ = [
     "Secret",
     "SecretDeleteResponse",
     "SecretDeleteResponseObject",
+    "SecretDeleteResponseType",
     "SecretEnvironmentMounts",
     "SecretList",
     "SecretObject",
     "SecretRevealResponse",
     "SecretRevealResponseObject",
     "SecretType",
+    "SecretVersion",
+    "SecretVersionList",
+    "SecretVersionObject",
     "Sha256Digest",
     "Space",
     "SpaceDeleteResponse",
@@ -2070,6 +2172,15 @@ __all__ = [
     "StartBrowsersRequestSpaceIdOne",
     "StopBrowsersRequestSpaceId",
     "StopBrowsersRequestSpaceIdOne",
+    "StreamEventsRequestCategory",
+    "StreamEventsRequestCategoryOneItem",
+    "StreamEventsRequestCategoryZero",
+    "StreamEventsRequestChannel",
+    "StreamEventsRequestChannelOneItem",
+    "StreamEventsRequestChannelZero",
+    "StreamEventsRequestOutcome",
+    "StreamEventsRequestOutcomeOneItem",
+    "StreamEventsRequestOutcomeZero",
     "StreamRunsRequestInclude",
     "StreamRunsRequestIncludeOneItem",
     "StreamRunsRequestIncludeZero",

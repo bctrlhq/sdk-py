@@ -21,10 +21,12 @@ from ..types.secret import Secret
 from ..types.secret_delete_response import SecretDeleteResponse
 from ..types.secret_list import SecretList
 from ..types.secret_reveal_response import SecretRevealResponse
+from ..types.secret_version_list import SecretVersionList
 from .types.list_secrets_request_delimiter import ListSecretsRequestDelimiter
 from .types.list_secrets_request_order import ListSecretsRequestOrder
 from .types.list_secrets_request_type import ListSecretsRequestType
-from .types.secret_put_request_type import SecretPutRequestType
+from .types.secret_create_request_type import SecretCreateRequestType
+from .types.versions_secrets_request_order import VersionsSecretsRequestOrder
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
@@ -139,42 +141,75 @@ class RawSecretsClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def reveal(
+    def create(
         self,
         *,
         path: str,
+        type: SecretCreateRequestType,
         idempotency_key: typing.Optional[str] = None,
-        version: typing.Optional[int] = OMIT,
+        label: typing.Optional[str] = OMIT,
+        notes: typing.Optional[str] = OMIT,
+        origins: typing.Optional[typing.Sequence[str]] = OMIT,
+        password: typing.Optional[str] = OMIT,
+        totp: typing.Optional[str] = OMIT,
+        username: typing.Optional[str] = OMIT,
+        value: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[SecretRevealResponse]:
+    ) -> HttpResponse[Secret]:
         """
-        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+        Create a Secret at a new path. The returned ID addresses it; paths remain reference keys.
 
         Parameters
         ----------
         path : str
             Secret path, for example `prod/github/bot`. May contain `/`.
 
+        type : SecretCreateRequestType
+            `login`: username, password and TOTP seed for a site. `value`: one opaque value.
+
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
 
-        version : typing.Optional[int]
-            Defaults to the current version.
+        label : typing.Optional[str]
+
+        notes : typing.Optional[str]
+            Free-form notes. Write-only.
+
+        origins : typing.Optional[typing.Sequence[str]]
+            Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.
+
+        password : typing.Optional[str]
+            Password of a `login`. Write-only.
+
+        totp : typing.Optional[str]
+            TOTP seed (base32) of a `login`. Write-only.
+
+        username : typing.Optional[str]
+
+        value : typing.Optional[str]
+            The value of a `value` secret. Write-only.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[SecretRevealResponse]
-            OK
+        HttpResponse[Secret]
+            Created
         """
         _response = self._client_wrapper.httpx_client.request(
-            "v1/secrets:reveal",
+            "v1/secrets",
             method="POST",
             json={
+                "label": label,
+                "notes": notes,
+                "origins": origins,
+                "password": password,
                 "path": path,
-                "version": version,
+                "totp": totp,
+                "type": type,
+                "username": username,
+                "value": value,
             },
             headers={
                 "content-type": "application/json",
@@ -186,9 +221,9 @@ class RawSecretsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    SecretRevealResponse,
+                    Secret,
                     parse_obj_as(
-                        type_=SecretRevealResponse,  # type: ignore
+                        type_=Secret,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -226,8 +261,8 @@ class RawSecretsClient:
                         ),
                     ),
                 )
-            if _response.status_code == 404:
-                raise NotFoundError(
+            if _response.status_code == 409:
+                raise ConflictError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -257,14 +292,14 @@ class RawSecretsClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def get(self, path: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[Secret]:
+    def get(self, secret: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[Secret]:
         """
-        Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets:reveal` to read values.
+        Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets/{secret}/reveal` to read values.
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -275,7 +310,7 @@ class RawSecretsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(path)}",
+            f"v1/secrets/{encode_path_param(secret)}",
             method="GET",
             request_options=request_options,
         )
@@ -331,191 +366,9 @@ class RawSecretsClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def put(
-        self,
-        path: str,
-        *,
-        if_match: typing.Optional[str] = None,
-        idempotency_key: typing.Optional[str] = None,
-        from_version: typing.Optional[int] = OMIT,
-        label: typing.Optional[str] = OMIT,
-        notes: typing.Optional[str] = OMIT,
-        origins: typing.Optional[typing.Sequence[str]] = OMIT,
-        password: typing.Optional[str] = OMIT,
-        totp: typing.Optional[str] = OMIT,
-        type: typing.Optional[SecretPutRequestType] = OMIT,
-        username: typing.Optional[str] = OMIT,
-        value: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[Secret]:
-        """
-        Create or replace a Secret. Every write is a new version, returned as `version` and the `ETag` header. Send `If-Match` to write only over a known version. Send `{fromVersion}` alone to roll back to an earlier version.
-
-        Parameters
-        ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
-
-        if_match : typing.Optional[str]
-            Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        from_version : typing.Optional[int]
-            Rollback: make the values of this earlier version the new version. Send it alone.
-
-        label : typing.Optional[str]
-
-        notes : typing.Optional[str]
-            Free-form notes. Write-only.
-
-        origins : typing.Optional[typing.Sequence[str]]
-            Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.
-
-        password : typing.Optional[str]
-            Password of a `login`. Write-only.
-
-        totp : typing.Optional[str]
-            TOTP seed (base32) of a `login`. Write-only.
-
-        type : typing.Optional[SecretPutRequestType]
-            `login`: username, password and TOTP seed for a site. `value`: one opaque value.
-
-        username : typing.Optional[str]
-
-        value : typing.Optional[str]
-            The value of a `value` secret. Write-only.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        HttpResponse[Secret]
-            OK
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(path)}",
-            method="PUT",
-            json={
-                "fromVersion": from_version,
-                "label": label,
-                "notes": notes,
-                "origins": origins,
-                "password": password,
-                "totp": totp,
-                "type": type,
-                "username": username,
-                "value": value,
-            },
-            headers={
-                "content-type": "application/json",
-                "If-Match": str(if_match) if if_match is not None else None,
-                "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
-            },
-            request_options=request_options,
-            omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    Secret,
-                    parse_obj_as(
-                        type_=Secret,  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 409:
-                raise ConflictError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 412:
-                raise PreconditionFailedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(
-                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
-            )
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
     def delete(
         self,
-        path: str,
+        secret: str,
         *,
         if_match: typing.Optional[str] = None,
         idempotency_key: typing.Optional[str] = None,
@@ -526,8 +379,8 @@ class RawSecretsClient:
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         if_match : typing.Optional[str]
             Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
@@ -544,7 +397,7 @@ class RawSecretsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(path)}",
+            f"v1/secrets/{encode_path_param(secret)}",
             method="DELETE",
             headers={
                 "If-Match": str(if_match) if if_match is not None else None,
@@ -628,10 +481,11 @@ class RawSecretsClient:
 
     def update(
         self,
-        path: str,
+        secret: str,
         *,
         if_match: typing.Optional[str] = None,
         idempotency_key: typing.Optional[str] = None,
+        from_version: typing.Optional[int] = OMIT,
         label: typing.Optional[str] = OMIT,
         notes: typing.Optional[str] = OMIT,
         origins: typing.Optional[typing.Sequence[str]] = OMIT,
@@ -646,14 +500,17 @@ class RawSecretsClient:
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         if_match : typing.Optional[str]
             Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        from_version : typing.Optional[int]
+            Restore values of this version; send alone.
 
         label : typing.Optional[str]
 
@@ -683,9 +540,10 @@ class RawSecretsClient:
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(path)}",
+            f"v1/secrets/{encode_path_param(secret)}",
             method="PATCH",
             json={
+                "fromVersion": from_version,
                 "label": label,
                 "notes": notes,
                 "origins": origins,
@@ -769,6 +627,228 @@ class RawSecretsClient:
                 )
             if _response.status_code == 429:
                 raise TooManyRequestsError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def reveal(
+        self,
+        secret: str,
+        *,
+        idempotency_key: typing.Optional[str] = None,
+        version: typing.Optional[int] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[SecretRevealResponse]:
+        """
+        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+
+        Parameters
+        ----------
+        secret : str
+            Unique secret identifier generated by BCTRL.
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        version : typing.Optional[int]
+            Defaults to the current version.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[SecretRevealResponse]
+            OK
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"v1/secrets/{encode_path_param(secret)}/reveal",
+            method="POST",
+            json={
+                "version": version,
+            },
+            headers={
+                "content-type": "application/json",
+                "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    SecretRevealResponse,
+                    parse_obj_as(
+                        type_=SecretRevealResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 429:
+                raise TooManyRequestsError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    def versions(
+        self,
+        secret: str,
+        *,
+        cursor: typing.Optional[str] = None,
+        order: typing.Optional[VersionsSecretsRequestOrder] = None,
+        limit: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> HttpResponse[SecretVersionList]:
+        """
+        List version metadata by secret ID. Values and ciphertext are never returned.
+
+        Parameters
+        ----------
+        secret : str
+            Unique secret identifier generated by BCTRL.
+
+        cursor : typing.Optional[str]
+
+        order : typing.Optional[VersionsSecretsRequestOrder]
+            Order by createdAt and ID. Defaults to desc.
+
+        limit : typing.Optional[int]
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        HttpResponse[SecretVersionList]
+            OK
+        """
+        _response = self._client_wrapper.httpx_client.request(
+            f"v1/secrets/{encode_path_param(secret)}/versions",
+            method="GET",
+            params={
+                "cursor": cursor,
+                "order": order,
+                "limit": limit,
+            },
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    SecretVersionList,
+                    parse_obj_as(
+                        type_=SecretVersionList,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return HttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -896,42 +976,75 @@ class AsyncRawSecretsClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def reveal(
+    async def create(
         self,
         *,
         path: str,
+        type: SecretCreateRequestType,
         idempotency_key: typing.Optional[str] = None,
-        version: typing.Optional[int] = OMIT,
+        label: typing.Optional[str] = OMIT,
+        notes: typing.Optional[str] = OMIT,
+        origins: typing.Optional[typing.Sequence[str]] = OMIT,
+        password: typing.Optional[str] = OMIT,
+        totp: typing.Optional[str] = OMIT,
+        username: typing.Optional[str] = OMIT,
+        value: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[SecretRevealResponse]:
+    ) -> AsyncHttpResponse[Secret]:
         """
-        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+        Create a Secret at a new path. The returned ID addresses it; paths remain reference keys.
 
         Parameters
         ----------
         path : str
             Secret path, for example `prod/github/bot`. May contain `/`.
 
+        type : SecretCreateRequestType
+            `login`: username, password and TOTP seed for a site. `value`: one opaque value.
+
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
 
-        version : typing.Optional[int]
-            Defaults to the current version.
+        label : typing.Optional[str]
+
+        notes : typing.Optional[str]
+            Free-form notes. Write-only.
+
+        origins : typing.Optional[typing.Sequence[str]]
+            Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.
+
+        password : typing.Optional[str]
+            Password of a `login`. Write-only.
+
+        totp : typing.Optional[str]
+            TOTP seed (base32) of a `login`. Write-only.
+
+        username : typing.Optional[str]
+
+        value : typing.Optional[str]
+            The value of a `value` secret. Write-only.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[SecretRevealResponse]
-            OK
+        AsyncHttpResponse[Secret]
+            Created
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "v1/secrets:reveal",
+            "v1/secrets",
             method="POST",
             json={
+                "label": label,
+                "notes": notes,
+                "origins": origins,
+                "password": password,
                 "path": path,
-                "version": version,
+                "totp": totp,
+                "type": type,
+                "username": username,
+                "value": value,
             },
             headers={
                 "content-type": "application/json",
@@ -943,9 +1056,9 @@ class AsyncRawSecretsClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    SecretRevealResponse,
+                    Secret,
                     parse_obj_as(
-                        type_=SecretRevealResponse,  # type: ignore
+                        type_=Secret,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -983,8 +1096,8 @@ class AsyncRawSecretsClient:
                         ),
                     ),
                 )
-            if _response.status_code == 404:
-                raise NotFoundError(
+            if _response.status_code == 409:
+                raise ConflictError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,
@@ -1015,15 +1128,15 @@ class AsyncRawSecretsClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def get(
-        self, path: str, *, request_options: typing.Optional[RequestOptions] = None
+        self, secret: str, *, request_options: typing.Optional[RequestOptions] = None
     ) -> AsyncHttpResponse[Secret]:
         """
-        Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets:reveal` to read values.
+        Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets/{secret}/reveal` to read values.
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -1034,7 +1147,7 @@ class AsyncRawSecretsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(path)}",
+            f"v1/secrets/{encode_path_param(secret)}",
             method="GET",
             request_options=request_options,
         )
@@ -1090,191 +1203,9 @@ class AsyncRawSecretsClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def put(
-        self,
-        path: str,
-        *,
-        if_match: typing.Optional[str] = None,
-        idempotency_key: typing.Optional[str] = None,
-        from_version: typing.Optional[int] = OMIT,
-        label: typing.Optional[str] = OMIT,
-        notes: typing.Optional[str] = OMIT,
-        origins: typing.Optional[typing.Sequence[str]] = OMIT,
-        password: typing.Optional[str] = OMIT,
-        totp: typing.Optional[str] = OMIT,
-        type: typing.Optional[SecretPutRequestType] = OMIT,
-        username: typing.Optional[str] = OMIT,
-        value: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[Secret]:
-        """
-        Create or replace a Secret. Every write is a new version, returned as `version` and the `ETag` header. Send `If-Match` to write only over a known version. Send `{fromVersion}` alone to roll back to an earlier version.
-
-        Parameters
-        ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
-
-        if_match : typing.Optional[str]
-            Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        from_version : typing.Optional[int]
-            Rollback: make the values of this earlier version the new version. Send it alone.
-
-        label : typing.Optional[str]
-
-        notes : typing.Optional[str]
-            Free-form notes. Write-only.
-
-        origins : typing.Optional[typing.Sequence[str]]
-            Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.
-
-        password : typing.Optional[str]
-            Password of a `login`. Write-only.
-
-        totp : typing.Optional[str]
-            TOTP seed (base32) of a `login`. Write-only.
-
-        type : typing.Optional[SecretPutRequestType]
-            `login`: username, password and TOTP seed for a site. `value`: one opaque value.
-
-        username : typing.Optional[str]
-
-        value : typing.Optional[str]
-            The value of a `value` secret. Write-only.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        AsyncHttpResponse[Secret]
-            OK
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(path)}",
-            method="PUT",
-            json={
-                "fromVersion": from_version,
-                "label": label,
-                "notes": notes,
-                "origins": origins,
-                "password": password,
-                "totp": totp,
-                "type": type,
-                "username": username,
-                "value": value,
-            },
-            headers={
-                "content-type": "application/json",
-                "If-Match": str(if_match) if if_match is not None else None,
-                "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
-            },
-            request_options=request_options,
-            omit=OMIT,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    Secret,
-                    parse_obj_as(
-                        type_=Secret,  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 409:
-                raise ConflictError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 412:
-                raise PreconditionFailedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(
-                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
-            )
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
     async def delete(
         self,
-        path: str,
+        secret: str,
         *,
         if_match: typing.Optional[str] = None,
         idempotency_key: typing.Optional[str] = None,
@@ -1285,8 +1216,8 @@ class AsyncRawSecretsClient:
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         if_match : typing.Optional[str]
             Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
@@ -1303,7 +1234,7 @@ class AsyncRawSecretsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(path)}",
+            f"v1/secrets/{encode_path_param(secret)}",
             method="DELETE",
             headers={
                 "If-Match": str(if_match) if if_match is not None else None,
@@ -1387,10 +1318,11 @@ class AsyncRawSecretsClient:
 
     async def update(
         self,
-        path: str,
+        secret: str,
         *,
         if_match: typing.Optional[str] = None,
         idempotency_key: typing.Optional[str] = None,
+        from_version: typing.Optional[int] = OMIT,
         label: typing.Optional[str] = OMIT,
         notes: typing.Optional[str] = OMIT,
         origins: typing.Optional[typing.Sequence[str]] = OMIT,
@@ -1405,14 +1337,17 @@ class AsyncRawSecretsClient:
 
         Parameters
         ----------
-        path : str
-            Secret path, for example `prod/github/bot`. May contain `/`.
+        secret : str
+            Unique secret identifier generated by BCTRL.
 
         if_match : typing.Optional[str]
             Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        from_version : typing.Optional[int]
+            Restore values of this version; send alone.
 
         label : typing.Optional[str]
 
@@ -1442,9 +1377,10 @@ class AsyncRawSecretsClient:
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/secrets/{encode_path_param(path)}",
+            f"v1/secrets/{encode_path_param(secret)}",
             method="PATCH",
             json={
+                "fromVersion": from_version,
                 "label": label,
                 "notes": notes,
                 "origins": origins,
@@ -1528,6 +1464,228 @@ class AsyncRawSecretsClient:
                 )
             if _response.status_code == 429:
                 raise TooManyRequestsError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def reveal(
+        self,
+        secret: str,
+        *,
+        idempotency_key: typing.Optional[str] = None,
+        version: typing.Optional[int] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[SecretRevealResponse]:
+        """
+        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+
+        Parameters
+        ----------
+        secret : str
+            Unique secret identifier generated by BCTRL.
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        version : typing.Optional[int]
+            Defaults to the current version.
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[SecretRevealResponse]
+            OK
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"v1/secrets/{encode_path_param(secret)}/reveal",
+            method="POST",
+            json={
+                "version": version,
+            },
+            headers={
+                "content-type": "application/json",
+                "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
+            },
+            request_options=request_options,
+            omit=OMIT,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    SecretRevealResponse,
+                    parse_obj_as(
+                        type_=SecretRevealResponse,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 429:
+                raise TooManyRequestsError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            _response_json = _response.json()
+        except JSONDecodeError:
+            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
+        except ValidationError as e:
+            raise ParsingError(
+                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
+            )
+        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
+
+    async def versions(
+        self,
+        secret: str,
+        *,
+        cursor: typing.Optional[str] = None,
+        order: typing.Optional[VersionsSecretsRequestOrder] = None,
+        limit: typing.Optional[int] = None,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> AsyncHttpResponse[SecretVersionList]:
+        """
+        List version metadata by secret ID. Values and ciphertext are never returned.
+
+        Parameters
+        ----------
+        secret : str
+            Unique secret identifier generated by BCTRL.
+
+        cursor : typing.Optional[str]
+
+        order : typing.Optional[VersionsSecretsRequestOrder]
+            Order by createdAt and ID. Defaults to desc.
+
+        limit : typing.Optional[int]
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        AsyncHttpResponse[SecretVersionList]
+            OK
+        """
+        _response = await self._client_wrapper.httpx_client.request(
+            f"v1/secrets/{encode_path_param(secret)}/versions",
+            method="GET",
+            params={
+                "cursor": cursor,
+                "order": order,
+                "limit": limit,
+            },
+            request_options=request_options,
+        )
+        try:
+            if 200 <= _response.status_code < 300:
+                _data = typing.cast(
+                    SecretVersionList,
+                    parse_obj_as(
+                        type_=SecretVersionList,  # type: ignore
+                        object_=_response.json(),
+                    ),
+                )
+                return AsyncHttpResponse(response=_response, data=_data)
+            if _response.status_code == 400:
+                raise BadRequestError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 401:
+                raise UnauthorizedError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 403:
+                raise ForbiddenError(
+                    headers=dict(_response.headers),
+                    body=typing.cast(
+                        typing.Any,
+                        parse_obj_as(
+                            type_=typing.Any,  # type: ignore
+                            object_=_response.json(),
+                        ),
+                    ),
+                )
+            if _response.status_code == 404:
+                raise NotFoundError(
                     headers=dict(_response.headers),
                     body=typing.cast(
                         typing.Any,

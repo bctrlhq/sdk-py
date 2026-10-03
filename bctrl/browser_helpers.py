@@ -63,10 +63,19 @@ class Browsers(BrowsersClient):
     @contextmanager
     def with_browser(self, **kwargs: Any) -> Iterator[Browser]:
         browser = self.create(**kwargs)
+        failure: BaseException | None = None
         try:
             yield browser
+        except BaseException as error:
+            failure = error
+            raise
         finally:
-            self.stop(browser.id, wait=60)
+            try:
+                self.stop(browser.id, wait=60)
+            except BaseException as cleanup:
+                if failure is not None:
+                    raise failure from cleanup
+                raise
 
 
 class AsyncBrowsers(AsyncBrowsersClient):
@@ -79,7 +88,16 @@ class AsyncBrowsers(AsyncBrowsersClient):
     @asynccontextmanager
     async def with_browser(self, **kwargs: Any) -> AsyncIterator[AsyncBrowser]:
         browser = await self.create(**kwargs)
+        failure: BaseException | None = None
         try:
             yield browser
+        except BaseException as error:
+            failure = error
+            raise
         finally:
-            await self.stop(browser.id, wait=60)
+            try:
+                await self.stop(browser.id, wait=60)
+            except BaseException as cleanup:
+                if failure is not None:
+                    raise failure from cleanup
+                raise

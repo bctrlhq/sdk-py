@@ -9,12 +9,14 @@ if typing.TYPE_CHECKING:
     from .list_secrets_request_delimiter import ListSecretsRequestDelimiter
     from .list_secrets_request_order import ListSecretsRequestOrder
     from .list_secrets_request_type import ListSecretsRequestType
-    from .secret_put_request_type import SecretPutRequestType
+    from .secret_create_request_type import SecretCreateRequestType
+    from .versions_secrets_request_order import VersionsSecretsRequestOrder
 _dynamic_imports: typing.Dict[str, str] = {
     "ListSecretsRequestDelimiter": ".list_secrets_request_delimiter",
     "ListSecretsRequestOrder": ".list_secrets_request_order",
     "ListSecretsRequestType": ".list_secrets_request_type",
-    "SecretPutRequestType": ".secret_put_request_type",
+    "SecretCreateRequestType": ".secret_create_request_type",
+    "VersionsSecretsRequestOrder": ".versions_secrets_request_order",
 }
 
 
@@ -39,4 +41,10 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["ListSecretsRequestDelimiter", "ListSecretsRequestOrder", "ListSecretsRequestType", "SecretPutRequestType"]
+__all__ = [
+    "ListSecretsRequestDelimiter",
+    "ListSecretsRequestOrder",
+    "ListSecretsRequestType",
+    "SecretCreateRequestType",
+    "VersionsSecretsRequestOrder",
+]
