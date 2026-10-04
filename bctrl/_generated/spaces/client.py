@@ -9,7 +9,6 @@ from ..core.request_options import RequestOptions
 from ..types.environment_mounts import EnvironmentMounts
 from ..types.resource_name import ResourceName
 from ..types.space import Space
-from ..types.space_delete_response import SpaceDeleteResponse
 from ..types.space_environment_patch import SpaceEnvironmentPatch
 from ..types.space_list_response import SpaceListResponse
 from .raw_client import AsyncRawSpacesClient, RawSpacesClient
@@ -176,15 +175,19 @@ class SpacesClient:
         self,
         space_id: str,
         *,
+        wait: typing.Optional[int] = None,
         idempotency_key: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> SpaceDeleteResponse:
+    ) -> Space:
         """
-        Delete a space after its active runtimes have been stopped.
+        Delete a Space and everything in it: its browsers and sandboxes are stopped and destroyed, and its agents, Tasks, Conversations, files and views deleted. Run records, usage and Events stay with the organization. The deletion runs in the background; the Space shows status deleting until it is gone. Pass wait to block until then.
 
         Parameters
         ----------
         space_id : str
+
+        wait : typing.Optional[int]
+            Seconds to wait for the deletion to finish before answering.
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
@@ -194,7 +197,7 @@ class SpacesClient:
 
         Returns
         -------
-        SpaceDeleteResponse
+        Space
             OK
 
         Examples
@@ -210,7 +213,9 @@ class SpacesClient:
             space_id="spaceId",
         )
         """
-        _response = self._raw_client.delete(space_id, idempotency_key=idempotency_key, request_options=request_options)
+        _response = self._raw_client.delete(
+            space_id, wait=wait, idempotency_key=idempotency_key, request_options=request_options
+        )
         return _response.data
 
     def update(
@@ -463,15 +468,19 @@ class AsyncSpacesClient:
         self,
         space_id: str,
         *,
+        wait: typing.Optional[int] = None,
         idempotency_key: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> SpaceDeleteResponse:
+    ) -> Space:
         """
-        Delete a space after its active runtimes have been stopped.
+        Delete a Space and everything in it: its browsers and sandboxes are stopped and destroyed, and its agents, Tasks, Conversations, files and views deleted. Run records, usage and Events stay with the organization. The deletion runs in the background; the Space shows status deleting until it is gone. Pass wait to block until then.
 
         Parameters
         ----------
         space_id : str
+
+        wait : typing.Optional[int]
+            Seconds to wait for the deletion to finish before answering.
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
@@ -481,7 +490,7 @@ class AsyncSpacesClient:
 
         Returns
         -------
-        SpaceDeleteResponse
+        Space
             OK
 
         Examples
@@ -506,7 +515,7 @@ class AsyncSpacesClient:
         asyncio.run(main())
         """
         _response = await self._raw_client.delete(
-            space_id, idempotency_key=idempotency_key, request_options=request_options
+            space_id, wait=wait, idempotency_key=idempotency_key, request_options=request_options
         )
         return _response.data
 

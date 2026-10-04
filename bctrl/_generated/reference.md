@@ -6509,7 +6509,7 @@ client.spaces.get(
 </dl>
 </details>
 
-<details><summary><code>client.spaces.<a href="src/bctrl/spaces/client.py">delete</a>(...) -> SpaceDeleteResponse</code></summary>
+<details><summary><code>client.spaces.<a href="src/bctrl/spaces/client.py">delete</a>(...) -> Space</code></summary>
 <dl>
 <dd>
 
@@ -6521,7 +6521,7 @@ client.spaces.get(
 <dl>
 <dd>
 
-Delete a space after its active runtimes have been stopped.
+Delete a Space and everything in it: its browsers and sandboxes are stopped and destroyed, and its agents, Tasks, Conversations, files and views deleted. Run records, usage and Events stay with the organization. The deletion runs in the background; the Space shows status deleting until it is gone. Pass wait to block until then.
 </dd>
 </dl>
 </dd>
@@ -6563,6 +6563,14 @@ client.spaces.delete(
 <dd>
 
 **space_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**wait:** `typing.Optional[int]` — Seconds to wait for the deletion to finish before answering.
     
 </dd>
 </dl>

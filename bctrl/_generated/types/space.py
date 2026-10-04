@@ -11,6 +11,7 @@ from .resource_name import ResourceName
 from .rfc3339timestamp import Rfc3339Timestamp
 from .space_object import SpaceObject
 from .space_region import SpaceRegion
+from .space_status import SpaceStatus
 
 
 class Space(UniversalBaseModel):
@@ -20,6 +21,17 @@ class Space(UniversalBaseModel):
     created_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="createdAt"), pydantic.Field(alias="createdAt")
     ]
+    deletion_error: typing_extensions.Annotated[
+        typing.Optional[str],
+        FieldMetadata(alias="deletionError"),
+        pydantic.Field(
+            alias="deletionError", description="Why the deletion is not finished yet; it is retried. Null otherwise."
+        ),
+    ] = None
+    """
+    Why the deletion is not finished yet; it is retried. Null otherwise.
+    """
+
     environment: EnvironmentMountsOutput
     expire_after_idle_days: typing_extensions.Annotated[
         int, FieldMetadata(alias="expireAfterIdleDays"), pydantic.Field(alias="expireAfterIdleDays")
@@ -33,6 +45,11 @@ class Space(UniversalBaseModel):
     name: ResourceName
     object: SpaceObject
     region: SpaceRegion
+    status: SpaceStatus = pydantic.Field()
+    """
+    `deleting` once DELETE is accepted: its browsers, sandboxes, agents, Tasks, Conversations, files and views are being stopped and removed. `deleted` appears only in the DELETE response when the deletion finished within `wait`; the Space is then gone.
+    """
+
     updated_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]

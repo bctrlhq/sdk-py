@@ -780,8 +780,6 @@ if typing.TYPE_CHECKING:
     from .secret_version_object import SecretVersionObject
     from .sha256digest import Sha256Digest
     from .space import Space
-    from .space_delete_response import SpaceDeleteResponse
-    from .space_delete_response_object import SpaceDeleteResponseObject
     from .space_environment_patch import SpaceEnvironmentPatch
     from .space_environment_patch_ai import SpaceEnvironmentPatchAi
     from .space_environment_patch_ai_default import SpaceEnvironmentPatchAiDefault
@@ -790,6 +788,7 @@ if typing.TYPE_CHECKING:
     from .space_object import SpaceObject
     from .space_region import SpaceRegion
     from .space_secrets_mount import SpaceSecretsMount
+    from .space_status import SpaceStatus
     from .spending_cap import SpendingCap
     from .spending_cap_currency import SpendingCapCurrency
     from .spending_cap_object import SpendingCapObject
@@ -1693,8 +1692,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SecretVersionObject": ".secret_version_object",
     "Sha256Digest": ".sha256digest",
     "Space": ".space",
-    "SpaceDeleteResponse": ".space_delete_response",
-    "SpaceDeleteResponseObject": ".space_delete_response_object",
     "SpaceEnvironmentPatch": ".space_environment_patch",
     "SpaceEnvironmentPatchAi": ".space_environment_patch_ai",
     "SpaceEnvironmentPatchAiDefault": ".space_environment_patch_ai_default",
@@ -1703,6 +1700,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SpaceObject": ".space_object",
     "SpaceRegion": ".space_region",
     "SpaceSecretsMount": ".space_secrets_mount",
+    "SpaceStatus": ".space_status",
     "SpendingCap": ".spending_cap",
     "SpendingCapCurrency": ".spending_cap_currency",
     "SpendingCapObject": ".spending_cap_object",
@@ -2633,8 +2631,6 @@ __all__ = [
     "SecretVersionObject",
     "Sha256Digest",
     "Space",
-    "SpaceDeleteResponse",
-    "SpaceDeleteResponseObject",
     "SpaceEnvironmentPatch",
     "SpaceEnvironmentPatchAi",
     "SpaceEnvironmentPatchAiDefault",
@@ -2643,6 +2639,7 @@ __all__ = [
     "SpaceObject",
     "SpaceRegion",
     "SpaceSecretsMount",
+    "SpaceStatus",
     "SpendingCap",
     "SpendingCapCurrency",
     "SpendingCapObject",

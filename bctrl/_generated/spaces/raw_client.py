@@ -20,7 +20,6 @@ from ..errors.unauthorized_error import UnauthorizedError
 from ..types.environment_mounts import EnvironmentMounts
 from ..types.resource_name import ResourceName
 from ..types.space import Space
-from ..types.space_delete_response import SpaceDeleteResponse
 from ..types.space_environment_patch import SpaceEnvironmentPatch
 from ..types.space_list_response import SpaceListResponse
 from .types.list_spaces_request_order import ListSpacesRequestOrder
@@ -321,15 +320,19 @@ class RawSpacesClient:
         self,
         space_id: str,
         *,
+        wait: typing.Optional[int] = None,
         idempotency_key: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[SpaceDeleteResponse]:
+    ) -> HttpResponse[Space]:
         """
-        Delete a space after its active runtimes have been stopped.
+        Delete a Space and everything in it: its browsers and sandboxes are stopped and destroyed, and its agents, Tasks, Conversations, files and views deleted. Run records, usage and Events stay with the organization. The deletion runs in the background; the Space shows status deleting until it is gone. Pass wait to block until then.
 
         Parameters
         ----------
         space_id : str
+
+        wait : typing.Optional[int]
+            Seconds to wait for the deletion to finish before answering.
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
@@ -339,12 +342,15 @@ class RawSpacesClient:
 
         Returns
         -------
-        HttpResponse[SpaceDeleteResponse]
+        HttpResponse[Space]
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
             f"v1/spaces/{quote_path_param(space_id)}",
             method="DELETE",
+            params={
+                "wait": wait,
+            },
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
             },
@@ -353,9 +359,9 @@ class RawSpacesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    SpaceDeleteResponse,
+                    Space,
                     parse_obj_as(
-                        type_=SpaceDeleteResponse,  # type: ignore
+                        type_=Space,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -846,15 +852,19 @@ class AsyncRawSpacesClient:
         self,
         space_id: str,
         *,
+        wait: typing.Optional[int] = None,
         idempotency_key: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[SpaceDeleteResponse]:
+    ) -> AsyncHttpResponse[Space]:
         """
-        Delete a space after its active runtimes have been stopped.
+        Delete a Space and everything in it: its browsers and sandboxes are stopped and destroyed, and its agents, Tasks, Conversations, files and views deleted. Run records, usage and Events stay with the organization. The deletion runs in the background; the Space shows status deleting until it is gone. Pass wait to block until then.
 
         Parameters
         ----------
         space_id : str
+
+        wait : typing.Optional[int]
+            Seconds to wait for the deletion to finish before answering.
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
@@ -864,12 +874,15 @@ class AsyncRawSpacesClient:
 
         Returns
         -------
-        AsyncHttpResponse[SpaceDeleteResponse]
+        AsyncHttpResponse[Space]
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
             f"v1/spaces/{quote_path_param(space_id)}",
             method="DELETE",
+            params={
+                "wait": wait,
+            },
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
             },
@@ -878,9 +891,9 @@ class AsyncRawSpacesClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    SpaceDeleteResponse,
+                    Space,
                     parse_obj_as(
-                        type_=SpaceDeleteResponse,  # type: ignore
+                        type_=Space,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
