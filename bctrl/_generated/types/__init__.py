@@ -384,51 +384,12 @@ if typing.TYPE_CHECKING:
     from .embedded_view_presentation import EmbeddedViewPresentation
     from .embedded_view_presentation_output import EmbeddedViewPresentationOutput
     from .embedded_view_presentation_output_mode import EmbeddedViewPresentationOutputMode
-    from .environment import Environment
     from .environment_ai_mount import EnvironmentAiMount
     from .environment_ai_mount_default import EnvironmentAiMountDefault
-    from .environment_capabilities import EnvironmentCapabilities
-    from .environment_connection import EnvironmentConnection
-    from .environment_connection_create_request import (
-        EnvironmentConnectionCreateRequest,
-        EnvironmentConnectionCreateRequest_Terminal,
-    )
-    from .environment_connection_create_response import EnvironmentConnectionCreateResponse
-    from .environment_connection_create_response_object import EnvironmentConnectionCreateResponseObject
-    from .environment_connection_create_response_protocol import EnvironmentConnectionCreateResponseProtocol
-    from .environment_connection_create_response_subprotocol import EnvironmentConnectionCreateResponseSubprotocol
-    from .environment_connection_object import EnvironmentConnectionObject
-    from .environment_connection_protocol import EnvironmentConnectionProtocol
-    from .environment_delete_response import EnvironmentDeleteResponse
-    from .environment_delete_response_object import EnvironmentDeleteResponseObject
-    from .environment_exec import EnvironmentExec
-    from .environment_exec_accepted import EnvironmentExecAccepted
-    from .environment_exec_accepted_object import EnvironmentExecAcceptedObject
-    from .environment_exec_accepted_status import EnvironmentExecAcceptedStatus
-    from .environment_exec_event import (
-        EnvironmentExecEvent,
-        EnvironmentExecEvent_ExecCompleted,
-        EnvironmentExecEvent_ExecOutput,
-    )
-    from .environment_exec_event_exec_completed import EnvironmentExecEventExecCompleted
-    from .environment_exec_event_exec_output import EnvironmentExecEventExecOutput
-    from .environment_exec_event_exec_output_stream import EnvironmentExecEventExecOutputStream
-    from .environment_exec_object import EnvironmentExecObject
-    from .environment_exec_status import EnvironmentExecStatus
-    from .environment_file_entry import EnvironmentFileEntry
-    from .environment_file_entry_type import EnvironmentFileEntryType
-    from .environment_file_list_response import EnvironmentFileListResponse
-    from .environment_file_list_response_object import EnvironmentFileListResponseObject
-    from .environment_file_stage_response import EnvironmentFileStageResponse
-    from .environment_file_stage_response_object import EnvironmentFileStageResponseObject
     from .environment_mounts import EnvironmentMounts
     from .environment_mounts_output import EnvironmentMountsOutput
-    from .environment_object import EnvironmentObject
-    from .environment_status import EnvironmentStatus
     from .environment_storage_mount import EnvironmentStorageMount
     from .environment_storage_mount_output import EnvironmentStorageMountOutput
-    from .environment_terminal_connection_request import EnvironmentTerminalConnectionRequest
-    from .environments_list_response import EnvironmentsListResponse
     from .error_response import ErrorResponse
     from .error_response_error import ErrorResponseError
     from .error_response_error_reason_class import ErrorResponseErrorReasonClass
@@ -733,6 +694,50 @@ if typing.TYPE_CHECKING:
     from .run_usage import RunUsage
     from .run_usage_billing_status import RunUsageBillingStatus
     from .runs_delete_response import RunsDeleteResponse
+    from .sandbox import Sandbox
+    from .sandbox_capabilities import SandboxCapabilities
+    from .sandbox_connection import SandboxConnection
+    from .sandbox_connection_create_request import (
+        SandboxConnectionCreateRequest,
+        SandboxConnectionCreateRequest_Terminal,
+    )
+    from .sandbox_connection_create_response import SandboxConnectionCreateResponse
+    from .sandbox_connection_create_response_object import SandboxConnectionCreateResponseObject
+    from .sandbox_connection_create_response_protocol import SandboxConnectionCreateResponseProtocol
+    from .sandbox_connection_create_response_subprotocol import SandboxConnectionCreateResponseSubprotocol
+    from .sandbox_connection_object import SandboxConnectionObject
+    from .sandbox_connection_protocol import SandboxConnectionProtocol
+    from .sandbox_delete_response import SandboxDeleteResponse
+    from .sandbox_delete_response_object import SandboxDeleteResponseObject
+    from .sandbox_file_entry import SandboxFileEntry
+    from .sandbox_file_entry_type import SandboxFileEntryType
+    from .sandbox_file_list_response import SandboxFileListResponse
+    from .sandbox_file_list_response_object import SandboxFileListResponseObject
+    from .sandbox_file_stage_response import SandboxFileStageResponse
+    from .sandbox_file_stage_response_object import SandboxFileStageResponseObject
+    from .sandbox_object import SandboxObject
+    from .sandbox_process import SandboxProcess
+    from .sandbox_process_accepted import SandboxProcessAccepted
+    from .sandbox_process_accepted_object import SandboxProcessAcceptedObject
+    from .sandbox_process_accepted_status import SandboxProcessAcceptedStatus
+    from .sandbox_process_event import (
+        SandboxProcessEvent,
+        SandboxProcessEvent_ProcessCompleted,
+        SandboxProcessEvent_ProcessOutput,
+    )
+    from .sandbox_process_event_process_completed import SandboxProcessEventProcessCompleted
+    from .sandbox_process_event_process_output import SandboxProcessEventProcessOutput
+    from .sandbox_process_event_process_output_stream import SandboxProcessEventProcessOutputStream
+    from .sandbox_process_object import SandboxProcessObject
+    from .sandbox_process_status import SandboxProcessStatus
+    from .sandbox_snapshot import SandboxSnapshot
+    from .sandbox_snapshot_delete_response import SandboxSnapshotDeleteResponse
+    from .sandbox_snapshot_delete_response_object import SandboxSnapshotDeleteResponseObject
+    from .sandbox_snapshot_object import SandboxSnapshotObject
+    from .sandbox_status import SandboxStatus
+    from .sandbox_terminal_connection_request import SandboxTerminalConnectionRequest
+    from .sandboxes_list_response import SandboxesListResponse
+    from .sandboxes_snapshots_list_response import SandboxesSnapshotsListResponse
     from .screenshot_computer_request_space_id import ScreenshotComputerRequestSpaceId
     from .screenshot_computer_request_space_id_one import ScreenshotComputerRequestSpaceIdOne
     from .screenshot_pages_request_space_id import ScreenshotPagesRequestSpaceId
@@ -1283,47 +1288,12 @@ _dynamic_imports: typing.Dict[str, str] = {
     "EmbeddedViewPresentation": ".embedded_view_presentation",
     "EmbeddedViewPresentationOutput": ".embedded_view_presentation_output",
     "EmbeddedViewPresentationOutputMode": ".embedded_view_presentation_output_mode",
-    "Environment": ".environment",
     "EnvironmentAiMount": ".environment_ai_mount",
     "EnvironmentAiMountDefault": ".environment_ai_mount_default",
-    "EnvironmentCapabilities": ".environment_capabilities",
-    "EnvironmentConnection": ".environment_connection",
-    "EnvironmentConnectionCreateRequest": ".environment_connection_create_request",
-    "EnvironmentConnectionCreateRequest_Terminal": ".environment_connection_create_request",
-    "EnvironmentConnectionCreateResponse": ".environment_connection_create_response",
-    "EnvironmentConnectionCreateResponseObject": ".environment_connection_create_response_object",
-    "EnvironmentConnectionCreateResponseProtocol": ".environment_connection_create_response_protocol",
-    "EnvironmentConnectionCreateResponseSubprotocol": ".environment_connection_create_response_subprotocol",
-    "EnvironmentConnectionObject": ".environment_connection_object",
-    "EnvironmentConnectionProtocol": ".environment_connection_protocol",
-    "EnvironmentDeleteResponse": ".environment_delete_response",
-    "EnvironmentDeleteResponseObject": ".environment_delete_response_object",
-    "EnvironmentExec": ".environment_exec",
-    "EnvironmentExecAccepted": ".environment_exec_accepted",
-    "EnvironmentExecAcceptedObject": ".environment_exec_accepted_object",
-    "EnvironmentExecAcceptedStatus": ".environment_exec_accepted_status",
-    "EnvironmentExecEvent": ".environment_exec_event",
-    "EnvironmentExecEventExecCompleted": ".environment_exec_event_exec_completed",
-    "EnvironmentExecEventExecOutput": ".environment_exec_event_exec_output",
-    "EnvironmentExecEventExecOutputStream": ".environment_exec_event_exec_output_stream",
-    "EnvironmentExecEvent_ExecCompleted": ".environment_exec_event",
-    "EnvironmentExecEvent_ExecOutput": ".environment_exec_event",
-    "EnvironmentExecObject": ".environment_exec_object",
-    "EnvironmentExecStatus": ".environment_exec_status",
-    "EnvironmentFileEntry": ".environment_file_entry",
-    "EnvironmentFileEntryType": ".environment_file_entry_type",
-    "EnvironmentFileListResponse": ".environment_file_list_response",
-    "EnvironmentFileListResponseObject": ".environment_file_list_response_object",
-    "EnvironmentFileStageResponse": ".environment_file_stage_response",
-    "EnvironmentFileStageResponseObject": ".environment_file_stage_response_object",
     "EnvironmentMounts": ".environment_mounts",
     "EnvironmentMountsOutput": ".environment_mounts_output",
-    "EnvironmentObject": ".environment_object",
-    "EnvironmentStatus": ".environment_status",
     "EnvironmentStorageMount": ".environment_storage_mount",
     "EnvironmentStorageMountOutput": ".environment_storage_mount_output",
-    "EnvironmentTerminalConnectionRequest": ".environment_terminal_connection_request",
-    "EnvironmentsListResponse": ".environments_list_response",
     "ErrorResponse": ".error_response",
     "ErrorResponseError": ".error_response_error",
     "ErrorResponseErrorReasonClass": ".error_response_error_reason_class",
@@ -1622,6 +1592,46 @@ _dynamic_imports: typing.Dict[str, str] = {
     "RunUsage": ".run_usage",
     "RunUsageBillingStatus": ".run_usage_billing_status",
     "RunsDeleteResponse": ".runs_delete_response",
+    "Sandbox": ".sandbox",
+    "SandboxCapabilities": ".sandbox_capabilities",
+    "SandboxConnection": ".sandbox_connection",
+    "SandboxConnectionCreateRequest": ".sandbox_connection_create_request",
+    "SandboxConnectionCreateRequest_Terminal": ".sandbox_connection_create_request",
+    "SandboxConnectionCreateResponse": ".sandbox_connection_create_response",
+    "SandboxConnectionCreateResponseObject": ".sandbox_connection_create_response_object",
+    "SandboxConnectionCreateResponseProtocol": ".sandbox_connection_create_response_protocol",
+    "SandboxConnectionCreateResponseSubprotocol": ".sandbox_connection_create_response_subprotocol",
+    "SandboxConnectionObject": ".sandbox_connection_object",
+    "SandboxConnectionProtocol": ".sandbox_connection_protocol",
+    "SandboxDeleteResponse": ".sandbox_delete_response",
+    "SandboxDeleteResponseObject": ".sandbox_delete_response_object",
+    "SandboxFileEntry": ".sandbox_file_entry",
+    "SandboxFileEntryType": ".sandbox_file_entry_type",
+    "SandboxFileListResponse": ".sandbox_file_list_response",
+    "SandboxFileListResponseObject": ".sandbox_file_list_response_object",
+    "SandboxFileStageResponse": ".sandbox_file_stage_response",
+    "SandboxFileStageResponseObject": ".sandbox_file_stage_response_object",
+    "SandboxObject": ".sandbox_object",
+    "SandboxProcess": ".sandbox_process",
+    "SandboxProcessAccepted": ".sandbox_process_accepted",
+    "SandboxProcessAcceptedObject": ".sandbox_process_accepted_object",
+    "SandboxProcessAcceptedStatus": ".sandbox_process_accepted_status",
+    "SandboxProcessEvent": ".sandbox_process_event",
+    "SandboxProcessEventProcessCompleted": ".sandbox_process_event_process_completed",
+    "SandboxProcessEventProcessOutput": ".sandbox_process_event_process_output",
+    "SandboxProcessEventProcessOutputStream": ".sandbox_process_event_process_output_stream",
+    "SandboxProcessEvent_ProcessCompleted": ".sandbox_process_event",
+    "SandboxProcessEvent_ProcessOutput": ".sandbox_process_event",
+    "SandboxProcessObject": ".sandbox_process_object",
+    "SandboxProcessStatus": ".sandbox_process_status",
+    "SandboxSnapshot": ".sandbox_snapshot",
+    "SandboxSnapshotDeleteResponse": ".sandbox_snapshot_delete_response",
+    "SandboxSnapshotDeleteResponseObject": ".sandbox_snapshot_delete_response_object",
+    "SandboxSnapshotObject": ".sandbox_snapshot_object",
+    "SandboxStatus": ".sandbox_status",
+    "SandboxTerminalConnectionRequest": ".sandbox_terminal_connection_request",
+    "SandboxesListResponse": ".sandboxes_list_response",
+    "SandboxesSnapshotsListResponse": ".sandboxes_snapshots_list_response",
     "ScreenshotComputerRequestSpaceId": ".screenshot_computer_request_space_id",
     "ScreenshotComputerRequestSpaceIdOne": ".screenshot_computer_request_space_id_one",
     "ScreenshotPagesRequestSpaceId": ".screenshot_pages_request_space_id",
@@ -2199,47 +2209,12 @@ __all__ = [
     "EmbeddedViewPresentation",
     "EmbeddedViewPresentationOutput",
     "EmbeddedViewPresentationOutputMode",
-    "Environment",
     "EnvironmentAiMount",
     "EnvironmentAiMountDefault",
-    "EnvironmentCapabilities",
-    "EnvironmentConnection",
-    "EnvironmentConnectionCreateRequest",
-    "EnvironmentConnectionCreateRequest_Terminal",
-    "EnvironmentConnectionCreateResponse",
-    "EnvironmentConnectionCreateResponseObject",
-    "EnvironmentConnectionCreateResponseProtocol",
-    "EnvironmentConnectionCreateResponseSubprotocol",
-    "EnvironmentConnectionObject",
-    "EnvironmentConnectionProtocol",
-    "EnvironmentDeleteResponse",
-    "EnvironmentDeleteResponseObject",
-    "EnvironmentExec",
-    "EnvironmentExecAccepted",
-    "EnvironmentExecAcceptedObject",
-    "EnvironmentExecAcceptedStatus",
-    "EnvironmentExecEvent",
-    "EnvironmentExecEventExecCompleted",
-    "EnvironmentExecEventExecOutput",
-    "EnvironmentExecEventExecOutputStream",
-    "EnvironmentExecEvent_ExecCompleted",
-    "EnvironmentExecEvent_ExecOutput",
-    "EnvironmentExecObject",
-    "EnvironmentExecStatus",
-    "EnvironmentFileEntry",
-    "EnvironmentFileEntryType",
-    "EnvironmentFileListResponse",
-    "EnvironmentFileListResponseObject",
-    "EnvironmentFileStageResponse",
-    "EnvironmentFileStageResponseObject",
     "EnvironmentMounts",
     "EnvironmentMountsOutput",
-    "EnvironmentObject",
-    "EnvironmentStatus",
     "EnvironmentStorageMount",
     "EnvironmentStorageMountOutput",
-    "EnvironmentTerminalConnectionRequest",
-    "EnvironmentsListResponse",
     "ErrorResponse",
     "ErrorResponseError",
     "ErrorResponseErrorReasonClass",
@@ -2538,6 +2513,46 @@ __all__ = [
     "RunUsage",
     "RunUsageBillingStatus",
     "RunsDeleteResponse",
+    "Sandbox",
+    "SandboxCapabilities",
+    "SandboxConnection",
+    "SandboxConnectionCreateRequest",
+    "SandboxConnectionCreateRequest_Terminal",
+    "SandboxConnectionCreateResponse",
+    "SandboxConnectionCreateResponseObject",
+    "SandboxConnectionCreateResponseProtocol",
+    "SandboxConnectionCreateResponseSubprotocol",
+    "SandboxConnectionObject",
+    "SandboxConnectionProtocol",
+    "SandboxDeleteResponse",
+    "SandboxDeleteResponseObject",
+    "SandboxFileEntry",
+    "SandboxFileEntryType",
+    "SandboxFileListResponse",
+    "SandboxFileListResponseObject",
+    "SandboxFileStageResponse",
+    "SandboxFileStageResponseObject",
+    "SandboxObject",
+    "SandboxProcess",
+    "SandboxProcessAccepted",
+    "SandboxProcessAcceptedObject",
+    "SandboxProcessAcceptedStatus",
+    "SandboxProcessEvent",
+    "SandboxProcessEventProcessCompleted",
+    "SandboxProcessEventProcessOutput",
+    "SandboxProcessEventProcessOutputStream",
+    "SandboxProcessEvent_ProcessCompleted",
+    "SandboxProcessEvent_ProcessOutput",
+    "SandboxProcessObject",
+    "SandboxProcessStatus",
+    "SandboxSnapshot",
+    "SandboxSnapshotDeleteResponse",
+    "SandboxSnapshotDeleteResponseObject",
+    "SandboxSnapshotObject",
+    "SandboxStatus",
+    "SandboxTerminalConnectionRequest",
+    "SandboxesListResponse",
+    "SandboxesSnapshotsListResponse",
     "ScreenshotComputerRequestSpaceId",
     "ScreenshotComputerRequestSpaceIdOne",
     "ScreenshotPagesRequestSpaceId",

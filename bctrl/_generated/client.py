@@ -22,13 +22,13 @@ if typing.TYPE_CHECKING:
     from .browser.client import AsyncBrowserClient, BrowserClient
     from .browsers.client import AsyncBrowsersClient, BrowsersClient
     from .conversations.client import AsyncConversationsClient, ConversationsClient
-    from .environments.client import AsyncEnvironmentsClient, EnvironmentsClient
     from .events.client import AsyncEventsClient, EventsClient
     from .files.client import AsyncFilesClient, FilesClient
     from .locations.client import AsyncLocationsClient, LocationsClient
     from .notification_recipients.client import AsyncNotificationRecipientsClient, NotificationRecipientsClient
     from .proxies.client import AsyncProxiesClient, ProxiesClient
     from .runs.client import AsyncRunsClient, RunsClient
+    from .sandboxes.client import AsyncSandboxesClient, SandboxesClient
     from .secrets.client import AsyncSecretsClient, SecretsClient
     from .spaces.client import AsyncSpacesClient, SpacesClient
     from .subaccounts.client import AsyncSubaccountsClient, SubaccountsClient
@@ -139,13 +139,13 @@ class Bctrl:
         self._auth: typing.Optional[AuthClient] = None
         self._browsers: typing.Optional[BrowsersClient] = None
         self._conversations: typing.Optional[ConversationsClient] = None
-        self._environments: typing.Optional[EnvironmentsClient] = None
         self._events: typing.Optional[EventsClient] = None
         self._files: typing.Optional[FilesClient] = None
         self._locations: typing.Optional[LocationsClient] = None
         self._notification_recipients: typing.Optional[NotificationRecipientsClient] = None
         self._proxies: typing.Optional[ProxiesClient] = None
         self._runs: typing.Optional[RunsClient] = None
+        self._sandboxes: typing.Optional[SandboxesClient] = None
         self._secrets: typing.Optional[SecretsClient] = None
         self._spaces: typing.Optional[SpacesClient] = None
         self._subaccounts: typing.Optional[SubaccountsClient] = None
@@ -256,14 +256,6 @@ class Bctrl:
         return self._conversations
 
     @property
-    def environments(self):
-        if self._environments is None:
-            from .environments.client import EnvironmentsClient  # noqa: E402
-
-            self._environments = EnvironmentsClient(client_wrapper=self._client_wrapper)
-        return self._environments
-
-    @property
     def events(self):
         if self._events is None:
             from .events.client import EventsClient  # noqa: E402
@@ -310,6 +302,14 @@ class Bctrl:
 
             self._runs = RunsClient(client_wrapper=self._client_wrapper)
         return self._runs
+
+    @property
+    def sandboxes(self):
+        if self._sandboxes is None:
+            from .sandboxes.client import SandboxesClient  # noqa: E402
+
+            self._sandboxes = SandboxesClient(client_wrapper=self._client_wrapper)
+        return self._sandboxes
 
     @property
     def secrets(self):
@@ -520,13 +520,13 @@ class AsyncBctrl:
         self._auth: typing.Optional[AsyncAuthClient] = None
         self._browsers: typing.Optional[AsyncBrowsersClient] = None
         self._conversations: typing.Optional[AsyncConversationsClient] = None
-        self._environments: typing.Optional[AsyncEnvironmentsClient] = None
         self._events: typing.Optional[AsyncEventsClient] = None
         self._files: typing.Optional[AsyncFilesClient] = None
         self._locations: typing.Optional[AsyncLocationsClient] = None
         self._notification_recipients: typing.Optional[AsyncNotificationRecipientsClient] = None
         self._proxies: typing.Optional[AsyncProxiesClient] = None
         self._runs: typing.Optional[AsyncRunsClient] = None
+        self._sandboxes: typing.Optional[AsyncSandboxesClient] = None
         self._secrets: typing.Optional[AsyncSecretsClient] = None
         self._spaces: typing.Optional[AsyncSpacesClient] = None
         self._subaccounts: typing.Optional[AsyncSubaccountsClient] = None
@@ -645,14 +645,6 @@ class AsyncBctrl:
         return self._conversations
 
     @property
-    def environments(self):
-        if self._environments is None:
-            from .environments.client import AsyncEnvironmentsClient  # noqa: E402
-
-            self._environments = AsyncEnvironmentsClient(client_wrapper=self._client_wrapper)
-        return self._environments
-
-    @property
     def events(self):
         if self._events is None:
             from .events.client import AsyncEventsClient  # noqa: E402
@@ -699,6 +691,14 @@ class AsyncBctrl:
 
             self._runs = AsyncRunsClient(client_wrapper=self._client_wrapper)
         return self._runs
+
+    @property
+    def sandboxes(self):
+        if self._sandboxes is None:
+            from .sandboxes.client import AsyncSandboxesClient  # noqa: E402
+
+            self._sandboxes = AsyncSandboxesClient(client_wrapper=self._client_wrapper)
+        return self._sandboxes
 
     @property
     def secrets(self):
