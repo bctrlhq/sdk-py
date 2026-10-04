@@ -8,7 +8,6 @@ import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .api_key_create_request_agent_agent import ApiKeyCreateRequestAgentAgent
-from .api_key_create_request_agent_scopes_item import ApiKeyCreateRequestAgentScopesItem
 from .api_key_create_request_agent_type import ApiKeyCreateRequestAgentType
 from .resource_name import ResourceName
 from .subaccount_id import SubaccountId
@@ -20,7 +19,7 @@ class ApiKeyCreateRequestAgent(UniversalBaseModel):
         typing.Optional[dt.datetime], FieldMetadata(alias="expiresAt"), pydantic.Field(alias="expiresAt")
     ] = None
     name: typing.Optional[ResourceName] = None
-    scopes: typing.Optional[typing.List[ApiKeyCreateRequestAgentScopesItem]] = None
+    scopes: typing.Optional[typing.List[str]] = None
     subaccount_id: typing_extensions.Annotated[
         typing.Optional[SubaccountId], FieldMetadata(alias="subaccountId"), pydantic.Field(alias="subaccountId")
     ] = None

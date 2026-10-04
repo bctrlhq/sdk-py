@@ -118,6 +118,7 @@ class RawSpacesClient:
         self,
         *,
         idempotency_key: typing.Optional[str] = None,
+        capability_scopes: typing.Optional[typing.Sequence[str]] = OMIT,
         environment: typing.Optional[EnvironmentMounts] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
@@ -131,6 +132,8 @@ class RawSpacesClient:
         ----------
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        capability_scopes : typing.Optional[typing.Sequence[str]]
 
         environment : typing.Optional[EnvironmentMounts]
 
@@ -152,6 +155,7 @@ class RawSpacesClient:
             "v1/spaces",
             method="POST",
             json={
+                "capabilityScopes": capability_scopes,
                 "environment": convert_and_respect_annotation_metadata(
                     object_=environment, annotation=EnvironmentMounts, direction="write"
                 ),
@@ -425,6 +429,7 @@ class RawSpacesClient:
         space_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
+        capability_scopes: typing.Optional[typing.Sequence[str]] = OMIT,
         environment: typing.Optional[SpaceEnvironmentPatch] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
@@ -439,6 +444,8 @@ class RawSpacesClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        capability_scopes : typing.Optional[typing.Sequence[str]]
 
         environment : typing.Optional[SpaceEnvironmentPatch]
 
@@ -458,6 +465,7 @@ class RawSpacesClient:
             f"v1/spaces/{quote_path_param(space_id)}",
             method="PATCH",
             json={
+                "capabilityScopes": capability_scopes,
                 "environment": convert_and_respect_annotation_metadata(
                     object_=environment, annotation=SpaceEnvironmentPatch, direction="write"
                 ),
@@ -633,6 +641,7 @@ class AsyncRawSpacesClient:
         self,
         *,
         idempotency_key: typing.Optional[str] = None,
+        capability_scopes: typing.Optional[typing.Sequence[str]] = OMIT,
         environment: typing.Optional[EnvironmentMounts] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
@@ -646,6 +655,8 @@ class AsyncRawSpacesClient:
         ----------
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        capability_scopes : typing.Optional[typing.Sequence[str]]
 
         environment : typing.Optional[EnvironmentMounts]
 
@@ -667,6 +678,7 @@ class AsyncRawSpacesClient:
             "v1/spaces",
             method="POST",
             json={
+                "capabilityScopes": capability_scopes,
                 "environment": convert_and_respect_annotation_metadata(
                     object_=environment, annotation=EnvironmentMounts, direction="write"
                 ),
@@ -942,6 +954,7 @@ class AsyncRawSpacesClient:
         space_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
+        capability_scopes: typing.Optional[typing.Sequence[str]] = OMIT,
         environment: typing.Optional[SpaceEnvironmentPatch] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
@@ -956,6 +969,8 @@ class AsyncRawSpacesClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        capability_scopes : typing.Optional[typing.Sequence[str]]
 
         environment : typing.Optional[SpaceEnvironmentPatch]
 
@@ -975,6 +990,7 @@ class AsyncRawSpacesClient:
             f"v1/spaces/{quote_path_param(space_id)}",
             method="PATCH",
             json={
+                "capabilityScopes": capability_scopes,
                 "environment": convert_and_respect_annotation_metadata(
                     object_=environment, annotation=SpaceEnvironmentPatch, direction="write"
                 ),

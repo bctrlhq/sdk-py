@@ -7,7 +7,6 @@ import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .api_key_subaccount_object import ApiKeySubaccountObject
-from .api_key_subaccount_scopes_item import ApiKeySubaccountScopesItem
 from .non_negative_count import NonNegativeCount
 from .rfc3339timestamp import Rfc3339Timestamp
 from .subaccount_id import SubaccountId
@@ -27,7 +26,7 @@ class ApiKeySubaccount(UniversalBaseModel):
     ] = None
     name: typing.Optional[str] = None
     object: ApiKeySubaccountObject
-    scopes: typing.List[ApiKeySubaccountScopesItem]
+    scopes: typing.List[str]
     subaccount_id: typing_extensions.Annotated[
         typing.Optional[SubaccountId], FieldMetadata(alias="subaccountId"), pydantic.Field(alias="subaccountId")
     ] = None

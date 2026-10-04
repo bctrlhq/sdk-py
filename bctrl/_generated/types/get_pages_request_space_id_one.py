@@ -2,4 +2,4 @@
 
 import typing
 
-ApiKeySubaccountScopesItem = typing.Union[typing.Literal["*"], typing.Any]
+GetPagesRequestSpaceIdOne = typing.Union[typing.Literal["default"], typing.Any]

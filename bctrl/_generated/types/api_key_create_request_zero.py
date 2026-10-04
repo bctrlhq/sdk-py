@@ -7,7 +7,6 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
-from .api_key_create_request_zero_scopes_item import ApiKeyCreateRequestZeroScopesItem
 from .api_key_create_request_zero_type import ApiKeyCreateRequestZeroType
 from .resource_name import ResourceName
 from .subaccount_id import SubaccountId
@@ -18,7 +17,7 @@ class ApiKeyCreateRequestZero(UniversalBaseModel):
         typing.Optional[dt.datetime], FieldMetadata(alias="expiresAt"), pydantic.Field(alias="expiresAt")
     ] = None
     name: typing.Optional[ResourceName] = None
-    scopes: typing.Optional[typing.List[ApiKeyCreateRequestZeroScopesItem]] = None
+    scopes: typing.Optional[typing.List[str]] = None
     subaccount_id: typing_extensions.Annotated[
         typing.Optional[SubaccountId], FieldMetadata(alias="subaccountId"), pydantic.Field(alias="subaccountId")
     ] = None

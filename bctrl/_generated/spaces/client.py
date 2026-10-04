@@ -85,6 +85,7 @@ class SpacesClient:
         self,
         *,
         idempotency_key: typing.Optional[str] = None,
+        capability_scopes: typing.Optional[typing.Sequence[str]] = OMIT,
         environment: typing.Optional[EnvironmentMounts] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
@@ -98,6 +99,8 @@ class SpacesClient:
         ----------
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        capability_scopes : typing.Optional[typing.Sequence[str]]
 
         environment : typing.Optional[EnvironmentMounts]
 
@@ -128,6 +131,7 @@ class SpacesClient:
         """
         _response = self._raw_client.create(
             idempotency_key=idempotency_key,
+            capability_scopes=capability_scopes,
             environment=environment,
             expire_after_idle_days=expire_after_idle_days,
             name=name,
@@ -214,6 +218,7 @@ class SpacesClient:
         space_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
+        capability_scopes: typing.Optional[typing.Sequence[str]] = OMIT,
         environment: typing.Optional[SpaceEnvironmentPatch] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
@@ -228,6 +233,8 @@ class SpacesClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        capability_scopes : typing.Optional[typing.Sequence[str]]
 
         environment : typing.Optional[SpaceEnvironmentPatch]
 
@@ -259,6 +266,7 @@ class SpacesClient:
         _response = self._raw_client.update(
             space_id,
             idempotency_key=idempotency_key,
+            capability_scopes=capability_scopes,
             environment=environment,
             expire_after_idle_days=expire_after_idle_days,
             name=name,
@@ -348,6 +356,7 @@ class AsyncSpacesClient:
         self,
         *,
         idempotency_key: typing.Optional[str] = None,
+        capability_scopes: typing.Optional[typing.Sequence[str]] = OMIT,
         environment: typing.Optional[EnvironmentMounts] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
@@ -361,6 +370,8 @@ class AsyncSpacesClient:
         ----------
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        capability_scopes : typing.Optional[typing.Sequence[str]]
 
         environment : typing.Optional[EnvironmentMounts]
 
@@ -399,6 +410,7 @@ class AsyncSpacesClient:
         """
         _response = await self._raw_client.create(
             idempotency_key=idempotency_key,
+            capability_scopes=capability_scopes,
             environment=environment,
             expire_after_idle_days=expire_after_idle_days,
             name=name,
@@ -503,6 +515,7 @@ class AsyncSpacesClient:
         space_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
+        capability_scopes: typing.Optional[typing.Sequence[str]] = OMIT,
         environment: typing.Optional[SpaceEnvironmentPatch] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
@@ -517,6 +530,8 @@ class AsyncSpacesClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        capability_scopes : typing.Optional[typing.Sequence[str]]
 
         environment : typing.Optional[SpaceEnvironmentPatch]
 
@@ -556,6 +571,7 @@ class AsyncSpacesClient:
         _response = await self._raw_client.update(
             space_id,
             idempotency_key=idempotency_key,
+            capability_scopes=capability_scopes,
             environment=environment,
             expire_after_idle_days=expire_after_idle_days,
             name=name,

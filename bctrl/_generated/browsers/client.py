@@ -6,11 +6,13 @@ import typing
 
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
+from ..types.browser_fetch_result import BrowserFetchResult
 from ..types.browser_list_response import BrowserListResponse
 from ..types.browser_network_traffic_config import BrowserNetworkTrafficConfig
 from ..types.browser_resource import BrowserResource
 from ..types.browsers_delete_response import BrowsersDeleteResponse
 from ..types.delete_browsers_request_space_id import DeleteBrowsersRequestSpaceId
+from ..types.fetch_browsers_request_space_id import FetchBrowsersRequestSpaceId
 from ..types.get_browsers_request_space_id import GetBrowsersRequestSpaceId
 from ..types.json_object import JsonObject
 from ..types.list_browsers_request_space_id import ListBrowsersRequestSpaceId
@@ -26,6 +28,8 @@ from .types.browser_create_request_proxy import BrowserCreateRequestProxy
 from .types.browser_create_request_space_id import BrowserCreateRequestSpaceId
 from .types.browser_create_request_stealth import BrowserCreateRequestStealth
 from .types.browser_create_request_viewport import BrowserCreateRequestViewport
+from .types.browser_fetch_request_body_encoding import BrowserFetchRequestBodyEncoding
+from .types.browser_fetch_request_method import BrowserFetchRequestMethod
 from .types.browsers_update_request_captcha import BrowsersUpdateRequestCaptcha
 from .types.browsers_update_request_proxy import BrowsersUpdateRequestProxy
 from .types.browsers_update_request_stealth import BrowsersUpdateRequestStealth
@@ -37,6 +41,8 @@ if typing.TYPE_CHECKING:
     from .connections.client import AsyncConnectionsClient, ConnectionsClient
     from .control.client import AsyncControlClient, ControlClient
     from .events.client import AsyncEventsClient, EventsClient
+    from .files.client import AsyncFilesClient, FilesClient
+    from .pages.client import AsyncPagesClient, PagesClient
     from .recording.client import AsyncRecordingClient, RecordingClient
     from .runs.client import AsyncRunsClient, RunsClient
 # this is used as the default value for optional parameters
@@ -51,6 +57,8 @@ class BrowsersClient:
         self._connections: typing.Optional[ConnectionsClient] = None
         self._control: typing.Optional[ControlClient] = None
         self._events: typing.Optional[EventsClient] = None
+        self._files: typing.Optional[FilesClient] = None
+        self._pages: typing.Optional[PagesClient] = None
         self._recording: typing.Optional[RecordingClient] = None
         self._runs: typing.Optional[RunsClient] = None
 
@@ -465,6 +473,84 @@ class BrowsersClient:
         )
         return _response.data
 
+    def fetch(
+        self,
+        browser_id: str,
+        *,
+        url: str,
+        space_id: typing.Optional[FetchBrowsersRequestSpaceId] = None,
+        idempotency_key: typing.Optional[str] = None,
+        body: typing.Optional[str] = OMIT,
+        body_encoding: typing.Optional[BrowserFetchRequestBodyEncoding] = OMIT,
+        headers: typing.Optional[typing.Dict[str, str]] = OMIT,
+        max_bytes: typing.Optional[int] = OMIT,
+        method: typing.Optional[BrowserFetchRequestMethod] = OMIT,
+        timeout_ms: typing.Optional[int] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> BrowserFetchResult:
+        """
+        Send an HTTP request from the browser itself: it carries the browser's cookies, proxy and TLS/HTTP2 fingerprint and is not subject to CORS. The response body is returned base64 encoded up to maxBytes (truncated is true beyond it). Human control blocks it; the Run's Events record the URL without its query, the status and the byte count. An interrupted request returns unknown and must not be repeated automatically.
+
+        Parameters
+        ----------
+        browser_id : str
+
+        url : str
+
+        space_id : typing.Optional[FetchBrowsersRequestSpaceId]
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        body : typing.Optional[str]
+
+        body_encoding : typing.Optional[BrowserFetchRequestBodyEncoding]
+
+        headers : typing.Optional[typing.Dict[str, str]]
+
+        max_bytes : typing.Optional[int]
+
+        method : typing.Optional[BrowserFetchRequestMethod]
+
+        timeout_ms : typing.Optional[int]
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        BrowserFetchResult
+            OK
+
+        Examples
+        --------
+        from bctrl import Bctrl
+
+        client = Bctrl(
+            bctrl_space="YOUR_BCTRL_SPACE",
+            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
+            token="YOUR_TOKEN",
+        )
+        client.browsers.fetch(
+            browser_id="browserId",
+            url="url",
+        )
+        """
+        _response = self._raw_client.fetch(
+            browser_id,
+            url=url,
+            space_id=space_id,
+            idempotency_key=idempotency_key,
+            body=body,
+            body_encoding=body_encoding,
+            headers=headers,
+            max_bytes=max_bytes,
+            method=method,
+            timeout_ms=timeout_ms,
+            request_options=request_options,
+        )
+        return _response.data
+
     def start(
         self,
         browser_id: str,
@@ -604,6 +690,22 @@ class BrowsersClient:
         return self._events
 
     @property
+    def files(self):
+        if self._files is None:
+            from .files.client import FilesClient  # noqa: E402
+
+            self._files = FilesClient(client_wrapper=self._client_wrapper)
+        return self._files
+
+    @property
+    def pages(self):
+        if self._pages is None:
+            from .pages.client import PagesClient  # noqa: E402
+
+            self._pages = PagesClient(client_wrapper=self._client_wrapper)
+        return self._pages
+
+    @property
     def recording(self):
         if self._recording is None:
             from .recording.client import RecordingClient  # noqa: E402
@@ -628,6 +730,8 @@ class AsyncBrowsersClient:
         self._connections: typing.Optional[AsyncConnectionsClient] = None
         self._control: typing.Optional[AsyncControlClient] = None
         self._events: typing.Optional[AsyncEventsClient] = None
+        self._files: typing.Optional[AsyncFilesClient] = None
+        self._pages: typing.Optional[AsyncPagesClient] = None
         self._recording: typing.Optional[AsyncRecordingClient] = None
         self._runs: typing.Optional[AsyncRunsClient] = None
 
@@ -1084,6 +1188,92 @@ class AsyncBrowsersClient:
         )
         return _response.data
 
+    async def fetch(
+        self,
+        browser_id: str,
+        *,
+        url: str,
+        space_id: typing.Optional[FetchBrowsersRequestSpaceId] = None,
+        idempotency_key: typing.Optional[str] = None,
+        body: typing.Optional[str] = OMIT,
+        body_encoding: typing.Optional[BrowserFetchRequestBodyEncoding] = OMIT,
+        headers: typing.Optional[typing.Dict[str, str]] = OMIT,
+        max_bytes: typing.Optional[int] = OMIT,
+        method: typing.Optional[BrowserFetchRequestMethod] = OMIT,
+        timeout_ms: typing.Optional[int] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> BrowserFetchResult:
+        """
+        Send an HTTP request from the browser itself: it carries the browser's cookies, proxy and TLS/HTTP2 fingerprint and is not subject to CORS. The response body is returned base64 encoded up to maxBytes (truncated is true beyond it). Human control blocks it; the Run's Events record the URL without its query, the status and the byte count. An interrupted request returns unknown and must not be repeated automatically.
+
+        Parameters
+        ----------
+        browser_id : str
+
+        url : str
+
+        space_id : typing.Optional[FetchBrowsersRequestSpaceId]
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        body : typing.Optional[str]
+
+        body_encoding : typing.Optional[BrowserFetchRequestBodyEncoding]
+
+        headers : typing.Optional[typing.Dict[str, str]]
+
+        max_bytes : typing.Optional[int]
+
+        method : typing.Optional[BrowserFetchRequestMethod]
+
+        timeout_ms : typing.Optional[int]
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        BrowserFetchResult
+            OK
+
+        Examples
+        --------
+        import asyncio
+
+        from bctrl import AsyncBctrl
+
+        client = AsyncBctrl(
+            bctrl_space="YOUR_BCTRL_SPACE",
+            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
+            token="YOUR_TOKEN",
+        )
+
+
+        async def main() -> None:
+            await client.browsers.fetch(
+                browser_id="browserId",
+                url="url",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.fetch(
+            browser_id,
+            url=url,
+            space_id=space_id,
+            idempotency_key=idempotency_key,
+            body=body,
+            body_encoding=body_encoding,
+            headers=headers,
+            max_bytes=max_bytes,
+            method=method,
+            timeout_ms=timeout_ms,
+            request_options=request_options,
+        )
+        return _response.data
+
     async def start(
         self,
         browser_id: str,
@@ -1237,6 +1427,22 @@ class AsyncBrowsersClient:
 
             self._events = AsyncEventsClient(client_wrapper=self._client_wrapper)
         return self._events
+
+    @property
+    def files(self):
+        if self._files is None:
+            from .files.client import AsyncFilesClient  # noqa: E402
+
+            self._files = AsyncFilesClient(client_wrapper=self._client_wrapper)
+        return self._files
+
+    @property
+    def pages(self):
+        if self._pages is None:
+            from .pages.client import AsyncPagesClient  # noqa: E402
+
+            self._pages = AsyncPagesClient(client_wrapper=self._client_wrapper)
+        return self._pages
 
     @property
     def recording(self):

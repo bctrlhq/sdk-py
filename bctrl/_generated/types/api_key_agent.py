@@ -9,7 +9,6 @@ from ..core.serialization import FieldMetadata
 from .api_key_agent_acts_for import ApiKeyAgentActsFor
 from .api_key_agent_agent import ApiKeyAgentAgent
 from .api_key_agent_object import ApiKeyAgentObject
-from .api_key_agent_scopes_item import ApiKeyAgentScopesItem
 from .non_negative_count import NonNegativeCount
 from .rfc3339timestamp import Rfc3339Timestamp
 from .subaccount_id import SubaccountId
@@ -33,7 +32,7 @@ class ApiKeyAgent(UniversalBaseModel):
     ] = None
     name: typing.Optional[str] = None
     object: ApiKeyAgentObject
-    scopes: typing.List[ApiKeyAgentScopesItem]
+    scopes: typing.List[str]
     subaccount_id: typing_extensions.Annotated[
         typing.Optional[SubaccountId], FieldMetadata(alias="subaccountId"), pydantic.Field(alias="subaccountId")
     ] = None

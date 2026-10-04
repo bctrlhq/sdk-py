@@ -351,6 +351,7 @@
         "createdAt": "2026-07-26T12:00:00Z",
         "environment": {},
         "expireAfterIdleDays": 1,
+        "capabilityScopes": ["*"],
         "id": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
         "isDefault": true,
         "name": "Production browser",
@@ -395,6 +396,7 @@
       }
     },
     "expireAfterIdleDays": 1,
+    "capabilityScopes": ["*"],
     "id": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
     "isDefault": true,
     "name": "Production browser",

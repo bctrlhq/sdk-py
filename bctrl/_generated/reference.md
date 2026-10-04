@@ -1333,6 +1333,152 @@ client.browsers.update(
 </dl>
 </details>
 
+<details><summary><code>client.browsers.<a href="src/bctrl/browsers/client.py">fetch</a>(...) -> BrowserFetchResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Send an HTTP request from the browser itself: it carries the browser's cookies, proxy and TLS/HTTP2 fingerprint and is not subject to CORS. The response body is returned base64 encoded up to maxBytes (truncated is true beyond it). Human control blocks it; the Run's Events record the URL without its query, the status and the byte count. An interrupted request returns unknown and must not be repeated automatically.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.fetch(
+    browser_id="browserId",
+    url="url",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**url:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[FetchBrowsersRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**body:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**body_encoding:** `typing.Optional[BrowserFetchRequestBodyEncoding]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**headers:** `typing.Optional[typing.Dict[str, str]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**max_bytes:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**method:** `typing.Optional[BrowserFetchRequestMethod]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**timeout_ms:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.browsers.<a href="src/bctrl/browsers/client.py">start</a>(...) -> BrowserResource</code></summary>
 <dl>
 <dd>
@@ -6033,6 +6179,14 @@ client.spaces.create()
 <dl>
 <dd>
 
+**capability_scopes:** `typing.Optional[typing.List[str]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **environment:** `typing.Optional[EnvironmentMounts]` 
     
 </dd>
@@ -6293,6 +6447,14 @@ client.spaces.update(
 <dd>
 
 **idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**capability_scopes:** `typing.Optional[typing.List[str]]` 
     
 </dd>
 </dl>
@@ -12343,6 +12505,1385 @@ client.browsers.events.stream(
 </dl>
 </details>
 
+## Browsers Files
+<details><summary><code>client.browsers.files.<a href="src/bctrl/browsers/files/client.py">list</a>(...) -> BrowserFileListResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List a directory of the current Browser Run. The top level holds /downloads, /files (the Run's Space files, read only) and /workspace; nothing else of the machine is reachable. Pages are ordered by name and a cursor belongs to its Run.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.files.list(
+    browser_id="browserId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**path:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cursor:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[ListFilesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.files.<a href="src/bctrl/browsers/files/client.py">delete</a>(...) -> BrowserFileDeleteResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a file or directory of the current Browser Run; a non-empty directory needs recursive. Top-level directories and /files cannot be deleted. An interrupted deletion returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.files.delete(
+    browser_id="browserId",
+    path="path",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**path:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**recursive:** `typing.Optional[DeleteFilesRequestRecursive]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[DeleteFilesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.files.<a href="src/bctrl/browsers/files/client.py">download</a>(...) -> typing.Iterator[bytes]</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Download one file of the current Browser Run (at most 1 GiB) as bytes. Headers carry its size and SHA-256.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.files.download(
+    browser_id="browserId",
+    path="x",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**path:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[DownloadFilesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.files.<a href="src/bctrl/browsers/files/client.py">upload</a>(...) -> BrowserFileUploadResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Upload one file into /downloads or /workspace of the current Browser Run from multipart field file (at most 25 MiB). The file is written atomically; set overwrite to replace an existing file and createParents to create missing directories. An interrupted upload returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.files.upload(
+    browser_id="browserId",
+    path="path",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**path:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**overwrite:** `typing.Optional[UploadFilesRequestOverwrite]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**create_parents:** `typing.Optional[UploadFilesRequestCreateParents]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[UploadFilesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.files.<a href="src/bctrl/browsers/files/client.py">move</a>(...) -> BrowserFileMoveResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Move or rename a file or directory of the current Browser Run within /downloads and /workspace. Set overwrite to replace the destination. An interrupted move returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.files.move(
+    browser_id="browserId",
+    destination_path="destinationPath",
+    source_path="sourcePath",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**destination_path:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**source_path:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[MoveFilesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**overwrite:** `typing.Optional[bool]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Browsers Pages
+<details><summary><code>client.browsers.pages.<a href="src/bctrl/browsers/pages/client.py">list</a>(...) -> PagesResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the open pages of the current Browser Run, ordered by Page ID. A cursor belongs to the Run that produced it. The result carries its canonical Event ID; interrupted execution returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.pages.list(
+    browser_id="browserId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cursor:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[ListPagesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.pages.<a href="src/bctrl/browsers/pages/client.py">open</a>(...) -> PageResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Open a new page in the current Browser Run at an HTTP(S) URL or about:blank, activated by default. Human control blocks automation. An interrupted action returns unknown and must not be repeated automatically.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.pages.open(
+    browser_id="browserId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[OpenPagesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**activate:** `typing.Optional[bool]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**url:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.pages.<a href="src/bctrl/browsers/pages/client.py">get</a>(...) -> PageResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Read one open page of the current Browser Run: its URL, title and whether it is active. The result carries its canonical Event ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.pages.get(
+    browser_id="browserId",
+    page_id="pageId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**page_id:** `str` — Unique page identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[GetPagesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.pages.<a href="src/bctrl/browsers/pages/client.py">close</a>(...) -> PageDeleteResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Close one page of the current Browser Run. Human control blocks automation. An interrupted action returns unknown and must not be repeated automatically.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.pages.close(
+    browser_id="browserId",
+    page_id="pageId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**page_id:** `str` — Unique page identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[ClosePagesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.pages.<a href="src/bctrl/browsers/pages/client.py">activate</a>(...) -> PageResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Bring one page of the current Browser Run to the front. Activation is confirmed by the browser, never assumed. Human control blocks automation; an interrupted action returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.pages.activate(
+    browser_id="browserId",
+    page_id="pageId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**page_id:** `str` — Unique page identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[ActivatePagesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.pages.<a href="src/bctrl/browsers/pages/client.py">navigate</a>(...) -> PageResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Navigate one page of the current Browser Run to an HTTP(S) URL and wait up to timeoutMs for its document. Human control blocks automation. An interrupted navigation returns unknown and must not be repeated automatically.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.pages.navigate(
+    browser_id="browserId",
+    page_id="pageId",
+    url="url",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**page_id:** `str` — Unique page identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**url:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[NavigatePagesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**timeout_ms:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.pages.<a href="src/bctrl/browsers/pages/client.py">pdf</a>(...) -> PagePdfResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Print one page of the current Browser Run to PDF. The document is returned base64 encoded. Interrupted execution returns unknown with null data.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.pages.pdf(
+    browser_id="browserId",
+    page_id="pageId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**page_id:** `str` — Unique page identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[PdfPagesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**landscape:** `typing.Optional[bool]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**print_background:** `typing.Optional[bool]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**scale:** `typing.Optional[float]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.pages.<a href="src/bctrl/browsers/pages/client.py">screenshot</a>(...) -> PageScreenshotResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Capture one page of the current Browser Run as PNG or JPEG, optionally the full page. The image is returned base64 encoded. Interrupted execution returns unknown with null data.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.pages.screenshot(
+    browser_id="browserId",
+    page_id="pageId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**page_id:** `str` — Unique page identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[ScreenshotPagesRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**format:** `typing.Optional[BrowsersPagesScreenshotRequestFormat]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**full_page:** `typing.Optional[bool]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quality:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Browsers Recording
 <details><summary><code>client.browsers.recording.<a href="src/bctrl/browsers/recording/client.py">get</a>(...) -> Recording</code></summary>
 <dl>
@@ -12547,6 +14088,186 @@ client.browsers.runs.list(
 <dd>
 
 **include:** `typing.Optional[ListRunsRequestInclude]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Browsers Computer Clipboard
+<details><summary><code>client.browsers.computer.clipboard.<a href="src/bctrl/browsers/computer/clipboard/client.py">read</a>(...) -> ComputerClipboardReadResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Read the system clipboard of the current Browser Run as text (at most 256 KiB of UTF-8). Reading has no effect on the page. The result carries its canonical Event ID; interrupted execution returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.clipboard.read(
+    browser_id="browserId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[ReadClipboardRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.browsers.computer.clipboard.<a href="src/bctrl/browsers/computer/clipboard/client.py">write</a>(...) -> ComputerClipboardWriteResult</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Replace the system clipboard of the current Browser Run with text (at most 256 KiB of UTF-8, no NUL); empty text clears it. Nothing is pasted. The text is excluded from Events. Human control blocks automation; an interrupted write returns unknown.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.computer.clipboard.write(
+    browser_id="browserId",
+    text="text",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**text:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[WriteClipboardRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
     
 </dd>
 </dl>

@@ -11,11 +11,8 @@ from ..core.serialization import FieldMetadata
 from .api_key_agent_acts_for import ApiKeyAgentActsFor
 from .api_key_agent_agent import ApiKeyAgentAgent
 from .api_key_agent_object import ApiKeyAgentObject
-from .api_key_agent_scopes_item import ApiKeyAgentScopesItem
 from .api_key_organization_object import ApiKeyOrganizationObject
-from .api_key_organization_scopes_item import ApiKeyOrganizationScopesItem
 from .api_key_subaccount_object import ApiKeySubaccountObject
-from .api_key_subaccount_scopes_item import ApiKeySubaccountScopesItem
 from .non_negative_count import NonNegativeCount
 from .rfc3339timestamp import Rfc3339Timestamp
 from .subaccount_id import SubaccountId
@@ -36,7 +33,7 @@ class ApiKey_Organization(UniversalBaseModel):
     ] = None
     name: typing.Optional[str] = None
     object: ApiKeyOrganizationObject
-    scopes: typing.List[ApiKeyOrganizationScopesItem]
+    scopes: typing.List[str]
     subaccount_id: typing_extensions.Annotated[
         typing.Optional[SubaccountId], FieldMetadata(alias="subaccountId"), pydantic.Field(alias="subaccountId")
     ] = None
@@ -72,7 +69,7 @@ class ApiKey_Subaccount(UniversalBaseModel):
     ] = None
     name: typing.Optional[str] = None
     object: ApiKeySubaccountObject
-    scopes: typing.List[ApiKeySubaccountScopesItem]
+    scopes: typing.List[str]
     subaccount_id: typing_extensions.Annotated[
         typing.Optional[SubaccountId], FieldMetadata(alias="subaccountId"), pydantic.Field(alias="subaccountId")
     ] = None
@@ -112,7 +109,7 @@ class ApiKey_Agent(UniversalBaseModel):
     ] = None
     name: typing.Optional[str] = None
     object: ApiKeyAgentObject
-    scopes: typing.List[ApiKeyAgentScopesItem]
+    scopes: typing.List[str]
     subaccount_id: typing_extensions.Annotated[
         typing.Optional[SubaccountId], FieldMetadata(alias="subaccountId"), pydantic.Field(alias="subaccountId")
     ] = None

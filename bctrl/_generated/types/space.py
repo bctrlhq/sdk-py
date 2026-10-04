@@ -14,6 +14,9 @@ from .space_region import SpaceRegion
 
 
 class Space(UniversalBaseModel):
+    capability_scopes: typing_extensions.Annotated[
+        typing.List[str], FieldMetadata(alias="capabilityScopes"), pydantic.Field(alias="capabilityScopes")
+    ]
     created_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="createdAt"), pydantic.Field(alias="createdAt")
     ]

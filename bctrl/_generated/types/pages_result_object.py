@@ -2,4 +2,4 @@
 
 import typing
 
-ApiKeyAgentScopesItem = typing.Union[typing.Literal["*"], typing.Any]
+PagesResultObject = typing.Union[typing.Literal["pages.result"], typing.Any]

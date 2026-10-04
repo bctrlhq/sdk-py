@@ -7,9 +7,11 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .types import BrowsersComputerClickRequestButton, BrowsersComputerScrollRequestDirection
+    from . import clipboard
 _dynamic_imports: typing.Dict[str, str] = {
     "BrowsersComputerClickRequestButton": ".types",
     "BrowsersComputerScrollRequestDirection": ".types",
+    "clipboard": ".clipboard",
 }
 
 
@@ -34,4 +36,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["BrowsersComputerClickRequestButton", "BrowsersComputerScrollRequestDirection"]
+__all__ = ["BrowsersComputerClickRequestButton", "BrowsersComputerScrollRequestDirection", "clipboard"]

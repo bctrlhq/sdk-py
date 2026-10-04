@@ -2,4 +2,4 @@
 
 import typing
 
-ApiKeyOrganizationScopesItem = typing.Union[typing.Literal["*"], typing.Any]
+PageResultObject = typing.Union[typing.Literal["pages.result"], typing.Any]

@@ -14,6 +14,8 @@ if typing.TYPE_CHECKING:
     from .account_usage_credits import AccountUsageCredits
     from .account_usage_cycle import AccountUsageCycle
     from .account_usage_object import AccountUsageObject
+    from .activate_pages_request_space_id import ActivatePagesRequestSpaceId
+    from .activate_pages_request_space_id_one import ActivatePagesRequestSpaceIdOne
     from .agent_turn import AgentTurn
     from .agent_turn_accepted import AgentTurnAccepted
     from .agent_turn_accepted_object import AgentTurnAcceptedObject
@@ -54,14 +56,11 @@ if typing.TYPE_CHECKING:
     from .api_key_agent_acts_for import ApiKeyAgentActsFor
     from .api_key_agent_agent import ApiKeyAgentAgent
     from .api_key_agent_object import ApiKeyAgentObject
-    from .api_key_agent_scopes_item import ApiKeyAgentScopesItem
     from .api_key_create_request import ApiKeyCreateRequest
     from .api_key_create_request_agent import ApiKeyCreateRequestAgent
     from .api_key_create_request_agent_agent import ApiKeyCreateRequestAgentAgent
-    from .api_key_create_request_agent_scopes_item import ApiKeyCreateRequestAgentScopesItem
     from .api_key_create_request_agent_type import ApiKeyCreateRequestAgentType
     from .api_key_create_request_zero import ApiKeyCreateRequestZero
-    from .api_key_create_request_zero_scopes_item import ApiKeyCreateRequestZeroScopesItem
     from .api_key_create_request_zero_type import ApiKeyCreateRequestZeroType
     from .api_key_create_response import ApiKeyCreateResponse
     from .api_key_delete_response import ApiKeyDeleteResponse
@@ -69,10 +68,8 @@ if typing.TYPE_CHECKING:
     from .api_key_list_response import ApiKeyListResponse
     from .api_key_organization import ApiKeyOrganization
     from .api_key_organization_object import ApiKeyOrganizationObject
-    from .api_key_organization_scopes_item import ApiKeyOrganizationScopesItem
     from .api_key_subaccount import ApiKeySubaccount
     from .api_key_subaccount_object import ApiKeySubaccountObject
-    from .api_key_subaccount_scopes_item import ApiKeySubaccountScopesItem
     from .auth_effective_scope import AuthEffectiveScope
     from .auth_effective_scope_scope import AuthEffectiveScopeScope
     from .auth_whoami_response import AuthWhoamiResponse
@@ -103,6 +100,35 @@ if typing.TYPE_CHECKING:
     from .browser_extension_list_response import BrowserExtensionListResponse
     from .browser_extension_object import BrowserExtensionObject
     from .browser_extension_verification_status import BrowserExtensionVerificationStatus
+    from .browser_fetch_response import BrowserFetchResponse
+    from .browser_fetch_response_body_encoding import BrowserFetchResponseBodyEncoding
+    from .browser_fetch_response_object import BrowserFetchResponseObject
+    from .browser_fetch_response_timing import BrowserFetchResponseTiming
+    from .browser_fetch_result import BrowserFetchResult
+    from .browser_fetch_result_object import BrowserFetchResultObject
+    from .browser_fetch_result_status import BrowserFetchResultStatus
+    from .browser_file_delete_result import BrowserFileDeleteResult
+    from .browser_file_delete_result_data import BrowserFileDeleteResultData
+    from .browser_file_delete_result_data_object import BrowserFileDeleteResultDataObject
+    from .browser_file_delete_result_object import BrowserFileDeleteResultObject
+    from .browser_file_delete_result_status import BrowserFileDeleteResultStatus
+    from .browser_file_list_result import BrowserFileListResult
+    from .browser_file_list_result_data import BrowserFileListResultData
+    from .browser_file_list_result_data_data_item import BrowserFileListResultDataDataItem
+    from .browser_file_list_result_data_data_item_kind import BrowserFileListResultDataDataItemKind
+    from .browser_file_list_result_data_data_item_object import BrowserFileListResultDataDataItemObject
+    from .browser_file_list_result_object import BrowserFileListResultObject
+    from .browser_file_list_result_status import BrowserFileListResultStatus
+    from .browser_file_move_result import BrowserFileMoveResult
+    from .browser_file_move_result_data import BrowserFileMoveResultData
+    from .browser_file_move_result_data_object import BrowserFileMoveResultDataObject
+    from .browser_file_move_result_object import BrowserFileMoveResultObject
+    from .browser_file_move_result_status import BrowserFileMoveResultStatus
+    from .browser_file_upload_result import BrowserFileUploadResult
+    from .browser_file_upload_result_data import BrowserFileUploadResultData
+    from .browser_file_upload_result_data_object import BrowserFileUploadResultDataObject
+    from .browser_file_upload_result_object import BrowserFileUploadResultObject
+    from .browser_file_upload_result_status import BrowserFileUploadResultStatus
     from .browser_inline_custom_proxy_connection_input import BrowserInlineCustomProxyConnectionInput
     from .browser_inline_custom_proxy_connection_input_dns_resolution import (
         BrowserInlineCustomProxyConnectionInputDnsResolution,
@@ -187,6 +213,11 @@ if typing.TYPE_CHECKING:
         BrowserNetworkTrafficConfigBlockResourceTypesItem,
     )
     from .browser_network_traffic_config_saver import BrowserNetworkTrafficConfigSaver
+    from .browser_page import BrowserPage
+    from .browser_page_deleted import BrowserPageDeleted
+    from .browser_page_deleted_object import BrowserPageDeletedObject
+    from .browser_page_object import BrowserPageObject
+    from .browser_pages_list import BrowserPagesList
     from .browser_proxy_config import BrowserProxyConfig
     from .browser_proxy_config_dns_resolution import BrowserProxyConfigDnsResolution
     from .browser_proxy_config_dns_resolution_dns_resolution import BrowserProxyConfigDnsResolutionDnsResolution
@@ -259,6 +290,8 @@ if typing.TYPE_CHECKING:
     from .byte_count import ByteCount
     from .click_computer_request_space_id import ClickComputerRequestSpaceId
     from .click_computer_request_space_id_one import ClickComputerRequestSpaceIdOne
+    from .close_pages_request_space_id import ClosePagesRequestSpaceId
+    from .close_pages_request_space_id_one import ClosePagesRequestSpaceIdOne
     from .computer_action_request import (
         ComputerActionRequest,
         ComputerActionRequest_Click,
@@ -288,6 +321,16 @@ if typing.TYPE_CHECKING:
     from .computer_batch_result_data import ComputerBatchResultData
     from .computer_batch_result_object import ComputerBatchResultObject
     from .computer_batch_result_status import ComputerBatchResultStatus
+    from .computer_clipboard_read_result import ComputerClipboardReadResult
+    from .computer_clipboard_read_result_data import ComputerClipboardReadResultData
+    from .computer_clipboard_read_result_data_object import ComputerClipboardReadResultDataObject
+    from .computer_clipboard_read_result_object import ComputerClipboardReadResultObject
+    from .computer_clipboard_read_result_status import ComputerClipboardReadResultStatus
+    from .computer_clipboard_write_result import ComputerClipboardWriteResult
+    from .computer_clipboard_write_result_data import ComputerClipboardWriteResultData
+    from .computer_clipboard_write_result_data_object import ComputerClipboardWriteResultDataObject
+    from .computer_clipboard_write_result_object import ComputerClipboardWriteResultObject
+    from .computer_clipboard_write_result_status import ComputerClipboardWriteResultStatus
     from .computer_result import ComputerResult
     from .computer_result_object import ComputerResultObject
     from .computer_result_status import ComputerResultStatus
@@ -368,8 +411,12 @@ if typing.TYPE_CHECKING:
     from .custom_tool_runtime_types_item import CustomToolRuntimeTypesItem
     from .delete_browsers_request_space_id import DeleteBrowsersRequestSpaceId
     from .delete_browsers_request_space_id_one import DeleteBrowsersRequestSpaceIdOne
+    from .delete_files_request_space_id import DeleteFilesRequestSpaceId
+    from .delete_files_request_space_id_one import DeleteFilesRequestSpaceIdOne
     from .double_click_computer_request_space_id import DoubleClickComputerRequestSpaceId
     from .double_click_computer_request_space_id_one import DoubleClickComputerRequestSpaceIdOne
+    from .download_files_request_space_id import DownloadFilesRequestSpaceId
+    from .download_files_request_space_id_one import DownloadFilesRequestSpaceIdOne
     from .drag_computer_request_space_id import DragComputerRequestSpaceId
     from .drag_computer_request_space_id_one import DragComputerRequestSpaceIdOne
     from .embedded_view import EmbeddedView
@@ -440,6 +487,8 @@ if typing.TYPE_CHECKING:
     from .event_target import EventTarget
     from .events_list_response import EventsListResponse
     from .extension_id import ExtensionId
+    from .fetch_browsers_request_space_id import FetchBrowsersRequestSpaceId
+    from .fetch_browsers_request_space_id_one import FetchBrowsersRequestSpaceIdOne
     from .file import File
     from .file_delete_response import FileDeleteResponse
     from .file_delete_response_object import FileDeleteResponseObject
@@ -453,6 +502,8 @@ if typing.TYPE_CHECKING:
     from .get_browsers_request_space_id_one import GetBrowsersRequestSpaceIdOne
     from .get_control_request_space_id import GetControlRequestSpaceId
     from .get_control_request_space_id_one import GetControlRequestSpaceIdOne
+    from .get_pages_request_space_id import GetPagesRequestSpaceId
+    from .get_pages_request_space_id_one import GetPagesRequestSpaceIdOne
     from .help_api_operation import HelpApiOperation
     from .help_api_operation_method import HelpApiOperationMethod
     from .help_body_discriminator import HelpBodyDiscriminator
@@ -506,6 +557,10 @@ if typing.TYPE_CHECKING:
     from .list_events_request_outcome import ListEventsRequestOutcome
     from .list_events_request_outcome_one_item import ListEventsRequestOutcomeOneItem
     from .list_events_request_outcome_zero import ListEventsRequestOutcomeZero
+    from .list_files_request_space_id import ListFilesRequestSpaceId
+    from .list_files_request_space_id_one import ListFilesRequestSpaceIdOne
+    from .list_pages_request_space_id import ListPagesRequestSpaceId
+    from .list_pages_request_space_id_one import ListPagesRequestSpaceIdOne
     from .list_runs_request_space_id import ListRunsRequestSpaceId
     from .list_runs_request_space_id_one import ListRunsRequestSpaceIdOne
     from .list_runs_request_status import ListRunsRequestStatus
@@ -531,6 +586,10 @@ if typing.TYPE_CHECKING:
     from .message_role import MessageRole
     from .move_computer_request_space_id import MoveComputerRequestSpaceId
     from .move_computer_request_space_id_one import MoveComputerRequestSpaceIdOne
+    from .move_files_request_space_id import MoveFilesRequestSpaceId
+    from .move_files_request_space_id_one import MoveFilesRequestSpaceIdOne
+    from .navigate_pages_request_space_id import NavigatePagesRequestSpaceId
+    from .navigate_pages_request_space_id_one import NavigatePagesRequestSpaceIdOne
     from .non_negative_count import NonNegativeCount
     from .not_found_error_body import NotFoundErrorBody
     from .not_found_error_body_error import NotFoundErrorBodyError
@@ -540,6 +599,8 @@ if typing.TYPE_CHECKING:
     from .notification_recipient_object import NotificationRecipientObject
     from .notification_recipient_type import NotificationRecipientType
     from .notification_recipients_list_response import NotificationRecipientsListResponse
+    from .open_pages_request_space_id import OpenPagesRequestSpaceId
+    from .open_pages_request_space_id_one import OpenPagesRequestSpaceIdOne
     from .open_router_chat_completion_params import OpenRouterChatCompletionParams
     from .open_router_chat_completion_params_cache_control import OpenRouterChatCompletionParamsCacheControl
     from .open_router_chat_completion_params_cache_control_ttl import OpenRouterChatCompletionParamsCacheControlTtl
@@ -549,8 +610,31 @@ if typing.TYPE_CHECKING:
     from .open_router_chat_completion_params_stop import OpenRouterChatCompletionParamsStop
     from .open_router_chat_completion_params_tool_choice import OpenRouterChatCompletionParamsToolChoice
     from .open_router_chat_completion_params_verbosity import OpenRouterChatCompletionParamsVerbosity
+    from .page_delete_result import PageDeleteResult
+    from .page_delete_result_object import PageDeleteResultObject
+    from .page_delete_result_status import PageDeleteResultStatus
+    from .page_pdf import PagePdf
+    from .page_pdf_mime_type import PagePdfMimeType
+    from .page_pdf_object import PagePdfObject
+    from .page_pdf_result import PagePdfResult
+    from .page_pdf_result_object import PagePdfResultObject
+    from .page_pdf_result_status import PagePdfResultStatus
+    from .page_result import PageResult
+    from .page_result_object import PageResultObject
+    from .page_result_status import PageResultStatus
+    from .page_screenshot import PageScreenshot
+    from .page_screenshot_mime_type import PageScreenshotMimeType
+    from .page_screenshot_object import PageScreenshotObject
+    from .page_screenshot_result import PageScreenshotResult
+    from .page_screenshot_result_object import PageScreenshotResultObject
+    from .page_screenshot_result_status import PageScreenshotResultStatus
+    from .pages_result import PagesResult
+    from .pages_result_object import PagesResultObject
+    from .pages_result_status import PagesResultStatus
     from .payment_required_error_body import PaymentRequiredErrorBody
     from .payment_required_error_body_error import PaymentRequiredErrorBodyError
+    from .pdf_pages_request_space_id import PdfPagesRequestSpaceId
+    from .pdf_pages_request_space_id_one import PdfPagesRequestSpaceIdOne
     from .precondition_failed_error_body import PreconditionFailedErrorBody
     from .precondition_failed_error_body_error import PreconditionFailedErrorBodyError
     from .proxy import Proxy
@@ -628,6 +712,8 @@ if typing.TYPE_CHECKING:
     from .proxy_test_response import ProxyTestResponse
     from .proxy_test_response_object import ProxyTestResponseObject
     from .public_error_code import PublicErrorCode
+    from .read_clipboard_request_space_id import ReadClipboardRequestSpaceId
+    from .read_clipboard_request_space_id_one import ReadClipboardRequestSpaceIdOne
     from .recording import Recording
     from .recording_kind import RecordingKind
     from .recording_object import RecordingObject
@@ -690,6 +776,8 @@ if typing.TYPE_CHECKING:
     from .runs_delete_response import RunsDeleteResponse
     from .screenshot_computer_request_space_id import ScreenshotComputerRequestSpaceId
     from .screenshot_computer_request_space_id_one import ScreenshotComputerRequestSpaceIdOne
+    from .screenshot_pages_request_space_id import ScreenshotPagesRequestSpaceId
+    from .screenshot_pages_request_space_id_one import ScreenshotPagesRequestSpaceIdOne
     from .scroll_computer_request_space_id import ScrollComputerRequestSpaceId
     from .scroll_computer_request_space_id_one import ScrollComputerRequestSpaceIdOne
     from .secret import Secret
@@ -856,6 +944,8 @@ if typing.TYPE_CHECKING:
     from .unauthorized_error_body_error import UnauthorizedErrorBodyError
     from .update_browsers_request_space_id import UpdateBrowsersRequestSpaceId
     from .update_browsers_request_space_id_one import UpdateBrowsersRequestSpaceIdOne
+    from .upload_files_request_space_id import UploadFilesRequestSpaceId
+    from .upload_files_request_space_id_one import UploadFilesRequestSpaceIdOne
     from .view import View
     from .view_bootstrap import ViewBootstrap
     from .view_components import ViewComponents
@@ -898,6 +988,8 @@ if typing.TYPE_CHECKING:
     from .webhook_rotate_secret_response import WebhookRotateSecretResponse
     from .webhook_rotate_secret_response_object import WebhookRotateSecretResponseObject
     from .webhooks_list_response import WebhooksListResponse
+    from .write_clipboard_request_space_id import WriteClipboardRequestSpaceId
+    from .write_clipboard_request_space_id_one import WriteClipboardRequestSpaceIdOne
 _dynamic_imports: typing.Dict[str, str] = {
     "Account": ".account",
     "AccountObject": ".account_object",
@@ -907,6 +999,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AccountUsageCredits": ".account_usage_credits",
     "AccountUsageCycle": ".account_usage_cycle",
     "AccountUsageObject": ".account_usage_object",
+    "ActivatePagesRequestSpaceId": ".activate_pages_request_space_id",
+    "ActivatePagesRequestSpaceIdOne": ".activate_pages_request_space_id_one",
     "AgentTurn": ".agent_turn",
     "AgentTurnAccepted": ".agent_turn_accepted",
     "AgentTurnAcceptedObject": ".agent_turn_accepted_object",
@@ -947,14 +1041,11 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ApiKeyAgentActsFor": ".api_key_agent_acts_for",
     "ApiKeyAgentAgent": ".api_key_agent_agent",
     "ApiKeyAgentObject": ".api_key_agent_object",
-    "ApiKeyAgentScopesItem": ".api_key_agent_scopes_item",
     "ApiKeyCreateRequest": ".api_key_create_request",
     "ApiKeyCreateRequestAgent": ".api_key_create_request_agent",
     "ApiKeyCreateRequestAgentAgent": ".api_key_create_request_agent_agent",
-    "ApiKeyCreateRequestAgentScopesItem": ".api_key_create_request_agent_scopes_item",
     "ApiKeyCreateRequestAgentType": ".api_key_create_request_agent_type",
     "ApiKeyCreateRequestZero": ".api_key_create_request_zero",
-    "ApiKeyCreateRequestZeroScopesItem": ".api_key_create_request_zero_scopes_item",
     "ApiKeyCreateRequestZeroType": ".api_key_create_request_zero_type",
     "ApiKeyCreateResponse": ".api_key_create_response",
     "ApiKeyDeleteResponse": ".api_key_delete_response",
@@ -962,10 +1053,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ApiKeyListResponse": ".api_key_list_response",
     "ApiKeyOrganization": ".api_key_organization",
     "ApiKeyOrganizationObject": ".api_key_organization_object",
-    "ApiKeyOrganizationScopesItem": ".api_key_organization_scopes_item",
     "ApiKeySubaccount": ".api_key_subaccount",
     "ApiKeySubaccountObject": ".api_key_subaccount_object",
-    "ApiKeySubaccountScopesItem": ".api_key_subaccount_scopes_item",
     "ApiKey_Agent": ".api_key",
     "ApiKey_Organization": ".api_key",
     "ApiKey_Subaccount": ".api_key",
@@ -999,6 +1088,35 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BrowserExtensionListResponse": ".browser_extension_list_response",
     "BrowserExtensionObject": ".browser_extension_object",
     "BrowserExtensionVerificationStatus": ".browser_extension_verification_status",
+    "BrowserFetchResponse": ".browser_fetch_response",
+    "BrowserFetchResponseBodyEncoding": ".browser_fetch_response_body_encoding",
+    "BrowserFetchResponseObject": ".browser_fetch_response_object",
+    "BrowserFetchResponseTiming": ".browser_fetch_response_timing",
+    "BrowserFetchResult": ".browser_fetch_result",
+    "BrowserFetchResultObject": ".browser_fetch_result_object",
+    "BrowserFetchResultStatus": ".browser_fetch_result_status",
+    "BrowserFileDeleteResult": ".browser_file_delete_result",
+    "BrowserFileDeleteResultData": ".browser_file_delete_result_data",
+    "BrowserFileDeleteResultDataObject": ".browser_file_delete_result_data_object",
+    "BrowserFileDeleteResultObject": ".browser_file_delete_result_object",
+    "BrowserFileDeleteResultStatus": ".browser_file_delete_result_status",
+    "BrowserFileListResult": ".browser_file_list_result",
+    "BrowserFileListResultData": ".browser_file_list_result_data",
+    "BrowserFileListResultDataDataItem": ".browser_file_list_result_data_data_item",
+    "BrowserFileListResultDataDataItemKind": ".browser_file_list_result_data_data_item_kind",
+    "BrowserFileListResultDataDataItemObject": ".browser_file_list_result_data_data_item_object",
+    "BrowserFileListResultObject": ".browser_file_list_result_object",
+    "BrowserFileListResultStatus": ".browser_file_list_result_status",
+    "BrowserFileMoveResult": ".browser_file_move_result",
+    "BrowserFileMoveResultData": ".browser_file_move_result_data",
+    "BrowserFileMoveResultDataObject": ".browser_file_move_result_data_object",
+    "BrowserFileMoveResultObject": ".browser_file_move_result_object",
+    "BrowserFileMoveResultStatus": ".browser_file_move_result_status",
+    "BrowserFileUploadResult": ".browser_file_upload_result",
+    "BrowserFileUploadResultData": ".browser_file_upload_result_data",
+    "BrowserFileUploadResultDataObject": ".browser_file_upload_result_data_object",
+    "BrowserFileUploadResultObject": ".browser_file_upload_result_object",
+    "BrowserFileUploadResultStatus": ".browser_file_upload_result_status",
     "BrowserInlineCustomProxyConnectionInput": ".browser_inline_custom_proxy_connection_input",
     "BrowserInlineCustomProxyConnectionInputDnsResolution": ".browser_inline_custom_proxy_connection_input_dns_resolution",
     "BrowserInlineCustomProxyConnectionInputProtocol": ".browser_inline_custom_proxy_connection_input_protocol",
@@ -1039,6 +1157,11 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BrowserNetworkTrafficConfig": ".browser_network_traffic_config",
     "BrowserNetworkTrafficConfigBlockResourceTypesItem": ".browser_network_traffic_config_block_resource_types_item",
     "BrowserNetworkTrafficConfigSaver": ".browser_network_traffic_config_saver",
+    "BrowserPage": ".browser_page",
+    "BrowserPageDeleted": ".browser_page_deleted",
+    "BrowserPageDeletedObject": ".browser_page_deleted_object",
+    "BrowserPageObject": ".browser_page_object",
+    "BrowserPagesList": ".browser_pages_list",
     "BrowserProxyConfig": ".browser_proxy_config",
     "BrowserProxyConfigDnsResolution": ".browser_proxy_config_dns_resolution",
     "BrowserProxyConfigDnsResolutionDnsResolution": ".browser_proxy_config_dns_resolution_dns_resolution",
@@ -1107,6 +1230,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ByteCount": ".byte_count",
     "ClickComputerRequestSpaceId": ".click_computer_request_space_id",
     "ClickComputerRequestSpaceIdOne": ".click_computer_request_space_id_one",
+    "ClosePagesRequestSpaceId": ".close_pages_request_space_id",
+    "ClosePagesRequestSpaceIdOne": ".close_pages_request_space_id_one",
     "ComputerActionRequest": ".computer_action_request",
     "ComputerActionRequestClick": ".computer_action_request_click",
     "ComputerActionRequestClickButton": ".computer_action_request_click_button",
@@ -1134,6 +1259,16 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ComputerBatchResultData": ".computer_batch_result_data",
     "ComputerBatchResultObject": ".computer_batch_result_object",
     "ComputerBatchResultStatus": ".computer_batch_result_status",
+    "ComputerClipboardReadResult": ".computer_clipboard_read_result",
+    "ComputerClipboardReadResultData": ".computer_clipboard_read_result_data",
+    "ComputerClipboardReadResultDataObject": ".computer_clipboard_read_result_data_object",
+    "ComputerClipboardReadResultObject": ".computer_clipboard_read_result_object",
+    "ComputerClipboardReadResultStatus": ".computer_clipboard_read_result_status",
+    "ComputerClipboardWriteResult": ".computer_clipboard_write_result",
+    "ComputerClipboardWriteResultData": ".computer_clipboard_write_result_data",
+    "ComputerClipboardWriteResultDataObject": ".computer_clipboard_write_result_data_object",
+    "ComputerClipboardWriteResultObject": ".computer_clipboard_write_result_object",
+    "ComputerClipboardWriteResultStatus": ".computer_clipboard_write_result_status",
     "ComputerResult": ".computer_result",
     "ComputerResultObject": ".computer_result_object",
     "ComputerResultStatus": ".computer_result_status",
@@ -1210,8 +1345,12 @@ _dynamic_imports: typing.Dict[str, str] = {
     "CustomToolRuntimeTypesItem": ".custom_tool_runtime_types_item",
     "DeleteBrowsersRequestSpaceId": ".delete_browsers_request_space_id",
     "DeleteBrowsersRequestSpaceIdOne": ".delete_browsers_request_space_id_one",
+    "DeleteFilesRequestSpaceId": ".delete_files_request_space_id",
+    "DeleteFilesRequestSpaceIdOne": ".delete_files_request_space_id_one",
     "DoubleClickComputerRequestSpaceId": ".double_click_computer_request_space_id",
     "DoubleClickComputerRequestSpaceIdOne": ".double_click_computer_request_space_id_one",
+    "DownloadFilesRequestSpaceId": ".download_files_request_space_id",
+    "DownloadFilesRequestSpaceIdOne": ".download_files_request_space_id_one",
     "DragComputerRequestSpaceId": ".drag_computer_request_space_id",
     "DragComputerRequestSpaceIdOne": ".drag_computer_request_space_id_one",
     "EmbeddedView": ".embedded_view",
@@ -1278,6 +1417,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "EventTarget": ".event_target",
     "EventsListResponse": ".events_list_response",
     "ExtensionId": ".extension_id",
+    "FetchBrowsersRequestSpaceId": ".fetch_browsers_request_space_id",
+    "FetchBrowsersRequestSpaceIdOne": ".fetch_browsers_request_space_id_one",
     "File": ".file",
     "FileDeleteResponse": ".file_delete_response",
     "FileDeleteResponseObject": ".file_delete_response_object",
@@ -1291,6 +1432,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "GetBrowsersRequestSpaceIdOne": ".get_browsers_request_space_id_one",
     "GetControlRequestSpaceId": ".get_control_request_space_id",
     "GetControlRequestSpaceIdOne": ".get_control_request_space_id_one",
+    "GetPagesRequestSpaceId": ".get_pages_request_space_id",
+    "GetPagesRequestSpaceIdOne": ".get_pages_request_space_id_one",
     "HelpApiOperation": ".help_api_operation",
     "HelpApiOperationMethod": ".help_api_operation_method",
     "HelpBodyDiscriminator": ".help_body_discriminator",
@@ -1346,6 +1489,10 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ListEventsRequestOutcome": ".list_events_request_outcome",
     "ListEventsRequestOutcomeOneItem": ".list_events_request_outcome_one_item",
     "ListEventsRequestOutcomeZero": ".list_events_request_outcome_zero",
+    "ListFilesRequestSpaceId": ".list_files_request_space_id",
+    "ListFilesRequestSpaceIdOne": ".list_files_request_space_id_one",
+    "ListPagesRequestSpaceId": ".list_pages_request_space_id",
+    "ListPagesRequestSpaceIdOne": ".list_pages_request_space_id_one",
     "ListRunsRequestSpaceId": ".list_runs_request_space_id",
     "ListRunsRequestSpaceIdOne": ".list_runs_request_space_id_one",
     "ListRunsRequestStatus": ".list_runs_request_status",
@@ -1371,6 +1518,10 @@ _dynamic_imports: typing.Dict[str, str] = {
     "MessageRole": ".message_role",
     "MoveComputerRequestSpaceId": ".move_computer_request_space_id",
     "MoveComputerRequestSpaceIdOne": ".move_computer_request_space_id_one",
+    "MoveFilesRequestSpaceId": ".move_files_request_space_id",
+    "MoveFilesRequestSpaceIdOne": ".move_files_request_space_id_one",
+    "NavigatePagesRequestSpaceId": ".navigate_pages_request_space_id",
+    "NavigatePagesRequestSpaceIdOne": ".navigate_pages_request_space_id_one",
     "NonNegativeCount": ".non_negative_count",
     "NotFoundErrorBody": ".not_found_error_body",
     "NotFoundErrorBodyError": ".not_found_error_body_error",
@@ -1380,6 +1531,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "NotificationRecipientObject": ".notification_recipient_object",
     "NotificationRecipientType": ".notification_recipient_type",
     "NotificationRecipientsListResponse": ".notification_recipients_list_response",
+    "OpenPagesRequestSpaceId": ".open_pages_request_space_id",
+    "OpenPagesRequestSpaceIdOne": ".open_pages_request_space_id_one",
     "OpenRouterChatCompletionParams": ".open_router_chat_completion_params",
     "OpenRouterChatCompletionParamsCacheControl": ".open_router_chat_completion_params_cache_control",
     "OpenRouterChatCompletionParamsCacheControlTtl": ".open_router_chat_completion_params_cache_control_ttl",
@@ -1389,8 +1542,31 @@ _dynamic_imports: typing.Dict[str, str] = {
     "OpenRouterChatCompletionParamsStop": ".open_router_chat_completion_params_stop",
     "OpenRouterChatCompletionParamsToolChoice": ".open_router_chat_completion_params_tool_choice",
     "OpenRouterChatCompletionParamsVerbosity": ".open_router_chat_completion_params_verbosity",
+    "PageDeleteResult": ".page_delete_result",
+    "PageDeleteResultObject": ".page_delete_result_object",
+    "PageDeleteResultStatus": ".page_delete_result_status",
+    "PagePdf": ".page_pdf",
+    "PagePdfMimeType": ".page_pdf_mime_type",
+    "PagePdfObject": ".page_pdf_object",
+    "PagePdfResult": ".page_pdf_result",
+    "PagePdfResultObject": ".page_pdf_result_object",
+    "PagePdfResultStatus": ".page_pdf_result_status",
+    "PageResult": ".page_result",
+    "PageResultObject": ".page_result_object",
+    "PageResultStatus": ".page_result_status",
+    "PageScreenshot": ".page_screenshot",
+    "PageScreenshotMimeType": ".page_screenshot_mime_type",
+    "PageScreenshotObject": ".page_screenshot_object",
+    "PageScreenshotResult": ".page_screenshot_result",
+    "PageScreenshotResultObject": ".page_screenshot_result_object",
+    "PageScreenshotResultStatus": ".page_screenshot_result_status",
+    "PagesResult": ".pages_result",
+    "PagesResultObject": ".pages_result_object",
+    "PagesResultStatus": ".pages_result_status",
     "PaymentRequiredErrorBody": ".payment_required_error_body",
     "PaymentRequiredErrorBodyError": ".payment_required_error_body_error",
+    "PdfPagesRequestSpaceId": ".pdf_pages_request_space_id",
+    "PdfPagesRequestSpaceIdOne": ".pdf_pages_request_space_id_one",
     "PreconditionFailedErrorBody": ".precondition_failed_error_body",
     "PreconditionFailedErrorBodyError": ".precondition_failed_error_body_error",
     "Proxy": ".proxy",
@@ -1462,6 +1638,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ProxyTestResponse": ".proxy_test_response",
     "ProxyTestResponseObject": ".proxy_test_response_object",
     "PublicErrorCode": ".public_error_code",
+    "ReadClipboardRequestSpaceId": ".read_clipboard_request_space_id",
+    "ReadClipboardRequestSpaceIdOne": ".read_clipboard_request_space_id_one",
     "Recording": ".recording",
     "RecordingKind": ".recording_kind",
     "RecordingObject": ".recording_object",
@@ -1522,6 +1700,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "RunsDeleteResponse": ".runs_delete_response",
     "ScreenshotComputerRequestSpaceId": ".screenshot_computer_request_space_id",
     "ScreenshotComputerRequestSpaceIdOne": ".screenshot_computer_request_space_id_one",
+    "ScreenshotPagesRequestSpaceId": ".screenshot_pages_request_space_id",
+    "ScreenshotPagesRequestSpaceIdOne": ".screenshot_pages_request_space_id_one",
     "ScrollComputerRequestSpaceId": ".scroll_computer_request_space_id",
     "ScrollComputerRequestSpaceIdOne": ".scroll_computer_request_space_id_one",
     "Secret": ".secret",
@@ -1686,6 +1866,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "UnauthorizedErrorBodyError": ".unauthorized_error_body_error",
     "UpdateBrowsersRequestSpaceId": ".update_browsers_request_space_id",
     "UpdateBrowsersRequestSpaceIdOne": ".update_browsers_request_space_id_one",
+    "UploadFilesRequestSpaceId": ".upload_files_request_space_id",
+    "UploadFilesRequestSpaceIdOne": ".upload_files_request_space_id_one",
     "View": ".view",
     "ViewBootstrap": ".view_bootstrap",
     "ViewComponents": ".view_components",
@@ -1730,6 +1912,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "WebhookRotateSecretResponse": ".webhook_rotate_secret_response",
     "WebhookRotateSecretResponseObject": ".webhook_rotate_secret_response_object",
     "WebhooksListResponse": ".webhooks_list_response",
+    "WriteClipboardRequestSpaceId": ".write_clipboard_request_space_id",
+    "WriteClipboardRequestSpaceIdOne": ".write_clipboard_request_space_id_one",
 }
 
 
@@ -1763,6 +1947,8 @@ __all__ = [
     "AccountUsageCredits",
     "AccountUsageCycle",
     "AccountUsageObject",
+    "ActivatePagesRequestSpaceId",
+    "ActivatePagesRequestSpaceIdOne",
     "AgentTurn",
     "AgentTurnAccepted",
     "AgentTurnAcceptedObject",
@@ -1803,14 +1989,11 @@ __all__ = [
     "ApiKeyAgentActsFor",
     "ApiKeyAgentAgent",
     "ApiKeyAgentObject",
-    "ApiKeyAgentScopesItem",
     "ApiKeyCreateRequest",
     "ApiKeyCreateRequestAgent",
     "ApiKeyCreateRequestAgentAgent",
-    "ApiKeyCreateRequestAgentScopesItem",
     "ApiKeyCreateRequestAgentType",
     "ApiKeyCreateRequestZero",
-    "ApiKeyCreateRequestZeroScopesItem",
     "ApiKeyCreateRequestZeroType",
     "ApiKeyCreateResponse",
     "ApiKeyDeleteResponse",
@@ -1818,10 +2001,8 @@ __all__ = [
     "ApiKeyListResponse",
     "ApiKeyOrganization",
     "ApiKeyOrganizationObject",
-    "ApiKeyOrganizationScopesItem",
     "ApiKeySubaccount",
     "ApiKeySubaccountObject",
-    "ApiKeySubaccountScopesItem",
     "ApiKey_Agent",
     "ApiKey_Organization",
     "ApiKey_Subaccount",
@@ -1855,6 +2036,35 @@ __all__ = [
     "BrowserExtensionListResponse",
     "BrowserExtensionObject",
     "BrowserExtensionVerificationStatus",
+    "BrowserFetchResponse",
+    "BrowserFetchResponseBodyEncoding",
+    "BrowserFetchResponseObject",
+    "BrowserFetchResponseTiming",
+    "BrowserFetchResult",
+    "BrowserFetchResultObject",
+    "BrowserFetchResultStatus",
+    "BrowserFileDeleteResult",
+    "BrowserFileDeleteResultData",
+    "BrowserFileDeleteResultDataObject",
+    "BrowserFileDeleteResultObject",
+    "BrowserFileDeleteResultStatus",
+    "BrowserFileListResult",
+    "BrowserFileListResultData",
+    "BrowserFileListResultDataDataItem",
+    "BrowserFileListResultDataDataItemKind",
+    "BrowserFileListResultDataDataItemObject",
+    "BrowserFileListResultObject",
+    "BrowserFileListResultStatus",
+    "BrowserFileMoveResult",
+    "BrowserFileMoveResultData",
+    "BrowserFileMoveResultDataObject",
+    "BrowserFileMoveResultObject",
+    "BrowserFileMoveResultStatus",
+    "BrowserFileUploadResult",
+    "BrowserFileUploadResultData",
+    "BrowserFileUploadResultDataObject",
+    "BrowserFileUploadResultObject",
+    "BrowserFileUploadResultStatus",
     "BrowserInlineCustomProxyConnectionInput",
     "BrowserInlineCustomProxyConnectionInputDnsResolution",
     "BrowserInlineCustomProxyConnectionInputProtocol",
@@ -1895,6 +2105,11 @@ __all__ = [
     "BrowserNetworkTrafficConfig",
     "BrowserNetworkTrafficConfigBlockResourceTypesItem",
     "BrowserNetworkTrafficConfigSaver",
+    "BrowserPage",
+    "BrowserPageDeleted",
+    "BrowserPageDeletedObject",
+    "BrowserPageObject",
+    "BrowserPagesList",
     "BrowserProxyConfig",
     "BrowserProxyConfigDnsResolution",
     "BrowserProxyConfigDnsResolutionDnsResolution",
@@ -1963,6 +2178,8 @@ __all__ = [
     "ByteCount",
     "ClickComputerRequestSpaceId",
     "ClickComputerRequestSpaceIdOne",
+    "ClosePagesRequestSpaceId",
+    "ClosePagesRequestSpaceIdOne",
     "ComputerActionRequest",
     "ComputerActionRequestClick",
     "ComputerActionRequestClickButton",
@@ -1990,6 +2207,16 @@ __all__ = [
     "ComputerBatchResultData",
     "ComputerBatchResultObject",
     "ComputerBatchResultStatus",
+    "ComputerClipboardReadResult",
+    "ComputerClipboardReadResultData",
+    "ComputerClipboardReadResultDataObject",
+    "ComputerClipboardReadResultObject",
+    "ComputerClipboardReadResultStatus",
+    "ComputerClipboardWriteResult",
+    "ComputerClipboardWriteResultData",
+    "ComputerClipboardWriteResultDataObject",
+    "ComputerClipboardWriteResultObject",
+    "ComputerClipboardWriteResultStatus",
     "ComputerResult",
     "ComputerResultObject",
     "ComputerResultStatus",
@@ -2066,8 +2293,12 @@ __all__ = [
     "CustomToolRuntimeTypesItem",
     "DeleteBrowsersRequestSpaceId",
     "DeleteBrowsersRequestSpaceIdOne",
+    "DeleteFilesRequestSpaceId",
+    "DeleteFilesRequestSpaceIdOne",
     "DoubleClickComputerRequestSpaceId",
     "DoubleClickComputerRequestSpaceIdOne",
+    "DownloadFilesRequestSpaceId",
+    "DownloadFilesRequestSpaceIdOne",
     "DragComputerRequestSpaceId",
     "DragComputerRequestSpaceIdOne",
     "EmbeddedView",
@@ -2134,6 +2365,8 @@ __all__ = [
     "EventTarget",
     "EventsListResponse",
     "ExtensionId",
+    "FetchBrowsersRequestSpaceId",
+    "FetchBrowsersRequestSpaceIdOne",
     "File",
     "FileDeleteResponse",
     "FileDeleteResponseObject",
@@ -2147,6 +2380,8 @@ __all__ = [
     "GetBrowsersRequestSpaceIdOne",
     "GetControlRequestSpaceId",
     "GetControlRequestSpaceIdOne",
+    "GetPagesRequestSpaceId",
+    "GetPagesRequestSpaceIdOne",
     "HelpApiOperation",
     "HelpApiOperationMethod",
     "HelpBodyDiscriminator",
@@ -2202,6 +2437,10 @@ __all__ = [
     "ListEventsRequestOutcome",
     "ListEventsRequestOutcomeOneItem",
     "ListEventsRequestOutcomeZero",
+    "ListFilesRequestSpaceId",
+    "ListFilesRequestSpaceIdOne",
+    "ListPagesRequestSpaceId",
+    "ListPagesRequestSpaceIdOne",
     "ListRunsRequestSpaceId",
     "ListRunsRequestSpaceIdOne",
     "ListRunsRequestStatus",
@@ -2227,6 +2466,10 @@ __all__ = [
     "MessageRole",
     "MoveComputerRequestSpaceId",
     "MoveComputerRequestSpaceIdOne",
+    "MoveFilesRequestSpaceId",
+    "MoveFilesRequestSpaceIdOne",
+    "NavigatePagesRequestSpaceId",
+    "NavigatePagesRequestSpaceIdOne",
     "NonNegativeCount",
     "NotFoundErrorBody",
     "NotFoundErrorBodyError",
@@ -2236,6 +2479,8 @@ __all__ = [
     "NotificationRecipientObject",
     "NotificationRecipientType",
     "NotificationRecipientsListResponse",
+    "OpenPagesRequestSpaceId",
+    "OpenPagesRequestSpaceIdOne",
     "OpenRouterChatCompletionParams",
     "OpenRouterChatCompletionParamsCacheControl",
     "OpenRouterChatCompletionParamsCacheControlTtl",
@@ -2245,8 +2490,31 @@ __all__ = [
     "OpenRouterChatCompletionParamsStop",
     "OpenRouterChatCompletionParamsToolChoice",
     "OpenRouterChatCompletionParamsVerbosity",
+    "PageDeleteResult",
+    "PageDeleteResultObject",
+    "PageDeleteResultStatus",
+    "PagePdf",
+    "PagePdfMimeType",
+    "PagePdfObject",
+    "PagePdfResult",
+    "PagePdfResultObject",
+    "PagePdfResultStatus",
+    "PageResult",
+    "PageResultObject",
+    "PageResultStatus",
+    "PageScreenshot",
+    "PageScreenshotMimeType",
+    "PageScreenshotObject",
+    "PageScreenshotResult",
+    "PageScreenshotResultObject",
+    "PageScreenshotResultStatus",
+    "PagesResult",
+    "PagesResultObject",
+    "PagesResultStatus",
     "PaymentRequiredErrorBody",
     "PaymentRequiredErrorBodyError",
+    "PdfPagesRequestSpaceId",
+    "PdfPagesRequestSpaceIdOne",
     "PreconditionFailedErrorBody",
     "PreconditionFailedErrorBodyError",
     "Proxy",
@@ -2318,6 +2586,8 @@ __all__ = [
     "ProxyTestResponse",
     "ProxyTestResponseObject",
     "PublicErrorCode",
+    "ReadClipboardRequestSpaceId",
+    "ReadClipboardRequestSpaceIdOne",
     "Recording",
     "RecordingKind",
     "RecordingObject",
@@ -2378,6 +2648,8 @@ __all__ = [
     "RunsDeleteResponse",
     "ScreenshotComputerRequestSpaceId",
     "ScreenshotComputerRequestSpaceIdOne",
+    "ScreenshotPagesRequestSpaceId",
+    "ScreenshotPagesRequestSpaceIdOne",
     "ScrollComputerRequestSpaceId",
     "ScrollComputerRequestSpaceIdOne",
     "Secret",
@@ -2542,6 +2814,8 @@ __all__ = [
     "UnauthorizedErrorBodyError",
     "UpdateBrowsersRequestSpaceId",
     "UpdateBrowsersRequestSpaceIdOne",
+    "UploadFilesRequestSpaceId",
+    "UploadFilesRequestSpaceIdOne",
     "View",
     "ViewBootstrap",
     "ViewComponents",
@@ -2586,4 +2860,6 @@ __all__ = [
     "WebhookRotateSecretResponse",
     "WebhookRotateSecretResponseObject",
     "WebhooksListResponse",
+    "WriteClipboardRequestSpaceId",
+    "WriteClipboardRequestSpaceIdOne",
 ]
