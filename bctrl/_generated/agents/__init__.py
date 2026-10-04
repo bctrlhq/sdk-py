@@ -13,7 +13,7 @@ if typing.TYPE_CHECKING:
         AgentUpdateRequestScope,
         ListAgentsRequestOrder,
     )
-    from . import versions
+    from . import a2a, versions
     from .versions import ListVersionsRequestOrder
 _dynamic_imports: typing.Dict[str, str] = {
     "AgentCreateRequestMemory": ".types",
@@ -22,6 +22,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AgentUpdateRequestScope": ".types",
     "ListAgentsRequestOrder": ".types",
     "ListVersionsRequestOrder": ".versions",
+    "a2a": ".a2a",
     "versions": ".versions",
 }
 
@@ -54,5 +55,6 @@ __all__ = [
     "AgentUpdateRequestScope",
     "ListAgentsRequestOrder",
     "ListVersionsRequestOrder",
+    "a2a",
     "versions",
 ]

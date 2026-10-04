@@ -6,6 +6,18 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
+    from .a2a_agent_card import A2AAgentCard
+    from .a2a_agent_card_capabilities import A2AAgentCardCapabilities
+    from .a2a_agent_card_provider import A2AAgentCardProvider
+    from .a2a_agent_card_skills_item import A2AAgentCardSkillsItem
+    from .a2a_agent_card_supported_interfaces_item import A2AAgentCardSupportedInterfacesItem
+    from .a2a_agent_card_supported_interfaces_item_protocol_binding import (
+        A2AAgentCardSupportedInterfacesItemProtocolBinding,
+    )
+    from .a2a_json_rpc_response import A2AJsonRpcResponse
+    from .a2a_json_rpc_response_error import A2AJsonRpcResponseError
+    from .a2a_json_rpc_response_id import A2AJsonRpcResponseId
+    from .a2a_json_rpc_response_jsonrpc import A2AJsonRpcResponseJsonrpc
     from .account import Account
     from .account_object import AccountObject
     from .account_usage import AccountUsage
@@ -959,6 +971,16 @@ if typing.TYPE_CHECKING:
     from .write_clipboard_request_space_id import WriteClipboardRequestSpaceId
     from .write_clipboard_request_space_id_one import WriteClipboardRequestSpaceIdOne
 _dynamic_imports: typing.Dict[str, str] = {
+    "A2AAgentCard": ".a2a_agent_card",
+    "A2AAgentCardCapabilities": ".a2a_agent_card_capabilities",
+    "A2AAgentCardProvider": ".a2a_agent_card_provider",
+    "A2AAgentCardSkillsItem": ".a2a_agent_card_skills_item",
+    "A2AAgentCardSupportedInterfacesItem": ".a2a_agent_card_supported_interfaces_item",
+    "A2AAgentCardSupportedInterfacesItemProtocolBinding": ".a2a_agent_card_supported_interfaces_item_protocol_binding",
+    "A2AJsonRpcResponse": ".a2a_json_rpc_response",
+    "A2AJsonRpcResponseError": ".a2a_json_rpc_response_error",
+    "A2AJsonRpcResponseId": ".a2a_json_rpc_response_id",
+    "A2AJsonRpcResponseJsonrpc": ".a2a_json_rpc_response_jsonrpc",
     "Account": ".account",
     "AccountObject": ".account_object",
     "AccountUsage": ".account_usage",
@@ -1880,6 +1902,16 @@ def __dir__():
 
 
 __all__ = [
+    "A2AAgentCard",
+    "A2AAgentCardCapabilities",
+    "A2AAgentCardProvider",
+    "A2AAgentCardSkillsItem",
+    "A2AAgentCardSupportedInterfacesItem",
+    "A2AAgentCardSupportedInterfacesItemProtocolBinding",
+    "A2AJsonRpcResponse",
+    "A2AJsonRpcResponseError",
+    "A2AJsonRpcResponseId",
+    "A2AJsonRpcResponseJsonrpc",
     "Account",
     "AccountObject",
     "AccountUsage",

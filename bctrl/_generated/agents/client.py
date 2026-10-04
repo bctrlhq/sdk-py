@@ -19,6 +19,7 @@ from .types.agent_update_request_scope import AgentUpdateRequestScope
 from .types.list_agents_request_order import ListAgentsRequestOrder
 
 if typing.TYPE_CHECKING:
+    from .a2a.client import A2AClient, AsyncA2AClient
     from .versions.client import AsyncVersionsClient, VersionsClient
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -28,6 +29,7 @@ class AgentsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._raw_client = RawAgentsClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
+        self._a2a: typing.Optional[A2AClient] = None
         self._versions: typing.Optional[VersionsClient] = None
 
     @property
@@ -323,6 +325,14 @@ class AgentsClient:
         return _response.data
 
     @property
+    def a2a(self):
+        if self._a2a is None:
+            from .a2a.client import A2AClient  # noqa: E402
+
+            self._a2a = A2AClient(client_wrapper=self._client_wrapper)
+        return self._a2a
+
+    @property
     def versions(self):
         if self._versions is None:
             from .versions.client import VersionsClient  # noqa: E402
@@ -335,6 +345,7 @@ class AsyncAgentsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._raw_client = AsyncRawAgentsClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
+        self._a2a: typing.Optional[AsyncA2AClient] = None
         self._versions: typing.Optional[AsyncVersionsClient] = None
 
     @property
@@ -670,6 +681,14 @@ class AsyncAgentsClient:
             request_options=request_options,
         )
         return _response.data
+
+    @property
+    def a2a(self):
+        if self._a2a is None:
+            from .a2a.client import AsyncA2AClient  # noqa: E402
+
+            self._a2a = AsyncA2AClient(client_wrapper=self._client_wrapper)
+        return self._a2a
 
     @property
     def versions(self):

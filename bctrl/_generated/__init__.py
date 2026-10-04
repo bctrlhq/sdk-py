@@ -7,6 +7,16 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .types import (
+        A2AAgentCard,
+        A2AAgentCardCapabilities,
+        A2AAgentCardProvider,
+        A2AAgentCardSkillsItem,
+        A2AAgentCardSupportedInterfacesItem,
+        A2AAgentCardSupportedInterfacesItemProtocolBinding,
+        A2AJsonRpcResponse,
+        A2AJsonRpcResponseError,
+        A2AJsonRpcResponseId,
+        A2AJsonRpcResponseJsonrpc,
         Account,
         AccountObject,
         AccountUsage,
@@ -1029,6 +1039,16 @@ if typing.TYPE_CHECKING:
     from .views import ListViewsRequestOrder
     from .webhooks import ListWebhooksRequestOrder
 _dynamic_imports: typing.Dict[str, str] = {
+    "A2AAgentCard": ".types",
+    "A2AAgentCardCapabilities": ".types",
+    "A2AAgentCardProvider": ".types",
+    "A2AAgentCardSkillsItem": ".types",
+    "A2AAgentCardSupportedInterfacesItem": ".types",
+    "A2AAgentCardSupportedInterfacesItemProtocolBinding": ".types",
+    "A2AJsonRpcResponse": ".types",
+    "A2AJsonRpcResponseError": ".types",
+    "A2AJsonRpcResponseId": ".types",
+    "A2AJsonRpcResponseJsonrpc": ".types",
     "Account": ".types",
     "AccountObject": ".types",
     "AccountUsage": ".types",
@@ -2063,6 +2083,16 @@ def __dir__():
 
 
 __all__ = [
+    "A2AAgentCard",
+    "A2AAgentCardCapabilities",
+    "A2AAgentCardProvider",
+    "A2AAgentCardSkillsItem",
+    "A2AAgentCardSupportedInterfacesItem",
+    "A2AAgentCardSupportedInterfacesItemProtocolBinding",
+    "A2AJsonRpcResponse",
+    "A2AJsonRpcResponseError",
+    "A2AJsonRpcResponseId",
+    "A2AJsonRpcResponseJsonrpc",
     "Account",
     "AccountObject",
     "AccountUsage",
