@@ -728,6 +728,12 @@ if typing.TYPE_CHECKING:
     from .sandbox_file_stage_response import SandboxFileStageResponse
     from .sandbox_file_stage_response_object import SandboxFileStageResponseObject
     from .sandbox_object import SandboxObject
+    from .sandbox_port import SandboxPort
+    from .sandbox_port_create_response import SandboxPortCreateResponse
+    from .sandbox_port_create_response_object import SandboxPortCreateResponseObject
+    from .sandbox_port_deleted import SandboxPortDeleted
+    from .sandbox_port_deleted_object import SandboxPortDeletedObject
+    from .sandbox_port_object import SandboxPortObject
     from .sandbox_process import SandboxProcess
     from .sandbox_process_accepted import SandboxProcessAccepted
     from .sandbox_process_accepted_object import SandboxProcessAcceptedObject
@@ -746,9 +752,12 @@ if typing.TYPE_CHECKING:
     from .sandbox_snapshot_delete_response import SandboxSnapshotDeleteResponse
     from .sandbox_snapshot_delete_response_object import SandboxSnapshotDeleteResponseObject
     from .sandbox_snapshot_object import SandboxSnapshotObject
+    from .sandbox_ssh_session import SandboxSshSession
+    from .sandbox_ssh_session_object import SandboxSshSessionObject
     from .sandbox_status import SandboxStatus
     from .sandbox_terminal_connection_request import SandboxTerminalConnectionRequest
     from .sandboxes_list_response import SandboxesListResponse
+    from .sandboxes_ports_list_response import SandboxesPortsListResponse
     from .sandboxes_snapshots_list_response import SandboxesSnapshotsListResponse
     from .screenshot_computer_request_space_id import ScreenshotComputerRequestSpaceId
     from .screenshot_computer_request_space_id_one import ScreenshotComputerRequestSpaceIdOne
@@ -1634,6 +1643,12 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SandboxFileStageResponse": ".sandbox_file_stage_response",
     "SandboxFileStageResponseObject": ".sandbox_file_stage_response_object",
     "SandboxObject": ".sandbox_object",
+    "SandboxPort": ".sandbox_port",
+    "SandboxPortCreateResponse": ".sandbox_port_create_response",
+    "SandboxPortCreateResponseObject": ".sandbox_port_create_response_object",
+    "SandboxPortDeleted": ".sandbox_port_deleted",
+    "SandboxPortDeletedObject": ".sandbox_port_deleted_object",
+    "SandboxPortObject": ".sandbox_port_object",
     "SandboxProcess": ".sandbox_process",
     "SandboxProcessAccepted": ".sandbox_process_accepted",
     "SandboxProcessAcceptedObject": ".sandbox_process_accepted_object",
@@ -1650,9 +1665,12 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SandboxSnapshotDeleteResponse": ".sandbox_snapshot_delete_response",
     "SandboxSnapshotDeleteResponseObject": ".sandbox_snapshot_delete_response_object",
     "SandboxSnapshotObject": ".sandbox_snapshot_object",
+    "SandboxSshSession": ".sandbox_ssh_session",
+    "SandboxSshSessionObject": ".sandbox_ssh_session_object",
     "SandboxStatus": ".sandbox_status",
     "SandboxTerminalConnectionRequest": ".sandbox_terminal_connection_request",
     "SandboxesListResponse": ".sandboxes_list_response",
+    "SandboxesPortsListResponse": ".sandboxes_ports_list_response",
     "SandboxesSnapshotsListResponse": ".sandboxes_snapshots_list_response",
     "ScreenshotComputerRequestSpaceId": ".screenshot_computer_request_space_id",
     "ScreenshotComputerRequestSpaceIdOne": ".screenshot_computer_request_space_id_one",
@@ -2565,6 +2583,12 @@ __all__ = [
     "SandboxFileStageResponse",
     "SandboxFileStageResponseObject",
     "SandboxObject",
+    "SandboxPort",
+    "SandboxPortCreateResponse",
+    "SandboxPortCreateResponseObject",
+    "SandboxPortDeleted",
+    "SandboxPortDeletedObject",
+    "SandboxPortObject",
     "SandboxProcess",
     "SandboxProcessAccepted",
     "SandboxProcessAcceptedObject",
@@ -2581,9 +2605,12 @@ __all__ = [
     "SandboxSnapshotDeleteResponse",
     "SandboxSnapshotDeleteResponseObject",
     "SandboxSnapshotObject",
+    "SandboxSshSession",
+    "SandboxSshSessionObject",
     "SandboxStatus",
     "SandboxTerminalConnectionRequest",
     "SandboxesListResponse",
+    "SandboxesPortsListResponse",
     "SandboxesSnapshotsListResponse",
     "ScreenshotComputerRequestSpaceId",
     "ScreenshotComputerRequestSpaceIdOne",

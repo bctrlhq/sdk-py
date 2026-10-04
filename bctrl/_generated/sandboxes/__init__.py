@@ -7,14 +7,16 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .types import ListSandboxesRequestOrder
-    from . import browser, connections, files, processes, snapshots
+    from . import browser, connections, files, ports, processes, snapshots, ssh_sessions
 _dynamic_imports: typing.Dict[str, str] = {
     "ListSandboxesRequestOrder": ".types",
     "browser": ".browser",
     "connections": ".connections",
     "files": ".files",
+    "ports": ".ports",
     "processes": ".processes",
     "snapshots": ".snapshots",
+    "ssh_sessions": ".ssh_sessions",
 }
 
 
@@ -39,4 +41,13 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["ListSandboxesRequestOrder", "browser", "connections", "files", "processes", "snapshots"]
+__all__ = [
+    "ListSandboxesRequestOrder",
+    "browser",
+    "connections",
+    "files",
+    "ports",
+    "processes",
+    "snapshots",
+    "ssh_sessions",
+]

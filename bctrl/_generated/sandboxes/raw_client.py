@@ -138,7 +138,7 @@ class RawSandboxesClient:
             Start as a fork of this snapshot (memory and disk), on the node that holds it. The image comes from the snapshot.
 
         image : typing.Optional[str]
-            Approved sandbox image identifier, for example `bctrl-pi-stable`.
+            An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.
 
         name : typing.Optional[ResourceName]
 
@@ -790,7 +790,7 @@ class AsyncRawSandboxesClient:
             Start as a fork of this snapshot (memory and disk), on the node that holds it. The image comes from the snapshot.
 
         image : typing.Optional[str]
-            Approved sandbox image identifier, for example `bctrl-pi-stable`.
+            An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.
 
         name : typing.Optional[ResourceName]
 

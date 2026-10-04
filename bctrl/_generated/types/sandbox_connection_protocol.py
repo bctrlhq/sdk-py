@@ -2,4 +2,4 @@
 
 import typing
 
-SandboxConnectionProtocol = typing.Union[typing.Literal["terminal"], typing.Any]
+SandboxConnectionProtocol = typing.Union[typing.Literal["terminal", "ssh", "port"], typing.Any]

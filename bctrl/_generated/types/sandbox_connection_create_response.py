@@ -25,6 +25,11 @@ class SandboxConnectionCreateResponse(UniversalBaseModel):
     """
 
     object: SandboxConnectionCreateResponseObject
+    port: typing.Optional[int] = pydantic.Field(default=None)
+    """
+    The sandbox port, for a port preview.
+    """
+
     protocol: SandboxConnectionCreateResponseProtocol
     revoked_at: typing_extensions.Annotated[
         typing.Optional[Rfc3339Timestamp], FieldMetadata(alias="revokedAt"), pydantic.Field(alias="revokedAt")

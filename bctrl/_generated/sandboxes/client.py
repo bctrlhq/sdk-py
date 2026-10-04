@@ -17,8 +17,10 @@ if typing.TYPE_CHECKING:
     from .browser.client import AsyncBrowserClient, BrowserClient
     from .connections.client import AsyncConnectionsClient, ConnectionsClient
     from .files.client import AsyncFilesClient, FilesClient
+    from .ports.client import AsyncPortsClient, PortsClient
     from .processes.client import AsyncProcessesClient, ProcessesClient
     from .snapshots.client import AsyncSnapshotsClient, SnapshotsClient
+    from .ssh_sessions.client import AsyncSshSessionsClient, SshSessionsClient
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
 
@@ -30,8 +32,10 @@ class SandboxesClient:
         self._browser: typing.Optional[BrowserClient] = None
         self._connections: typing.Optional[ConnectionsClient] = None
         self._files: typing.Optional[FilesClient] = None
+        self._ports: typing.Optional[PortsClient] = None
         self._processes: typing.Optional[ProcessesClient] = None
         self._snapshots: typing.Optional[SnapshotsClient] = None
+        self._ssh_sessions: typing.Optional[SshSessionsClient] = None
 
     @property
     def with_raw_response(self) -> RawSandboxesClient:
@@ -114,7 +118,7 @@ class SandboxesClient:
             Start as a fork of this snapshot (memory and disk), on the node that holds it. The image comes from the snapshot.
 
         image : typing.Optional[str]
-            Approved sandbox image identifier, for example `bctrl-pi-stable`.
+            An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.
 
         name : typing.Optional[ResourceName]
 
@@ -338,6 +342,14 @@ class SandboxesClient:
         return self._files
 
     @property
+    def ports(self):
+        if self._ports is None:
+            from .ports.client import PortsClient  # noqa: E402
+
+            self._ports = PortsClient(client_wrapper=self._client_wrapper)
+        return self._ports
+
+    @property
     def processes(self):
         if self._processes is None:
             from .processes.client import ProcessesClient  # noqa: E402
@@ -353,6 +365,14 @@ class SandboxesClient:
             self._snapshots = SnapshotsClient(client_wrapper=self._client_wrapper)
         return self._snapshots
 
+    @property
+    def ssh_sessions(self):
+        if self._ssh_sessions is None:
+            from .ssh_sessions.client import SshSessionsClient  # noqa: E402
+
+            self._ssh_sessions = SshSessionsClient(client_wrapper=self._client_wrapper)
+        return self._ssh_sessions
+
 
 class AsyncSandboxesClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
@@ -361,8 +381,10 @@ class AsyncSandboxesClient:
         self._browser: typing.Optional[AsyncBrowserClient] = None
         self._connections: typing.Optional[AsyncConnectionsClient] = None
         self._files: typing.Optional[AsyncFilesClient] = None
+        self._ports: typing.Optional[AsyncPortsClient] = None
         self._processes: typing.Optional[AsyncProcessesClient] = None
         self._snapshots: typing.Optional[AsyncSnapshotsClient] = None
+        self._ssh_sessions: typing.Optional[AsyncSshSessionsClient] = None
 
     @property
     def with_raw_response(self) -> AsyncRawSandboxesClient:
@@ -453,7 +475,7 @@ class AsyncSandboxesClient:
             Start as a fork of this snapshot (memory and disk), on the node that holds it. The image comes from the snapshot.
 
         image : typing.Optional[str]
-            Approved sandbox image identifier, for example `bctrl-pi-stable`.
+            An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.
 
         name : typing.Optional[ResourceName]
 
@@ -719,6 +741,14 @@ class AsyncSandboxesClient:
         return self._files
 
     @property
+    def ports(self):
+        if self._ports is None:
+            from .ports.client import AsyncPortsClient  # noqa: E402
+
+            self._ports = AsyncPortsClient(client_wrapper=self._client_wrapper)
+        return self._ports
+
+    @property
     def processes(self):
         if self._processes is None:
             from .processes.client import AsyncProcessesClient  # noqa: E402
@@ -733,3 +763,11 @@ class AsyncSandboxesClient:
 
             self._snapshots = AsyncSnapshotsClient(client_wrapper=self._client_wrapper)
         return self._snapshots
+
+    @property
+    def ssh_sessions(self):
+        if self._ssh_sessions is None:
+            from .ssh_sessions.client import AsyncSshSessionsClient  # noqa: E402
+
+            self._ssh_sessions = AsyncSshSessionsClient(client_wrapper=self._client_wrapper)
+        return self._ssh_sessions
