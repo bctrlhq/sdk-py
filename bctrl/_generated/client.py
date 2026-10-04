@@ -15,6 +15,7 @@ from .types.help_response import HelpResponse
 
 if typing.TYPE_CHECKING:
     from .account.client import AccountClient, AsyncAccountClient
+    from .agents.client import AgentsClient, AsyncAgentsClient
     from .ai.client import AiClient, AsyncAiClient
     from .api_keys.client import ApiKeysClient, AsyncApiKeysClient
     from .auth.client import AsyncAuthClient, AuthClient
@@ -31,9 +32,9 @@ if typing.TYPE_CHECKING:
     from .secrets.client import AsyncSecretsClient, SecretsClient
     from .spaces.client import AsyncSpacesClient, SpacesClient
     from .subaccounts.client import AsyncSubaccountsClient, SubaccountsClient
+    from .tasks.client import AsyncTasksClient, TasksClient
     from .tool_calls.client import AsyncToolCallsClient, ToolCallsClient
     from .tools.client import AsyncToolsClient, ToolsClient
-    from .toolsets.client import AsyncToolsetsClient, ToolsetsClient
     from .usage.client import AsyncUsageClient, UsageClient
     from .views.client import AsyncViewsClient, ViewsClient
     from .webhooks.client import AsyncWebhooksClient, WebhooksClient
@@ -133,6 +134,7 @@ class Bctrl:
         )
         self._raw_client = RawBctrl(client_wrapper=self._client_wrapper)
         self._account: typing.Optional[AccountClient] = None
+        self._agents: typing.Optional[AgentsClient] = None
         self._api_keys: typing.Optional[ApiKeysClient] = None
         self._auth: typing.Optional[AuthClient] = None
         self._browsers: typing.Optional[BrowsersClient] = None
@@ -147,9 +149,9 @@ class Bctrl:
         self._secrets: typing.Optional[SecretsClient] = None
         self._spaces: typing.Optional[SpacesClient] = None
         self._subaccounts: typing.Optional[SubaccountsClient] = None
+        self._tasks: typing.Optional[TasksClient] = None
         self._tool_calls: typing.Optional[ToolCallsClient] = None
         self._tools: typing.Optional[ToolsClient] = None
-        self._toolsets: typing.Optional[ToolsetsClient] = None
         self._usage: typing.Optional[UsageClient] = None
         self._views: typing.Optional[ViewsClient] = None
         self._webhooks: typing.Optional[WebhooksClient] = None
@@ -212,6 +214,14 @@ class Bctrl:
 
             self._account = AccountClient(client_wrapper=self._client_wrapper)
         return self._account
+
+    @property
+    def agents(self):
+        if self._agents is None:
+            from .agents.client import AgentsClient  # noqa: E402
+
+            self._agents = AgentsClient(client_wrapper=self._client_wrapper)
+        return self._agents
 
     @property
     def api_keys(self):
@@ -326,6 +336,14 @@ class Bctrl:
         return self._subaccounts
 
     @property
+    def tasks(self):
+        if self._tasks is None:
+            from .tasks.client import TasksClient  # noqa: E402
+
+            self._tasks = TasksClient(client_wrapper=self._client_wrapper)
+        return self._tasks
+
+    @property
     def tool_calls(self):
         if self._tool_calls is None:
             from .tool_calls.client import ToolCallsClient  # noqa: E402
@@ -340,14 +358,6 @@ class Bctrl:
 
             self._tools = ToolsClient(client_wrapper=self._client_wrapper)
         return self._tools
-
-    @property
-    def toolsets(self):
-        if self._toolsets is None:
-            from .toolsets.client import ToolsetsClient  # noqa: E402
-
-            self._toolsets = ToolsetsClient(client_wrapper=self._client_wrapper)
-        return self._toolsets
 
     @property
     def usage(self):
@@ -505,6 +515,7 @@ class AsyncBctrl:
         )
         self._raw_client = AsyncRawBctrl(client_wrapper=self._client_wrapper)
         self._account: typing.Optional[AsyncAccountClient] = None
+        self._agents: typing.Optional[AsyncAgentsClient] = None
         self._api_keys: typing.Optional[AsyncApiKeysClient] = None
         self._auth: typing.Optional[AsyncAuthClient] = None
         self._browsers: typing.Optional[AsyncBrowsersClient] = None
@@ -519,9 +530,9 @@ class AsyncBctrl:
         self._secrets: typing.Optional[AsyncSecretsClient] = None
         self._spaces: typing.Optional[AsyncSpacesClient] = None
         self._subaccounts: typing.Optional[AsyncSubaccountsClient] = None
+        self._tasks: typing.Optional[AsyncTasksClient] = None
         self._tool_calls: typing.Optional[AsyncToolCallsClient] = None
         self._tools: typing.Optional[AsyncToolsClient] = None
-        self._toolsets: typing.Optional[AsyncToolsetsClient] = None
         self._usage: typing.Optional[AsyncUsageClient] = None
         self._views: typing.Optional[AsyncViewsClient] = None
         self._webhooks: typing.Optional[AsyncWebhooksClient] = None
@@ -592,6 +603,14 @@ class AsyncBctrl:
 
             self._account = AsyncAccountClient(client_wrapper=self._client_wrapper)
         return self._account
+
+    @property
+    def agents(self):
+        if self._agents is None:
+            from .agents.client import AsyncAgentsClient  # noqa: E402
+
+            self._agents = AsyncAgentsClient(client_wrapper=self._client_wrapper)
+        return self._agents
 
     @property
     def api_keys(self):
@@ -706,6 +725,14 @@ class AsyncBctrl:
         return self._subaccounts
 
     @property
+    def tasks(self):
+        if self._tasks is None:
+            from .tasks.client import AsyncTasksClient  # noqa: E402
+
+            self._tasks = AsyncTasksClient(client_wrapper=self._client_wrapper)
+        return self._tasks
+
+    @property
     def tool_calls(self):
         if self._tool_calls is None:
             from .tool_calls.client import AsyncToolCallsClient  # noqa: E402
@@ -720,14 +747,6 @@ class AsyncBctrl:
 
             self._tools = AsyncToolsClient(client_wrapper=self._client_wrapper)
         return self._tools
-
-    @property
-    def toolsets(self):
-        if self._toolsets is None:
-            from .toolsets.client import AsyncToolsetsClient  # noqa: E402
-
-            self._toolsets = AsyncToolsetsClient(client_wrapper=self._client_wrapper)
-        return self._toolsets
 
     @property
     def usage(self):

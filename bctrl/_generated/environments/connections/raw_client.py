@@ -212,7 +212,7 @@ class RawConnectionsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[EnvironmentConnectionCreateResponse]:
         """
-        Open direct terminal access to a ready Environment. Returns a WebSocket URL and a one-time ticket. Refused while a managed conversation turn is using the Environment.
+        Open direct terminal access to a ready Environment. Returns a WebSocket URL and a one-time ticket. Refused while a Task is using the Environment.
 
         Parameters
         ----------
@@ -516,7 +516,7 @@ class AsyncRawConnectionsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[EnvironmentConnectionCreateResponse]:
         """
-        Open direct terminal access to a ready Environment. Returns a WebSocket URL and a one-time ticket. Refused while a managed conversation turn is using the Environment.
+        Open direct terminal access to a ready Environment. Returns a WebSocket URL and a one-time ticket. Refused while a Task is using the Environment.
 
         Parameters
         ----------

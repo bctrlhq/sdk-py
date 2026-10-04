@@ -7,7 +7,6 @@ import typing
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.json_object import JsonObject
-from ..types.json_value import JsonValue
 from ..types.tool import Tool
 from ..types.tool_create_request import ToolCreateRequest
 from ..types.tool_delete_response import ToolDeleteResponse
@@ -15,7 +14,6 @@ from ..types.tool_list_response import ToolListResponse
 from .raw_client import AsyncRawToolsClient, RawToolsClient
 from .types.list_tools_request_order import ListToolsRequestOrder
 from .types.tool_update_request_implementation import ToolUpdateRequestImplementation
-from .types.tool_update_request_modes_item import ToolUpdateRequestModesItem
 from .types.tool_update_request_runtime_types_item import ToolUpdateRequestRuntimeTypesItem
 
 if typing.TYPE_CHECKING:
@@ -97,7 +95,7 @@ class ToolsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Tool:
         """
-        Create an organization custom callable tool. Agents can use these tools through space toolsets during hosted work.
+        Create an organization custom callable tool. Agents select these tools in their immutable version definitions.
 
         Parameters
         ----------
@@ -226,7 +224,6 @@ class ToolsClient:
         description: typing.Optional[str] = OMIT,
         implementation: typing.Optional[ToolUpdateRequestImplementation] = OMIT,
         input_schema: typing.Optional[JsonObject] = OMIT,
-        modes: typing.Optional[typing.Sequence[ToolUpdateRequestModesItem]] = OMIT,
         output_schema: typing.Optional[JsonObject] = OMIT,
         runtime_types: typing.Optional[typing.Sequence[ToolUpdateRequestRuntimeTypesItem]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -249,8 +246,6 @@ class ToolsClient:
         implementation : typing.Optional[ToolUpdateRequestImplementation]
 
         input_schema : typing.Optional[JsonObject]
-
-        modes : typing.Optional[typing.Sequence[ToolUpdateRequestModesItem]]
 
         output_schema : typing.Optional[JsonObject]
 
@@ -285,64 +280,8 @@ class ToolsClient:
             description=description,
             implementation=implementation,
             input_schema=input_schema,
-            modes=modes,
             output_schema=output_schema,
             runtime_types=runtime_types,
-            request_options=request_options,
-        )
-        return _response.data
-
-    def call(
-        self,
-        tool_ref: str,
-        *,
-        request: JsonObject,
-        bctrl_runtime_id: typing.Optional[str] = None,
-        idempotency_key: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> JsonValue:
-        """
-        Call a synchronous tool and wait for its validated result.
-
-        Parameters
-        ----------
-        tool_ref : str
-
-        request : JsonObject
-
-        bctrl_runtime_id : typing.Optional[str]
-            Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        JsonValue
-            OK
-
-        Examples
-        --------
-        from bctrl import Bctrl
-
-        client = Bctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-        client.tools.call(
-            tool_ref="toolRef",
-            request={},
-        )
-        """
-        _response = self._raw_client.call(
-            tool_ref,
-            request=request,
-            bctrl_runtime_id=bctrl_runtime_id,
-            idempotency_key=idempotency_key,
             request_options=request_options,
         )
         return _response.data
@@ -437,7 +376,7 @@ class AsyncToolsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Tool:
         """
-        Create an organization custom callable tool. Agents can use these tools through space toolsets during hosted work.
+        Create an organization custom callable tool. Agents select these tools in their immutable version definitions.
 
         Parameters
         ----------
@@ -592,7 +531,6 @@ class AsyncToolsClient:
         description: typing.Optional[str] = OMIT,
         implementation: typing.Optional[ToolUpdateRequestImplementation] = OMIT,
         input_schema: typing.Optional[JsonObject] = OMIT,
-        modes: typing.Optional[typing.Sequence[ToolUpdateRequestModesItem]] = OMIT,
         output_schema: typing.Optional[JsonObject] = OMIT,
         runtime_types: typing.Optional[typing.Sequence[ToolUpdateRequestRuntimeTypesItem]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -615,8 +553,6 @@ class AsyncToolsClient:
         implementation : typing.Optional[ToolUpdateRequestImplementation]
 
         input_schema : typing.Optional[JsonObject]
-
-        modes : typing.Optional[typing.Sequence[ToolUpdateRequestModesItem]]
 
         output_schema : typing.Optional[JsonObject]
 
@@ -659,72 +595,8 @@ class AsyncToolsClient:
             description=description,
             implementation=implementation,
             input_schema=input_schema,
-            modes=modes,
             output_schema=output_schema,
             runtime_types=runtime_types,
-            request_options=request_options,
-        )
-        return _response.data
-
-    async def call(
-        self,
-        tool_ref: str,
-        *,
-        request: JsonObject,
-        bctrl_runtime_id: typing.Optional[str] = None,
-        idempotency_key: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> JsonValue:
-        """
-        Call a synchronous tool and wait for its validated result.
-
-        Parameters
-        ----------
-        tool_ref : str
-
-        request : JsonObject
-
-        bctrl_runtime_id : typing.Optional[str]
-            Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        JsonValue
-            OK
-
-        Examples
-        --------
-        import asyncio
-
-        from bctrl import AsyncBctrl
-
-        client = AsyncBctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-
-
-        async def main() -> None:
-            await client.tools.call(
-                tool_ref="toolRef",
-                request={},
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.call(
-            tool_ref,
-            request=request,
-            bctrl_runtime_id=bctrl_runtime_id,
-            idempotency_key=idempotency_key,
             request_options=request_options,
         )
         return _response.data

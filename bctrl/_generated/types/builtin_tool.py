@@ -8,7 +8,6 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .builtin_tool_id import BuiltinToolId
 from .builtin_tool_implementation import BuiltinToolImplementation
-from .builtin_tool_modes_item import BuiltinToolModesItem
 from .builtin_tool_name import BuiltinToolName
 from .builtin_tool_object import BuiltinToolObject
 from .builtin_tool_runtime_types_item import BuiltinToolRuntimeTypesItem
@@ -29,7 +28,6 @@ class BuiltinTool(UniversalBaseModel):
     input_schema: typing_extensions.Annotated[
         JsonObject, FieldMetadata(alias="inputSchema"), pydantic.Field(alias="inputSchema")
     ]
-    modes: typing.List[BuiltinToolModesItem]
     name: BuiltinToolName
     object: BuiltinToolObject
     output_schema: typing_extensions.Annotated[

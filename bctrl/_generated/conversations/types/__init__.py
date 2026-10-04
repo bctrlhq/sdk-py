@@ -7,11 +7,7 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .list_conversations_request_order import ListConversationsRequestOrder
-    from .list_conversations_request_status import ListConversationsRequestStatus
-_dynamic_imports: typing.Dict[str, str] = {
-    "ListConversationsRequestOrder": ".list_conversations_request_order",
-    "ListConversationsRequestStatus": ".list_conversations_request_status",
-}
+_dynamic_imports: typing.Dict[str, str] = {"ListConversationsRequestOrder": ".list_conversations_request_order"}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -35,4 +31,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["ListConversationsRequestOrder", "ListConversationsRequestStatus"]
+__all__ = ["ListConversationsRequestOrder"]

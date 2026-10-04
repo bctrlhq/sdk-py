@@ -8,7 +8,6 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
-from .conversation_event import ConversationEvent
 from .rfc3339timestamp import Rfc3339Timestamp
 from .run_event import RunEvent
 from .run_stream_event_control_changed_holder import RunStreamEventControlChangedHolder
@@ -105,23 +104,6 @@ class RunStreamEvent_RuntimeEvent(UniversalBaseModel):
             extra = pydantic.Extra.allow
 
 
-class RunStreamEvent_ConversationEvent(UniversalBaseModel):
-    type: typing.Literal["conversation.event"] = "conversation.event"
-    event: ConversationEvent
-    id: str
-    run_id: typing_extensions.Annotated[str, FieldMetadata(alias="runId"), pydantic.Field(alias="runId")]
-    timestamp: Rfc3339Timestamp
-
-    if IS_PYDANTIC_V2:
-        model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
-    else:
-
-        class Config:
-            frozen = True
-            smart_union = True
-            extra = pydantic.Extra.allow
-
-
 class RunStreamEvent_RunEnded(UniversalBaseModel):
     type: typing.Literal["run.ended"] = "run.ended"
     id: str
@@ -146,7 +128,6 @@ RunStreamEvent = typing_extensions.Annotated[
         RunStreamEvent_SpanUpdated,
         RunStreamEvent_SpanCompleted,
         RunStreamEvent_RuntimeEvent,
-        RunStreamEvent_ConversationEvent,
         RunStreamEvent_RunEnded,
     ],
     pydantic.Field(discriminator="type"),

@@ -42,8 +42,6 @@ def sdk():
             else:
                 response = browser
             return httpx.Response(200, json=response)
-        if re.fullmatch(r"/v1/tools/[^/]+/call", route):
-            return httpx.Response(200, json={"success": True, "action": (body or {}).get("action"), "width": 800, "height": 600})
         for key, value in FIXTURES.items():
             method, template = key.split(" ", 1)
             if method != request.method or not re.fullmatch(re.sub(r"\{[^}]+\}", "[^/]+", template), route):
@@ -61,11 +59,12 @@ def sdk():
 def test_computer_actions_preserve_vendor_snake_case_fields(sdk):
     client, requests = sdk
     action = {"action": "scroll", "scroll_direction": "down", "scroll_amount": 2, "coordinate": [20, 30]}
-    assert client.tools.call("computer.use", request=action, bctrl_runtime_id="br_test")["width"] == 800
-    client.tools.calls.create("computer.use", request=action, bctrl_runtime_id="br_test")
-    for request in requests:
-        assert request["body"] == action
-        assert request["headers"]["BCTRL-Runtime-Id"] == "br_test"
+    call = client.tools.calls.create("computer.use", input=action, runtime_id="br_test", wait=30)
+    assert call.object == "tool_call"
+    assert requests[0]["path"] == "/v1/tools/computer.use/calls?wait=30"
+    # The browser is a body field; the old BCTRL-Runtime-Id header is gone.
+    assert requests[0]["body"] == {"input": action, "runtimeId": "br_test"}
+    assert "BCTRL-Runtime-Id" not in requests[0]["headers"]
 
 
 def test_agent_keys_send_identity_and_retain_person_and_usage_metadata(sdk):
@@ -95,14 +94,18 @@ def test_spaces_and_browser_start_use_current_routes(sdk):
     assert run.connections is None
 
 
-def test_tools_and_conversations_are_first_class(sdk):
+def test_tools_tasks_and_conversations_are_first_class(sdk):
     client, requests = sdk
-    assert client.tools.call("stagehand.act", request={"instruction": "Click Continue"}, bctrl_runtime_id="br_test")["success"]
-    client.conversations.update("conv_test", model="deepseek/deepseek-v4.1-flash")
-    client.conversations.messages.create("conv_test", text="Continue", idempotency_key="message-1")
-    assert requests[0]["headers"]["BCTRL-Runtime-Id"] == "br_test"
-    assert "runtimeId" not in requests[0]["body"]
-    assert requests[2]["headers"]["Idempotency-Key"] == "message-1"
+    client.tools.calls.create("stagehand.act", input={"instruction": "Click Continue"}, runtime_id="br_test")
+    client.conversations.update("conv_test", title="Checkout")
+    task = client.tasks.create(agent="agt_test", input="Continue", idempotency_key="task-1")
+    assert requests[0]["body"]["runtimeId"] == "br_test"
+    assert requests[1]["body"] == {"title": "Checkout"}
+    assert requests[2]["path"] == "/v1/tasks"
+    assert requests[2]["body"] == {"agent": "agt_test", "input": "Continue"}
+    assert requests[2]["headers"]["Idempotency-Key"] == "task-1"
+    assert task.status == "queued"
+    assert not hasattr(client.conversations, "messages")
 
 
 def test_scoped_browser_exposes_current_connections_and_stops(sdk):
@@ -159,11 +162,10 @@ def test_scoped_browser_preserves_body_error_if_stop_also_fails(sdk):
 
 def test_code_execute_uses_async_tool_call_route(sdk):
     client, requests = sdk
-    client.tools.calls.create("code.execute", request={"source": "export default async () => ({ ok: true });", "input": {"value": 1}}, bctrl_runtime_id="br_test", idempotency_key="code-execute-1")
+    client.tools.calls.create("code.execute", input={"source": "export default async () => ({ ok: true });", "input": {"value": 1}}, idempotency_key="code-execute-1")
     assert requests[0]["path"] == "/v1/tools/code.execute/calls"
-    assert requests[0]["headers"]["BCTRL-Runtime-Id"] == "br_test"
     assert requests[0]["headers"]["Idempotency-Key"] == "code-execute-1"
-    assert requests[0]["body"]["input"] == {"value": 1}
+    assert requests[0]["body"]["input"]["input"] == {"value": 1}
 
 
 def test_files_notifications_proxy_catalog_and_subaccounts_use_current_routes(sdk):

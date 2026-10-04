@@ -77,17 +77,15 @@
     "updatedAt": "2026-07-26T12:00:00Z"
   },
   "PATCH /v1/conversations/{conversationId}": {
-    "activeTurnId": "turn_uAAAAAAAAAAAAAAAAAAAAAA",
+    "activeTaskId": null,
     "createdAt": "2026-07-26T12:00:00Z",
-    "environmentId": "env_uAAAAAAAAAAAAAAAAAAAAAA",
     "id": "conv_uAAAAAAAAAAAAAAAAAAAAAA",
-    "model": "model",
+    "metadata": null,
     "object": "conversation",
-    "runtimeId": "br_uAAAAAAAAAAAAAAAAAAAAAA",
+    "sandboxId": null,
     "spaceId": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
     "status": "idle",
     "title": "title",
-    "toolsetId": "tset_uAAAAAAAAAAAAAAAAAAAAAA",
     "updatedAt": "2026-07-26T12:00:00Z"
   },
   "GET /v1/files": {
@@ -351,7 +349,9 @@
         "createdAt": "2026-07-26T12:00:00Z",
         "environment": {},
         "expireAfterIdleDays": 1,
-        "capabilityScopes": ["*"],
+        "capabilityScopes": [
+          "*"
+        ],
         "id": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
         "isDefault": true,
         "name": "Production browser",
@@ -396,7 +396,9 @@
       }
     },
     "expireAfterIdleDays": 1,
-    "capabilityScopes": ["*"],
+    "capabilityScopes": [
+      "*"
+    ],
     "id": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
     "isDefault": true,
     "name": "Production browser",
@@ -485,15 +487,6 @@
       },
       "subaccountId": "V1StGXR8_Z5jdHi6B-myT"
     }
-  },
-  "POST /v1/conversations/{conversationId}/messages": {
-    "messageId": "msg_uAAAAAAAAAAAAAAAAAAAAAA",
-    "object": "agent_turn",
-    "runId": "run_uAAAAAAAAAAAAAAAAAAAAAA",
-    "spanId": "span_uAAAAAAAAAAAAAAAAAAAAAA",
-    "status": "queued",
-    "streamCursor": "streamCursor",
-    "turnId": "turn_uAAAAAAAAAAAAAAAAAAAAAA"
   },
   "GET /v1/proxies/geo": {
     "data": [
@@ -710,5 +703,32 @@
     "turnId": "turn_uAAAAAAAAAAAAAAAAAAAAAA",
     "updatedAt": "2026-07-26T12:00:00Z",
     "status": "queued"
+  },
+  "POST /v1/tasks": {
+    "object": "task",
+    "id": "task_uAAAAAAAAAAAAAAAAAAAAAA",
+    "agentId": "agt_uAAAAAAAAAAAAAAAAAAAAAA",
+    "versionId": "aver_uAAAAAAAAAAAAAAAAAAAAAA",
+    "version": 1,
+    "conversationId": "conv_uAAAAAAAAAAAAAAAAAAAAAA",
+    "spaceId": "sp_uAAAAAAAAAAAAAAAAAAAAAA",
+    "status": "queued",
+    "input": "Continue",
+    "output": null,
+    "outputSchema": null,
+    "artifacts": [],
+    "inputRequest": null,
+    "runs": [],
+    "usage": {
+      "inputTokens": 0,
+      "outputTokens": 0
+    },
+    "errorCode": null,
+    "errorMessage": null,
+    "metadata": null,
+    "createdAt": "2026-07-26T12:00:00Z",
+    "updatedAt": "2026-07-26T12:00:00Z",
+    "startedAt": null,
+    "finishedAt": null
   }
 }

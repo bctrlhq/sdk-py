@@ -654,7 +654,7 @@ class RawSecretsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[SecretRevealResponse]:
         """
-        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Task agents, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
 
         Parameters
         ----------
@@ -1491,7 +1491,7 @@ class AsyncRawSecretsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[SecretRevealResponse]:
         """
-        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+        Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Task agents, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
 
         Parameters
         ----------

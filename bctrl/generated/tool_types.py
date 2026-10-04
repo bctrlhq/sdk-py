@@ -3,7 +3,6 @@
 # Run `pnpm generate:sdk-contracts` to regenerate.
 
 from __future__ import annotations
-
 from typing import Any, Literal, Mapping, TypeAlias, TypedDict, overload
 from typing_extensions import NotRequired, Required
 from urllib.parse import quote
@@ -96,6 +95,8 @@ class BuiltinToolCodeExecuteInput(TypedDict):
     source: str
     timeoutMs: NotRequired[int]
 
+BuiltinToolCodeExecuteOutput: TypeAlias = JsonValue
+
 class BuiltinToolComputerUseInputVariant1(TypedDict):
     action: Literal["screenshot"]
 
@@ -163,6 +164,7 @@ BuiltinToolComputerUseInput: TypeAlias = BuiltinToolComputerUseInputVariant1 | B
 class BuiltinToolComputerUseOutput(TypedDict):
     action: Literal["screenshot", "left_click", "right_click", "middle_click", "double_click", "triple_click", "type", "key", "mouse_move", "scroll", "left_click_drag", "wait", "cursor_position"]
     coordinate: NotRequired[list[Any]]
+    eventId: str
     height: int
     image: NotRequired[dict[str, Any]]
     width: int
@@ -194,6 +196,8 @@ class BuiltinToolHumanRequestInput(TypedDict):
     prompt: str
     responseSchema: NotRequired[JsonObject]
     view: NotRequired[dict[str, Any]]
+
+BuiltinToolHumanRequestOutput: TypeAlias = str | float | bool | None | list[JsonValue] | dict[str, JsonValue]
 
 class BuiltinToolRunFilesAddInput(TypedDict):
     fileId: str
@@ -292,6 +296,10 @@ class BuiltinToolSecretsRequestInput(TypedDict):
     username: NotRequired[str]
     view: NotRequired[dict[str, Any]]
 
+class BuiltinToolSecretsRequestOutput(TypedDict):
+    path: str
+    version: int
+
 class BuiltinToolStagehandActInput(TypedDict):
     instruction: str
     pageId: NotRequired[str]
@@ -330,152 +338,94 @@ JsonValue: TypeAlias = Any
 
 
 class BuiltinToolsClient:
-    """Generated, exactly typed built-in Tool operations."""
+    """Generated built-in ToolCall creation with concrete input types."""
 
     def __init__(self, http: Any) -> None:
         self._http = http
 
     @overload
-    def call(self, tool_ref: Literal["browser.pages.activate"], input: BuiltinToolBrowserPagesActivateInput, *, runtime_id: str | None = None) -> BuiltinToolBrowserPagesActivateOutput: ...
+    def create_call(self, tool_ref: Literal["browser.pages.activate"], input: BuiltinToolBrowserPagesActivateInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["browser.pages.close"], input: BuiltinToolBrowserPagesCloseInput, *, runtime_id: str | None = None) -> BuiltinToolBrowserPagesCloseOutput: ...
+    def create_call(self, tool_ref: Literal["browser.pages.close"], input: BuiltinToolBrowserPagesCloseInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["browser.pages.get"], input: BuiltinToolBrowserPagesGetInput, *, runtime_id: str | None = None) -> BuiltinToolBrowserPagesGetOutput: ...
+    def create_call(self, tool_ref: Literal["browser.pages.get"], input: BuiltinToolBrowserPagesGetInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["browser.pages.list"], input: BuiltinToolBrowserPagesListInput, *, runtime_id: str | None = None) -> BuiltinToolBrowserPagesListOutput: ...
+    def create_call(self, tool_ref: Literal["browser.pages.list"], input: BuiltinToolBrowserPagesListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["browser.pages.open"], input: BuiltinToolBrowserPagesOpenInput, *, runtime_id: str | None = None) -> BuiltinToolBrowserPagesOpenOutput: ...
+    def create_call(self, tool_ref: Literal["browser.pages.open"], input: BuiltinToolBrowserPagesOpenInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["browser.setInputFiles"], input: BuiltinToolBrowserSetInputFilesInput, *, runtime_id: str | None = None) -> BuiltinToolBrowserSetInputFilesOutput: ...
+    def create_call(self, tool_ref: Literal["browser.setInputFiles"], input: BuiltinToolBrowserSetInputFilesInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["captcha.solve"], input: BuiltinToolCaptchaSolveInput, *, runtime_id: str | None = None) -> BuiltinToolCaptchaSolveOutput: ...
+    def create_call(self, tool_ref: Literal["captcha.solve"], input: BuiltinToolCaptchaSolveInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["captcha.status"], input: BuiltinToolCaptchaStatusInput, *, runtime_id: str | None = None) -> BuiltinToolCaptchaStatusOutput: ...
+    def create_call(self, tool_ref: Literal["captcha.status"], input: BuiltinToolCaptchaStatusInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["captcha.wait"], input: BuiltinToolCaptchaWaitInput, *, runtime_id: str | None = None) -> BuiltinToolCaptchaWaitOutput: ...
+    def create_call(self, tool_ref: Literal["captcha.wait"], input: BuiltinToolCaptchaWaitInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["computer.use"], input: BuiltinToolComputerUseInput, *, runtime_id: str | None = None) -> BuiltinToolComputerUseOutput: ...
+    def create_call(self, tool_ref: Literal["code.execute"], input: BuiltinToolCodeExecuteInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["files.list"], input: BuiltinToolFilesListInput, *, runtime_id: str | None = None) -> BuiltinToolFilesListOutput: ...
+    def create_call(self, tool_ref: Literal["computer.use"], input: BuiltinToolComputerUseInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["files.read_text"], input: BuiltinToolFilesReadTextInput, *, runtime_id: str | None = None) -> BuiltinToolFilesReadTextOutput: ...
+    def create_call(self, tool_ref: Literal["files.list"], input: BuiltinToolFilesListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["run.files.add"], input: BuiltinToolRunFilesAddInput, *, runtime_id: str | None = None) -> BuiltinToolRunFilesAddOutput: ...
+    def create_call(self, tool_ref: Literal["files.read_text"], input: BuiltinToolFilesReadTextInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["run.files.collect"], input: BuiltinToolRunFilesCollectInput, *, runtime_id: str | None = None) -> BuiltinToolRunFilesCollectOutput: ...
+    def create_call(self, tool_ref: Literal["human.request"], input: BuiltinToolHumanRequestInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["run.files.export"], input: BuiltinToolRunFilesExportInput, *, runtime_id: str | None = None) -> BuiltinToolRunFilesExportOutput: ...
+    def create_call(self, tool_ref: Literal["run.files.add"], input: BuiltinToolRunFilesAddInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["run.files.list"], input: BuiltinToolRunFilesListInput, *, runtime_id: str | None = None) -> BuiltinToolRunFilesListOutput: ...
+    def create_call(self, tool_ref: Literal["run.files.collect"], input: BuiltinToolRunFilesCollectInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["runtime.files.list"], input: BuiltinToolRuntimeFilesListInput, *, runtime_id: str | None = None) -> BuiltinToolRuntimeFilesListOutput: ...
+    def create_call(self, tool_ref: Literal["run.files.export"], input: BuiltinToolRunFilesExportInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["secrets.fill"], input: BuiltinToolSecretsFillInput, *, runtime_id: str | None = None) -> BuiltinToolSecretsFillOutput: ...
+    def create_call(self, tool_ref: Literal["run.files.list"], input: BuiltinToolRunFilesListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["secrets.list"], input: BuiltinToolSecretsListInput, *, runtime_id: str | None = None) -> BuiltinToolSecretsListOutput: ...
+    def create_call(self, tool_ref: Literal["runtime.files.list"], input: BuiltinToolRuntimeFilesListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["stagehand.act"], input: BuiltinToolStagehandActInput, *, runtime_id: str | None = None) -> BuiltinToolStagehandActOutput: ...
+    def create_call(self, tool_ref: Literal["secrets.fill"], input: BuiltinToolSecretsFillInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["stagehand.extract"], input: BuiltinToolStagehandExtractInput, *, runtime_id: str | None = None) -> BuiltinToolStagehandExtractOutput: ...
+    def create_call(self, tool_ref: Literal["secrets.list"], input: BuiltinToolSecretsListInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: Literal["stagehand.observe"], input: BuiltinToolStagehandObserveInput, *, runtime_id: str | None = None) -> BuiltinToolStagehandObserveOutput: ...
+    def create_call(self, tool_ref: Literal["secrets.request"], input: BuiltinToolSecretsRequestInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def call(self, tool_ref: str, input: Mapping[str, Any] | None = None, *, runtime_id: str | None = None, **kwargs: Any) -> Any: ...
-
-    def call(self, tool_ref: str, input: Mapping[str, Any] | None = None, *, runtime_id: str | None = None, **kwargs: Any) -> Any:
-        return self._http.request(
-            "POST",
-            f"/tools/{quote(tool_ref, safe='')}/call",
-            json_body=_body({**dict(input or {}), **kwargs}, tool_ref),
-            headers={"BCTRL-Runtime-Id": runtime_id} if runtime_id else None,
-        )
+    def create_call(self, tool_ref: Literal["stagehand.act"], input: BuiltinToolStagehandActInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def start(self, tool_ref: Literal["browser.pages.activate"], input: BuiltinToolBrowserPagesActivateInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
+    def create_call(self, tool_ref: Literal["stagehand.extract"], input: BuiltinToolStagehandExtractInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def start(self, tool_ref: Literal["browser.pages.close"], input: BuiltinToolBrowserPagesCloseInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
+    def create_call(self, tool_ref: Literal["stagehand.observe"], input: BuiltinToolStagehandObserveInput, *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
     @overload
-    def start(self, tool_ref: Literal["browser.pages.open"], input: BuiltinToolBrowserPagesOpenInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
+    def create_call(self, tool_ref: str, input: Mapping[str, Any], *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject: ...
 
-    @overload
-    def start(self, tool_ref: Literal["browser.setInputFiles"], input: BuiltinToolBrowserSetInputFilesInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["captcha.solve"], input: BuiltinToolCaptchaSolveInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["code.execute"], input: BuiltinToolCodeExecuteInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["computer.use"], input: BuiltinToolComputerUseInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["human.request"], input: BuiltinToolHumanRequestInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["run.files.add"], input: BuiltinToolRunFilesAddInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["run.files.collect"], input: BuiltinToolRunFilesCollectInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["run.files.export"], input: BuiltinToolRunFilesExportInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["secrets.request"], input: BuiltinToolSecretsRequestInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["stagehand.act"], input: BuiltinToolStagehandActInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["stagehand.extract"], input: BuiltinToolStagehandExtractInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: Literal["stagehand.observe"], input: BuiltinToolStagehandObserveInput, *, idempotency_key: str | None = None, runtime_id: str | None = None) -> JsonObject: ...
-
-    @overload
-    def start(self, tool_ref: str, input: Mapping[str, Any] | None = None, *, idempotency_key: str | None = None, runtime_id: str | None = None, **kwargs: Any) -> JsonObject: ...
-
-    def start(self, tool_ref: str, input: Mapping[str, Any] | None = None, *, idempotency_key: str | None = None, runtime_id: str | None = None, **kwargs: Any) -> JsonObject:
+    def create_call(self, tool_ref: str, input: Mapping[str, Any], *, idempotency_key: str | None = None, runtime_id: str | None = None, wait: int = 0) -> JsonObject:
         return self._http.request(
             "POST",
             f"/tools/{quote(tool_ref, safe='')}/calls",
-            json_body=_body({**dict(input or {}), **kwargs}, tool_ref),
+            params={"wait": wait},
+            json_body={"input": dict(input), **({"runtimeId": runtime_id} if runtime_id else {})},
             idempotency_key=idempotency_key,
-            headers={"BCTRL-Runtime-Id": runtime_id} if runtime_id else None,
         )
-
-
-def _body(values: Mapping[str, Any], tool_ref: str) -> JsonObject:
-    # computer.use follows the vendor's snake_case wire schema.
-    return {(key if tool_ref == "computer.use" else _wire_key(key)): value
-            for key, value in values.items() if value is not None}
-
-
-def _wire_key(key: str) -> str:
-    head, *tail = key.split("_")
-    return head + "".join(part[:1].upper() + part[1:] for part in tail if part)

@@ -6,20 +6,16 @@ import typing
 
 from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
-from ..types.conversation import Conversation
-from ..types.conversation_cancel_response import ConversationCancelResponse
-from ..types.conversation_detail import ConversationDetail
-from ..types.conversation_event import ConversationEvent
+from ..types.conversation_delete_response import ConversationDeleteResponse
 from ..types.conversation_list_response import ConversationListResponse
-from ..types.conversation_start_accepted import ConversationStartAccepted
-from ..types.conversation_variables import ConversationVariables
+from ..types.conversation_record import ConversationRecord
+from ..types.json_object import JsonObject
+from ..types.rfc3339timestamp import Rfc3339Timestamp
 from .raw_client import AsyncRawConversationsClient, RawConversationsClient
 from .types.list_conversations_request_order import ListConversationsRequestOrder
-from .types.list_conversations_request_status import ListConversationsRequestStatus
 
 if typing.TYPE_CHECKING:
-    from .messages.client import AsyncMessagesClient, MessagesClient
-    from .turns.client import AsyncTurnsClient, TurnsClient
+    from .events.client import AsyncEventsClient, EventsClient
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
 
@@ -28,8 +24,7 @@ class ConversationsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._raw_client = RawConversationsClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
-        self._messages: typing.Optional[MessagesClient] = None
-        self._turns: typing.Optional[TurnsClient] = None
+        self._events: typing.Optional[EventsClient] = None
 
     @property
     def with_raw_response(self) -> RawConversationsClient:
@@ -45,12 +40,13 @@ class ConversationsClient:
     def list(
         self,
         *,
-        space_id: typing.Optional[str] = None,
-        runtime_id: typing.Optional[str] = None,
-        status: typing.Optional[ListConversationsRequestStatus] = None,
         cursor: typing.Optional[str] = None,
         order: typing.Optional[ListConversationsRequestOrder] = None,
         limit: typing.Optional[int] = None,
+        space_id: typing.Optional[str] = None,
+        agent: typing.Optional[str] = None,
+        from_: typing.Optional[Rfc3339Timestamp] = None,
+        to: typing.Optional[Rfc3339Timestamp] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> ConversationListResponse:
         """
@@ -58,19 +54,21 @@ class ConversationsClient:
 
         Parameters
         ----------
-        space_id : typing.Optional[str]
-            Filter by a prefixed space ID, or pass `default` to use the caller default space.
-
-        runtime_id : typing.Optional[str]
-
-        status : typing.Optional[ListConversationsRequestStatus]
-
         cursor : typing.Optional[str]
 
         order : typing.Optional[ListConversationsRequestOrder]
             Order by createdAt and ID. Defaults to desc.
 
         limit : typing.Optional[int]
+
+        space_id : typing.Optional[str]
+            Filter by a prefixed space ID, or pass `default` to use the caller default space.
+
+        agent : typing.Optional[str]
+
+        from_ : typing.Optional[Rfc3339Timestamp]
+
+        to : typing.Optional[Rfc3339Timestamp]
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -82,6 +80,8 @@ class ConversationsClient:
 
         Examples
         --------
+        import datetime
+
         from bctrl import Bctrl
 
         client = Bctrl(
@@ -89,104 +89,44 @@ class ConversationsClient:
             bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
             token="YOUR_TOKEN",
         )
-        client.conversations.list()
+        client.conversations.list(
+            from_=datetime.datetime.fromisoformat(
+                "2026-07-26 12:00:00+00:00",
+            ),
+            to=datetime.datetime.fromisoformat(
+                "2026-07-26 12:00:00+00:00",
+            ),
+        )
         """
         _response = self._raw_client.list(
-            space_id=space_id,
-            runtime_id=runtime_id,
-            status=status,
             cursor=cursor,
             order=order,
             limit=limit,
-            request_options=request_options,
-        )
-        return _response.data
-
-    def create(
-        self,
-        *,
-        runtime_id: str,
-        idempotency_key: typing.Optional[str] = None,
-        model: typing.Optional[str] = OMIT,
-        title: typing.Optional[str] = OMIT,
-        toolset_id: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> Conversation:
-        """
-        Create an agent conversation bound to an active runtime.
-
-        Parameters
-        ----------
-        runtime_id : str
-            Unique browser identifier generated by BCTRL.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        model : typing.Optional[str]
-
-        title : typing.Optional[str]
-
-        toolset_id : typing.Optional[str]
-            Unique toolset identifier generated by BCTRL.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        Conversation
-            Created
-
-        Examples
-        --------
-        from bctrl import Bctrl
-
-        client = Bctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-        client.conversations.create(
-            runtime_id="runtimeId",
-        )
-        """
-        _response = self._raw_client.create(
-            runtime_id=runtime_id,
-            idempotency_key=idempotency_key,
-            model=model,
-            title=title,
-            toolset_id=toolset_id,
+            space_id=space_id,
+            agent=agent,
+            from_=from_,
+            to=to,
             request_options=request_options,
         )
         return _response.data
 
     def get(
-        self,
-        conversation_id: str,
-        *,
-        message_cursor: typing.Optional[str] = None,
-        message_limit: typing.Optional[int] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> ConversationDetail:
+        self, conversation_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> ConversationRecord:
         """
-        Get a conversation with its durable messages and turns.
+        Get a runtime-free Conversation record; read its events for history.
 
         Parameters
         ----------
         conversation_id : str
             Unique conversation identifier generated by BCTRL.
 
-        message_cursor : typing.Optional[str]
-
-        message_limit : typing.Optional[int]
-
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        ConversationDetail
+        ConversationRecord
             OK
 
         Examples
@@ -202,23 +142,18 @@ class ConversationsClient:
             conversation_id="conversationId",
         )
         """
-        _response = self._raw_client.get(
-            conversation_id, message_cursor=message_cursor, message_limit=message_limit, request_options=request_options
-        )
+        _response = self._raw_client.get(conversation_id, request_options=request_options)
         return _response.data
 
-    def update(
+    def delete(
         self,
         conversation_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
-        model: typing.Optional[str] = OMIT,
-        title: typing.Optional[str] = OMIT,
-        toolset_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> Conversation:
+    ) -> ConversationDeleteResponse:
         """
-        Update the defaults used by future turns in a conversation.
+        Delete an idle Conversation and retire its workspace.
 
         Parameters
         ----------
@@ -228,19 +163,62 @@ class ConversationsClient:
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
 
-        model : typing.Optional[str]
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        ConversationDeleteResponse
+            OK
+
+        Examples
+        --------
+        from bctrl import Bctrl
+
+        client = Bctrl(
+            bctrl_space="YOUR_BCTRL_SPACE",
+            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
+            token="YOUR_TOKEN",
+        )
+        client.conversations.delete(
+            conversation_id="conversationId",
+        )
+        """
+        _response = self._raw_client.delete(
+            conversation_id, idempotency_key=idempotency_key, request_options=request_options
+        )
+        return _response.data
+
+    def update(
+        self,
+        conversation_id: str,
+        *,
+        idempotency_key: typing.Optional[str] = None,
+        metadata: typing.Optional[JsonObject] = OMIT,
+        title: typing.Optional[str] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> ConversationRecord:
+        """
+        Update a Conversation title and metadata.
+
+        Parameters
+        ----------
+        conversation_id : str
+            Unique conversation identifier generated by BCTRL.
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        metadata : typing.Optional[JsonObject]
 
         title : typing.Optional[str]
-
-        toolset_id : typing.Optional[str]
-            Unique toolset identifier generated by BCTRL.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        Conversation
+        ConversationRecord
             OK
 
         Examples
@@ -259,211 +237,26 @@ class ConversationsClient:
         _response = self._raw_client.update(
             conversation_id,
             idempotency_key=idempotency_key,
-            model=model,
+            metadata=metadata,
             title=title,
-            toolset_id=toolset_id,
-            request_options=request_options,
-        )
-        return _response.data
-
-    def cancel(
-        self,
-        conversation_id: str,
-        *,
-        idempotency_key: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> ConversationCancelResponse:
-        """
-        Cancel the active turn in a conversation.
-
-        Parameters
-        ----------
-        conversation_id : str
-            Unique conversation identifier generated by BCTRL.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        ConversationCancelResponse
-            OK
-
-        Examples
-        --------
-        from bctrl import Bctrl
-
-        client = Bctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-        client.conversations.cancel(
-            conversation_id="conversationId",
-        )
-        """
-        _response = self._raw_client.cancel(
-            conversation_id, idempotency_key=idempotency_key, request_options=request_options
-        )
-        return _response.data
-
-    def stream(
-        self,
-        conversation_id: str,
-        *,
-        after: typing.Optional[str] = None,
-        last_event_id: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> typing.Iterator[ConversationEvent]:
-        """
-        Stream normalized durable conversation events.
-
-        Parameters
-        ----------
-        conversation_id : str
-            Unique conversation identifier generated by BCTRL.
-
-        after : typing.Optional[str]
-
-        last_event_id : typing.Optional[str]
-            Optional last delivered event identifier used to resume an SSE stream.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Yields
-        ------
-        typing.Iterator[ConversationEvent]
-            Server-Sent Events stream of normalized conversation frames
-
-        Examples
-        --------
-        from bctrl import Bctrl
-
-        client = Bctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-        response = client.conversations.stream(
-            conversation_id="conversationId",
-        )
-        for chunk in response:
-            yield chunk
-        """
-        with self._raw_client.stream(
-            conversation_id, after=after, last_event_id=last_event_id, request_options=request_options
-        ) as r:
-            yield from r.data
-
-    def start(
-        self,
-        *,
-        runtime_id: str,
-        text: str,
-        idempotency_key: typing.Optional[str] = None,
-        file_ids: typing.Optional[typing.Sequence[str]] = OMIT,
-        model: typing.Optional[str] = OMIT,
-        page_id: typing.Optional[str] = OMIT,
-        start_runtime: typing.Optional[bool] = OMIT,
-        title: typing.Optional[str] = OMIT,
-        toolset_id: typing.Optional[str] = OMIT,
-        variables: typing.Optional[ConversationVariables] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> ConversationStartAccepted:
-        """
-        Create a conversation and queue its first agent turn in one call, starting the runtime when needed.
-
-        Parameters
-        ----------
-        runtime_id : str
-            Unique browser identifier generated by BCTRL.
-
-        text : str
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        file_ids : typing.Optional[typing.Sequence[str]]
-
-        model : typing.Optional[str]
-
-        page_id : typing.Optional[str]
-            Unique page identifier generated by BCTRL.
-
-        start_runtime : typing.Optional[bool]
-            Start the Runtime when it is stopped. When false, a stopped Runtime is rejected with a conflict.
-
-        title : typing.Optional[str]
-
-        toolset_id : typing.Optional[str]
-            Unique toolset identifier generated by BCTRL.
-
-        variables : typing.Optional[ConversationVariables]
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        ConversationStartAccepted
-            Accepted
-
-        Examples
-        --------
-        from bctrl import Bctrl
-
-        client = Bctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-        client.conversations.start(
-            runtime_id="runtimeId",
-            text="text",
-        )
-        """
-        _response = self._raw_client.start(
-            runtime_id=runtime_id,
-            text=text,
-            idempotency_key=idempotency_key,
-            file_ids=file_ids,
-            model=model,
-            page_id=page_id,
-            start_runtime=start_runtime,
-            title=title,
-            toolset_id=toolset_id,
-            variables=variables,
             request_options=request_options,
         )
         return _response.data
 
     @property
-    def messages(self):
-        if self._messages is None:
-            from .messages.client import MessagesClient  # noqa: E402
+    def events(self):
+        if self._events is None:
+            from .events.client import EventsClient  # noqa: E402
 
-            self._messages = MessagesClient(client_wrapper=self._client_wrapper)
-        return self._messages
-
-    @property
-    def turns(self):
-        if self._turns is None:
-            from .turns.client import TurnsClient  # noqa: E402
-
-            self._turns = TurnsClient(client_wrapper=self._client_wrapper)
-        return self._turns
+            self._events = EventsClient(client_wrapper=self._client_wrapper)
+        return self._events
 
 
 class AsyncConversationsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._raw_client = AsyncRawConversationsClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
-        self._messages: typing.Optional[AsyncMessagesClient] = None
-        self._turns: typing.Optional[AsyncTurnsClient] = None
+        self._events: typing.Optional[AsyncEventsClient] = None
 
     @property
     def with_raw_response(self) -> AsyncRawConversationsClient:
@@ -479,12 +272,13 @@ class AsyncConversationsClient:
     async def list(
         self,
         *,
-        space_id: typing.Optional[str] = None,
-        runtime_id: typing.Optional[str] = None,
-        status: typing.Optional[ListConversationsRequestStatus] = None,
         cursor: typing.Optional[str] = None,
         order: typing.Optional[ListConversationsRequestOrder] = None,
         limit: typing.Optional[int] = None,
+        space_id: typing.Optional[str] = None,
+        agent: typing.Optional[str] = None,
+        from_: typing.Optional[Rfc3339Timestamp] = None,
+        to: typing.Optional[Rfc3339Timestamp] = None,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> ConversationListResponse:
         """
@@ -492,19 +286,21 @@ class AsyncConversationsClient:
 
         Parameters
         ----------
-        space_id : typing.Optional[str]
-            Filter by a prefixed space ID, or pass `default` to use the caller default space.
-
-        runtime_id : typing.Optional[str]
-
-        status : typing.Optional[ListConversationsRequestStatus]
-
         cursor : typing.Optional[str]
 
         order : typing.Optional[ListConversationsRequestOrder]
             Order by createdAt and ID. Defaults to desc.
 
         limit : typing.Optional[int]
+
+        space_id : typing.Optional[str]
+            Filter by a prefixed space ID, or pass `default` to use the caller default space.
+
+        agent : typing.Optional[str]
+
+        from_ : typing.Optional[Rfc3339Timestamp]
+
+        to : typing.Optional[Rfc3339Timestamp]
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -517,6 +313,7 @@ class AsyncConversationsClient:
         Examples
         --------
         import asyncio
+        import datetime
 
         from bctrl import AsyncBctrl
 
@@ -528,115 +325,47 @@ class AsyncConversationsClient:
 
 
         async def main() -> None:
-            await client.conversations.list()
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.list(
-            space_id=space_id,
-            runtime_id=runtime_id,
-            status=status,
-            cursor=cursor,
-            order=order,
-            limit=limit,
-            request_options=request_options,
-        )
-        return _response.data
-
-    async def create(
-        self,
-        *,
-        runtime_id: str,
-        idempotency_key: typing.Optional[str] = None,
-        model: typing.Optional[str] = OMIT,
-        title: typing.Optional[str] = OMIT,
-        toolset_id: typing.Optional[str] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> Conversation:
-        """
-        Create an agent conversation bound to an active runtime.
-
-        Parameters
-        ----------
-        runtime_id : str
-            Unique browser identifier generated by BCTRL.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        model : typing.Optional[str]
-
-        title : typing.Optional[str]
-
-        toolset_id : typing.Optional[str]
-            Unique toolset identifier generated by BCTRL.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        Conversation
-            Created
-
-        Examples
-        --------
-        import asyncio
-
-        from bctrl import AsyncBctrl
-
-        client = AsyncBctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-
-
-        async def main() -> None:
-            await client.conversations.create(
-                runtime_id="runtimeId",
+            await client.conversations.list(
+                from_=datetime.datetime.fromisoformat(
+                    "2026-07-26 12:00:00+00:00",
+                ),
+                to=datetime.datetime.fromisoformat(
+                    "2026-07-26 12:00:00+00:00",
+                ),
             )
 
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.create(
-            runtime_id=runtime_id,
-            idempotency_key=idempotency_key,
-            model=model,
-            title=title,
-            toolset_id=toolset_id,
+        _response = await self._raw_client.list(
+            cursor=cursor,
+            order=order,
+            limit=limit,
+            space_id=space_id,
+            agent=agent,
+            from_=from_,
+            to=to,
             request_options=request_options,
         )
         return _response.data
 
     async def get(
-        self,
-        conversation_id: str,
-        *,
-        message_cursor: typing.Optional[str] = None,
-        message_limit: typing.Optional[int] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> ConversationDetail:
+        self, conversation_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> ConversationRecord:
         """
-        Get a conversation with its durable messages and turns.
+        Get a runtime-free Conversation record; read its events for history.
 
         Parameters
         ----------
         conversation_id : str
             Unique conversation identifier generated by BCTRL.
 
-        message_cursor : typing.Optional[str]
-
-        message_limit : typing.Optional[int]
-
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        ConversationDetail
+        ConversationRecord
             OK
 
         Examples
@@ -660,23 +389,18 @@ class AsyncConversationsClient:
 
         asyncio.run(main())
         """
-        _response = await self._raw_client.get(
-            conversation_id, message_cursor=message_cursor, message_limit=message_limit, request_options=request_options
-        )
+        _response = await self._raw_client.get(conversation_id, request_options=request_options)
         return _response.data
 
-    async def update(
+    async def delete(
         self,
         conversation_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
-        model: typing.Optional[str] = OMIT,
-        title: typing.Optional[str] = OMIT,
-        toolset_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> Conversation:
+    ) -> ConversationDeleteResponse:
         """
-        Update the defaults used by future turns in a conversation.
+        Delete an idle Conversation and retire its workspace.
 
         Parameters
         ----------
@@ -686,19 +410,70 @@ class AsyncConversationsClient:
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
 
-        model : typing.Optional[str]
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration.
+
+        Returns
+        -------
+        ConversationDeleteResponse
+            OK
+
+        Examples
+        --------
+        import asyncio
+
+        from bctrl import AsyncBctrl
+
+        client = AsyncBctrl(
+            bctrl_space="YOUR_BCTRL_SPACE",
+            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
+            token="YOUR_TOKEN",
+        )
+
+
+        async def main() -> None:
+            await client.conversations.delete(
+                conversation_id="conversationId",
+            )
+
+
+        asyncio.run(main())
+        """
+        _response = await self._raw_client.delete(
+            conversation_id, idempotency_key=idempotency_key, request_options=request_options
+        )
+        return _response.data
+
+    async def update(
+        self,
+        conversation_id: str,
+        *,
+        idempotency_key: typing.Optional[str] = None,
+        metadata: typing.Optional[JsonObject] = OMIT,
+        title: typing.Optional[str] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> ConversationRecord:
+        """
+        Update a Conversation title and metadata.
+
+        Parameters
+        ----------
+        conversation_id : str
+            Unique conversation identifier generated by BCTRL.
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        metadata : typing.Optional[JsonObject]
 
         title : typing.Optional[str]
-
-        toolset_id : typing.Optional[str]
-            Unique toolset identifier generated by BCTRL.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        Conversation
+        ConversationRecord
             OK
 
         Examples
@@ -725,225 +500,16 @@ class AsyncConversationsClient:
         _response = await self._raw_client.update(
             conversation_id,
             idempotency_key=idempotency_key,
-            model=model,
+            metadata=metadata,
             title=title,
-            toolset_id=toolset_id,
-            request_options=request_options,
-        )
-        return _response.data
-
-    async def cancel(
-        self,
-        conversation_id: str,
-        *,
-        idempotency_key: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> ConversationCancelResponse:
-        """
-        Cancel the active turn in a conversation.
-
-        Parameters
-        ----------
-        conversation_id : str
-            Unique conversation identifier generated by BCTRL.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        ConversationCancelResponse
-            OK
-
-        Examples
-        --------
-        import asyncio
-
-        from bctrl import AsyncBctrl
-
-        client = AsyncBctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-
-
-        async def main() -> None:
-            await client.conversations.cancel(
-                conversation_id="conversationId",
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.cancel(
-            conversation_id, idempotency_key=idempotency_key, request_options=request_options
-        )
-        return _response.data
-
-    async def stream(
-        self,
-        conversation_id: str,
-        *,
-        after: typing.Optional[str] = None,
-        last_event_id: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> typing.AsyncIterator[ConversationEvent]:
-        """
-        Stream normalized durable conversation events.
-
-        Parameters
-        ----------
-        conversation_id : str
-            Unique conversation identifier generated by BCTRL.
-
-        after : typing.Optional[str]
-
-        last_event_id : typing.Optional[str]
-            Optional last delivered event identifier used to resume an SSE stream.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Yields
-        ------
-        typing.AsyncIterator[ConversationEvent]
-            Server-Sent Events stream of normalized conversation frames
-
-        Examples
-        --------
-        import asyncio
-
-        from bctrl import AsyncBctrl
-
-        client = AsyncBctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-
-
-        async def main() -> None:
-            response = client.conversations.stream(
-                conversation_id="conversationId",
-            )
-            async for chunk in response:
-                yield chunk
-
-
-        asyncio.run(main())
-        """
-        async with self._raw_client.stream(
-            conversation_id, after=after, last_event_id=last_event_id, request_options=request_options
-        ) as r:
-            async for _chunk in r.data:
-                yield _chunk
-
-    async def start(
-        self,
-        *,
-        runtime_id: str,
-        text: str,
-        idempotency_key: typing.Optional[str] = None,
-        file_ids: typing.Optional[typing.Sequence[str]] = OMIT,
-        model: typing.Optional[str] = OMIT,
-        page_id: typing.Optional[str] = OMIT,
-        start_runtime: typing.Optional[bool] = OMIT,
-        title: typing.Optional[str] = OMIT,
-        toolset_id: typing.Optional[str] = OMIT,
-        variables: typing.Optional[ConversationVariables] = OMIT,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> ConversationStartAccepted:
-        """
-        Create a conversation and queue its first agent turn in one call, starting the runtime when needed.
-
-        Parameters
-        ----------
-        runtime_id : str
-            Unique browser identifier generated by BCTRL.
-
-        text : str
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        file_ids : typing.Optional[typing.Sequence[str]]
-
-        model : typing.Optional[str]
-
-        page_id : typing.Optional[str]
-            Unique page identifier generated by BCTRL.
-
-        start_runtime : typing.Optional[bool]
-            Start the Runtime when it is stopped. When false, a stopped Runtime is rejected with a conflict.
-
-        title : typing.Optional[str]
-
-        toolset_id : typing.Optional[str]
-            Unique toolset identifier generated by BCTRL.
-
-        variables : typing.Optional[ConversationVariables]
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        ConversationStartAccepted
-            Accepted
-
-        Examples
-        --------
-        import asyncio
-
-        from bctrl import AsyncBctrl
-
-        client = AsyncBctrl(
-            bctrl_space="YOUR_BCTRL_SPACE",
-            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
-            token="YOUR_TOKEN",
-        )
-
-
-        async def main() -> None:
-            await client.conversations.start(
-                runtime_id="runtimeId",
-                text="text",
-            )
-
-
-        asyncio.run(main())
-        """
-        _response = await self._raw_client.start(
-            runtime_id=runtime_id,
-            text=text,
-            idempotency_key=idempotency_key,
-            file_ids=file_ids,
-            model=model,
-            page_id=page_id,
-            start_runtime=start_runtime,
-            title=title,
-            toolset_id=toolset_id,
-            variables=variables,
             request_options=request_options,
         )
         return _response.data
 
     @property
-    def messages(self):
-        if self._messages is None:
-            from .messages.client import AsyncMessagesClient  # noqa: E402
+    def events(self):
+        if self._events is None:
+            from .events.client import AsyncEventsClient  # noqa: E402
 
-            self._messages = AsyncMessagesClient(client_wrapper=self._client_wrapper)
-        return self._messages
-
-    @property
-    def turns(self):
-        if self._turns is None:
-            from .turns.client import AsyncTurnsClient  # noqa: E402
-
-            self._turns = AsyncTurnsClient(client_wrapper=self._client_wrapper)
-        return self._turns
+            self._events = AsyncEventsClient(client_wrapper=self._client_wrapper)
+        return self._events

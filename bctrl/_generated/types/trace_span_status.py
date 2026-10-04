@@ -3,6 +3,5 @@
 import typing
 
 TraceSpanStatus = typing.Union[
-    typing.Literal["queued", "running", "requires_input", "suspended", "succeeded", "failed", "cancelled", "timed_out"],
-    typing.Any,
+    typing.Literal["queued", "running", "awaiting_input", "succeeded", "failed", "canceled", "unknown"], typing.Any
 ]

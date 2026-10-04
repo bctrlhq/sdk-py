@@ -229,6 +229,557 @@ client.account.update()
 </dl>
 </details>
 
+## agents
+<details><summary><code>client.agents.<a href="src/bctrl/agents/client.py">list</a>(...) -> AgentsListResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List Agent definitions visible in the selected Space or tenant, with their promoted immutable version.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.agents.list(
+    name="Production browser",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**cursor:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**order:** `typing.Optional[ListAgentsRequestOrder]` — Order by createdAt and ID. Defaults to desc.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `typing.Optional[ResourceName]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agents.<a href="src/bctrl/agents/client.py">create</a>(...) -> Agent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create an Agent and its first immutable, promoted version in a Space.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.agents.create(
+    model="model",
+    name="Production browser",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**model:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `ResourceName` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**instructions:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**memory:** `typing.Optional[AgentCreateRequestMemory]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**metadata:** `typing.Optional[JsonObject]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**require_approval_for_promotion:** `typing.Optional[bool]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**scope:** `typing.Optional[AgentCreateRequestScope]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[str]` — Opaque resource ID or unique resource name in the selected Space or tenant.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**tools:** `typing.Optional[typing.List[str]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agents.<a href="src/bctrl/agents/client.py">get</a>(...) -> Agent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Read an Agent by ID or scoped name, including its promoted version and latest draft number.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.agents.get(
+    agent_id="agentId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agents.<a href="src/bctrl/agents/client.py">delete</a>(...) -> AgentsDeleteResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Archive an Agent definition. Existing Tasks and immutable version history remain available.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.agents.delete(
+    agent_id="agentId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agents.<a href="src/bctrl/agents/client.py">update</a>(...) -> Agent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Append an immutable Agent version. Tasks keep their selected version and the promoted version changes only on promotion.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.agents.update(
+    agent_id="agentId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**instructions:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**memory:** `typing.Optional[AgentUpdateRequestMemory]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**metadata:** `typing.Optional[JsonObject]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**model:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `typing.Optional[ResourceName]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**require_approval_for_promotion:** `typing.Optional[bool]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**scope:** `typing.Optional[AgentUpdateRequestScope]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**tools:** `typing.Optional[typing.List[str]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## ApiKeys
 <details><summary><code>client.api_keys.<a href="src/bctrl/api_keys/client.py">list</a>(...) -> ApiKeyListResponse</code></summary>
 <dl>
@@ -1711,13 +2262,17 @@ List durable agent conversations.
 ```python
 from bctrl import Bctrl
 from bctrl.environment import BctrlEnvironment
+import datetime
 
 client = Bctrl(
     token="<token>",
     environment=BctrlEnvironment.PRODUCTION,
 )
 
-client.conversations.list()
+client.conversations.list(
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+)
 
 ```
 </dd>
@@ -1729,30 +2284,6 @@ client.conversations.list()
 
 <dl>
 <dd>
-
-<dl>
-<dd>
-
-**space_id:** `typing.Optional[str]` — Filter by a prefixed space ID, or pass `default` to use the caller default space.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**runtime_id:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**status:** `typing.Optional[ListConversationsRequestStatus]` 
-    
-</dd>
-</dl>
 
 <dl>
 <dd>
@@ -1781,72 +2312,7 @@ client.conversations.list()
 <dl>
 <dd>
 
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.conversations.<a href="src/bctrl/conversations/client.py">create</a>(...) -> Conversation</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Create an agent conversation bound to an active runtime.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.conversations.create(
-    runtime_id="runtimeId",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**runtime_id:** `str` — Unique browser identifier generated by BCTRL.
+**space_id:** `typing.Optional[str]` — Filter by a prefixed space ID, or pass `default` to use the caller default space.
     
 </dd>
 </dl>
@@ -1854,7 +2320,7 @@ client.conversations.create(
 <dl>
 <dd>
 
-**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+**agent:** `typing.Optional[str]` 
     
 </dd>
 </dl>
@@ -1862,7 +2328,7 @@ client.conversations.create(
 <dl>
 <dd>
 
-**model:** `typing.Optional[str]` 
+**from:** `typing.Optional[Rfc3339Timestamp]` 
     
 </dd>
 </dl>
@@ -1870,15 +2336,7 @@ client.conversations.create(
 <dl>
 <dd>
 
-**title:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**toolset_id:** `typing.Optional[str]` — Unique toolset identifier generated by BCTRL.
+**to:** `typing.Optional[Rfc3339Timestamp]` 
     
 </dd>
 </dl>
@@ -1898,7 +2356,7 @@ client.conversations.create(
 </dl>
 </details>
 
-<details><summary><code>client.conversations.<a href="src/bctrl/conversations/client.py">get</a>(...) -> ConversationDetail</code></summary>
+<details><summary><code>client.conversations.<a href="src/bctrl/conversations/client.py">get</a>(...) -> ConversationRecord</code></summary>
 <dl>
 <dd>
 
@@ -1910,7 +2368,7 @@ client.conversations.create(
 <dl>
 <dd>
 
-Get a conversation with its durable messages and turns.
+Get a runtime-free Conversation record; read its events for history.
 </dd>
 </dl>
 </dd>
@@ -1959,7 +2417,72 @@ client.conversations.get(
 <dl>
 <dd>
 
-**message_cursor:** `typing.Optional[str]` 
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.conversations.<a href="src/bctrl/conversations/client.py">delete</a>(...) -> ConversationDeleteResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete an idle Conversation and retire its workspace.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.conversations.delete(
+    conversation_id="conversationId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**conversation_id:** `str` — Unique conversation identifier generated by BCTRL.
     
 </dd>
 </dl>
@@ -1967,7 +2490,7 @@ client.conversations.get(
 <dl>
 <dd>
 
-**message_limit:** `typing.Optional[int]` 
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
     
 </dd>
 </dl>
@@ -1987,7 +2510,7 @@ client.conversations.get(
 </dl>
 </details>
 
-<details><summary><code>client.conversations.<a href="src/bctrl/conversations/client.py">update</a>(...) -> Conversation</code></summary>
+<details><summary><code>client.conversations.<a href="src/bctrl/conversations/client.py">update</a>(...) -> ConversationRecord</code></summary>
 <dl>
 <dd>
 
@@ -1999,7 +2522,7 @@ client.conversations.get(
 <dl>
 <dd>
 
-Update the defaults used by future turns in a conversation.
+Update a Conversation title and metadata.
 </dd>
 </dl>
 </dd>
@@ -2056,7 +2579,7 @@ client.conversations.update(
 <dl>
 <dd>
 
-**model:** `typing.Optional[str]` 
+**metadata:** `typing.Optional[JsonObject]` 
     
 </dd>
 </dl>
@@ -2065,330 +2588,6 @@ client.conversations.update(
 <dd>
 
 **title:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**toolset_id:** `typing.Optional[str]` — Unique toolset identifier generated by BCTRL.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.conversations.<a href="src/bctrl/conversations/client.py">cancel</a>(...) -> ConversationCancelResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Cancel the active turn in a conversation.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.conversations.cancel(
-    conversation_id="conversationId",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**conversation_id:** `str` — Unique conversation identifier generated by BCTRL.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.conversations.<a href="src/bctrl/conversations/client.py">stream</a>(...) -> typing.Iterator[bytes]</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Stream normalized durable conversation events.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.conversations.stream(
-    conversation_id="conversationId",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**conversation_id:** `str` — Unique conversation identifier generated by BCTRL.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**after:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**last_event_id:** `typing.Optional[str]` — Optional last delivered event identifier used to resume an SSE stream.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.conversations.<a href="src/bctrl/conversations/client.py">start</a>(...) -> ConversationStartAccepted</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Create a conversation and queue its first agent turn in one call, starting the runtime when needed.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.conversations.start(
-    runtime_id="runtimeId",
-    text="text",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**runtime_id:** `str` — Unique browser identifier generated by BCTRL.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**text:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**file_ids:** `typing.Optional[typing.List[str]]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**model:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**page_id:** `typing.Optional[str]` — Unique page identifier generated by BCTRL.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**start_runtime:** `typing.Optional[bool]` — Start the Runtime when it is stopped. When false, a stopped Runtime is rejected with a conflict.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**title:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**toolset_id:** `typing.Optional[str]` — Unique toolset identifier generated by BCTRL.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**variables:** `typing.Optional[ConversationVariables]` 
     
 </dd>
 </dl>
@@ -5858,7 +6057,7 @@ client.secrets.update(
 <dl>
 <dd>
 
-Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Task agents, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
 </dd>
 </dl>
 </dd>
@@ -6998,6 +7197,528 @@ client.subaccounts.archive(
 </dl>
 </details>
 
+## tasks
+<details><summary><code>client.tasks.<a href="src/bctrl/tasks/client.py">list</a>(...) -> TasksListResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List Tasks by Agent, Conversation, status and time in the selected tenant or Space.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+import datetime
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.tasks.list(
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**cursor:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**order:** `typing.Optional[ListTasksRequestOrder]` — Order by createdAt and ID. Defaults to desc.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**agent:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**conversation:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**status:** `typing.Optional[ListTasksRequestStatus]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**from:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**to:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.tasks.<a href="src/bctrl/tasks/client.py">create</a>(...) -> Task</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Run an Agent on the input in a new or existing idle Conversation. The Task starts queued; read or wait on it with GET /v1/tasks/{taskId}.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.tasks.create(
+    agent="agent",
+    input="input",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent:** `str` — Opaque resource ID or unique resource name in the selected Space or tenant.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**input:** `TaskInput` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**conversation:** `typing.Optional[str]` — Unique conversation identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**metadata:** `typing.Optional[JsonObject]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**output_schema:** `typing.Optional[JsonObject]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[str]` — Opaque resource ID or unique resource name in the selected Space or tenant.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**version:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.tasks.<a href="src/bctrl/tasks/client.py">get</a>(...) -> Task</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Read Task status, structured output, artifacts, input request, Browser Runs and usage. Wait ends when the Task finishes or requests input.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.tasks.get(
+    task_id="taskId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**task_id:** `str` — Unique task identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**wait:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.tasks.<a href="src/bctrl/tasks/client.py">cancel</a>(...) -> Task</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Cancel the Task and revoke its delegated credential. Its Conversation remains busy until native cleanup is acknowledged.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.tasks.cancel(
+    task_id="taskId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**task_id:** `str` — Unique task identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.tasks.<a href="src/bctrl/tasks/client.py">input</a>(...) -> Task</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Answer its current input request by requestId, or steer a running Task. Approval applies only its immutable stored proposal.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.tasks.input(
+    task_id="taskId",
+    input={"key": "value"},
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**task_id:** `str` — Unique task identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**input:** `JsonValue` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_id:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## ToolCalls
 <details><summary><code>client.tool_calls.<a href="src/bctrl/tool_calls/client.py">list</a>(...) -> ToolCallListResponse</code></summary>
 <dl>
@@ -7066,7 +7787,7 @@ client.tool_calls.list()
 <dl>
 <dd>
 
-**turn_id:** `typing.Optional[str]` 
+**task_id:** `typing.Optional[str]` 
     
 </dd>
 </dl>
@@ -7188,6 +7909,14 @@ client.tool_calls.get(
 <dd>
 
 **tool_call_id:** `str` — Unique toolCall identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**wait:** `typing.Optional[int]` 
     
 </dd>
 </dl>
@@ -7567,7 +8296,7 @@ client.tools.list()
 <dl>
 <dd>
 
-Create an organization custom callable tool. Agents can use these tools through space toolsets during hosted work.
+Create an organization custom callable tool. Agents select these tools in their immutable version definitions.
 </dd>
 </dl>
 </dd>
@@ -7900,14 +8629,6 @@ client.tools.update(
 <dl>
 <dd>
 
-**modes:** `typing.Optional[typing.List[ToolUpdateRequestModesItem]]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **output_schema:** `typing.Optional[JsonObject]` 
     
 </dd>
@@ -7917,564 +8638,6 @@ client.tools.update(
 <dd>
 
 **runtime_types:** `typing.Optional[typing.List[ToolUpdateRequestRuntimeTypesItem]]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.tools.<a href="src/bctrl/tools/client.py">call</a>(...) -> JsonValue</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Call a synchronous tool and wait for its validated result.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.tools.call(
-    tool_ref="toolRef",
-    request={},
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**tool_ref:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request:** `JsonObject` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**bctrl_runtime_id:** `typing.Optional[str]` — Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-## toolsets
-<details><summary><code>client.toolsets.<a href="src/bctrl/toolsets/client.py">list</a>(...) -> ToolsetListResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-List reusable tool bundles in a space using the simplified response envelope.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.toolsets.list()
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**space_id:** `typing.Optional[str]` — Filter by a prefixed space ID, or pass `default` to use the caller default space.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**cursor:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**order:** `typing.Optional[ListToolsetsRequestOrder]` — Order by createdAt and ID. Defaults to desc.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**limit:** `typing.Optional[int]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.toolsets.<a href="src/bctrl/toolsets/client.py">create</a>(...) -> Toolset</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Create an ordered reusable bundle of built-in and custom tools.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.toolsets.create(
-    name="Production browser",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**name:** `ResourceName` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**description:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**space_id:** `typing.Optional[ToolsetCreateRequestSpaceId]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**tools:** `typing.Optional[typing.List[ToolsetCreateRequestToolsItem]]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.toolsets.<a href="src/bctrl/toolsets/client.py">get</a>(...) -> Toolset</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Get one toolset, including enabled built-in capabilities, custom tool IDs, and metadata.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.toolsets.get(
-    toolset_id="toolsetId",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**toolset_id:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.toolsets.<a href="src/bctrl/toolsets/client.py">delete</a>(...) -> ToolsetDeleteResponse</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Delete a toolset when it should no longer be used for new work.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.toolsets.delete(
-    toolset_id="toolsetId",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**toolset_id:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.toolsets.<a href="src/bctrl/toolsets/client.py">update</a>(...) -> Toolset</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Update a reusable tool bundle by changing its name, built-in capabilities, custom tools, or metadata.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.toolsets.update(
-    toolset_id="toolsetId",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**toolset_id:** `str` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**description:** `typing.Optional[str]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**name:** `typing.Optional[ResourceName]` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**tools:** `typing.Optional[typing.List[ToolsetUpdateRequestToolsItem]]` 
     
 </dd>
 </dl>
@@ -8733,7 +8896,7 @@ client.views.create(
 <dl>
 <dd>
 
-**conversation_send:** `typing.Optional[bool]` — Allow sending messages to and cancelling turns in the included conversations. Defaults to the value of control.
+**conversation_send:** `typing.Optional[bool]` — Allow giving input to and cancelling Tasks in the included conversations. Defaults to the value of control.
     
 </dd>
 </dl>
@@ -9658,6 +9821,276 @@ client.account.spending_cap.update(
 <dd>
 
 **request:** `SpendingCapPatchRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Agents Versions
+<details><summary><code>client.agents.versions.<a href="src/bctrl/agents/versions/client.py">list</a>(...) -> AgentsVersionsListResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List immutable versions of an Agent in creation order.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.agents.versions.list(
+    agent_id="agentId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cursor:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**order:** `typing.Optional[ListVersionsRequestOrder]` — Order by createdAt and ID. Defaults to desc.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agents.versions.<a href="src/bctrl/agents/versions/client.py">get</a>(...) -> AgentVersion</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Read the immutable definition of one numbered Agent version.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.agents.versions.get(
+    agent_id="agentId",
+    version=1,
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**version:** `int` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.agents.versions.<a href="src/bctrl/agents/versions/client.py">promote</a>(...) -> Agent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Select an immutable version for future Tasks. When approval is required, a person must promote it or answer the stored Task approval request.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.agents.versions.promote(
+    agent_id="agentId",
+    version=1,
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**agent_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**version:** `int` 
     
 </dd>
 </dl>
@@ -14287,8 +14720,8 @@ client.browsers.computer.clipboard.write(
 </dl>
 </details>
 
-## Conversations Messages
-<details><summary><code>client.conversations.messages.<a href="src/bctrl/conversations/messages/client.py">create</a>(...) -> AgentTurnAccepted</code></summary>
+## Conversations Events
+<details><summary><code>client.conversations.events.<a href="src/bctrl/conversations/events/client.py">list</a>(...) -> ConversationsEventsListResponse</code></summary>
 <dl>
 <dd>
 
@@ -14300,7 +14733,7 @@ client.browsers.computer.clipboard.write(
 <dl>
 <dd>
 
-Append a user message and start one agent turn.
+Read canonical Conversation history across its Tasks. Events inside runtimes remain in each Run log.
 </dd>
 </dl>
 </dd>
@@ -14317,15 +14750,17 @@ Append a user message and start one agent turn.
 ```python
 from bctrl import Bctrl
 from bctrl.environment import BctrlEnvironment
+import datetime
 
 client = Bctrl(
     token="<token>",
     environment=BctrlEnvironment.PRODUCTION,
 )
 
-client.conversations.messages.create(
+client.conversations.events.list(
     conversation_id="conversationId",
-    text="text",
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
 )
 
 ```
@@ -14350,7 +14785,7 @@ client.conversations.messages.create(
 <dl>
 <dd>
 
-**text:** `str` 
+**category:** `typing.Optional[ListEventsRequestCategory]` 
     
 </dd>
 </dl>
@@ -14358,7 +14793,7 @@ client.conversations.messages.create(
 <dl>
 <dd>
 
-**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+**type:** `typing.Optional[typing.Union[str, typing.Sequence[str]]]` 
     
 </dd>
 </dl>
@@ -14366,7 +14801,7 @@ client.conversations.messages.create(
 <dl>
 <dd>
 
-**file_ids:** `typing.Optional[typing.List[str]]` 
+**actor:** `typing.Optional[str]` — Actor ID.
     
 </dd>
 </dl>
@@ -14374,7 +14809,7 @@ client.conversations.messages.create(
 <dl>
 <dd>
 
-**model:** `typing.Optional[str]` 
+**actor_type:** `typing.Optional[ListEventsRequestActorType]` 
     
 </dd>
 </dl>
@@ -14382,7 +14817,7 @@ client.conversations.messages.create(
 <dl>
 <dd>
 
-**page_id:** `typing.Optional[str]` — Unique page identifier generated by BCTRL.
+**channel:** `typing.Optional[ListEventsRequestChannel]` 
     
 </dd>
 </dl>
@@ -14390,7 +14825,47 @@ client.conversations.messages.create(
 <dl>
 <dd>
 
-**variables:** `typing.Optional[ConversationVariables]` 
+**outcome:** `typing.Optional[ListEventsRequestOutcome]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**from:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**to:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cursor:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**order:** `typing.Optional[ListEventsRequestOrder]` — Order by createdAt and ID. Defaults to desc.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` 
     
 </dd>
 </dl>
@@ -14410,8 +14885,7 @@ client.conversations.messages.create(
 </dl>
 </details>
 
-## Conversations Turns
-<details><summary><code>client.conversations.turns.<a href="src/bctrl/conversations/turns/client.py">get</a>(...) -> AgentTurn</code></summary>
+<details><summary><code>client.conversations.events.<a href="src/bctrl/conversations/events/client.py">stream</a>(...) -> typing.Iterator[bytes]</code></summary>
 <dl>
 <dd>
 
@@ -14423,7 +14897,7 @@ client.conversations.messages.create(
 <dl>
 <dd>
 
-Get one agent turn with its status and execution attribution.
+Resume canonical Conversation history by Event ID. The stream stays pinned to this Conversation and rechecks reader authority; heartbeats are SSE comments.
 </dd>
 </dl>
 </dd>
@@ -14440,15 +14914,18 @@ Get one agent turn with its status and execution attribution.
 ```python
 from bctrl import Bctrl
 from bctrl.environment import BctrlEnvironment
+import datetime
 
 client = Bctrl(
     token="<token>",
     environment=BctrlEnvironment.PRODUCTION,
 )
 
-client.conversations.turns.get(
+client.conversations.events.stream(
     conversation_id="conversationId",
-    turn_id="turnId",
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    after="evt_uAAAAAAAAAAAAAAAAAAAAAA",
 )
 
 ```
@@ -14473,7 +14950,7 @@ client.conversations.turns.get(
 <dl>
 <dd>
 
-**turn_id:** `str` — Unique agentTurn identifier generated by BCTRL.
+**category:** `typing.Optional[StreamEventsRequestCategory]` 
     
 </dd>
 </dl>
@@ -14481,7 +14958,7 @@ client.conversations.turns.get(
 <dl>
 <dd>
 
-**wait:** `typing.Optional[int]` 
+**type:** `typing.Optional[typing.Union[str, typing.Sequence[str]]]` 
     
 </dd>
 </dl>
@@ -14489,73 +14966,7 @@ client.conversations.turns.get(
 <dl>
 <dd>
 
-**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.conversations.turns.<a href="src/bctrl/conversations/turns/client.py">cancel</a>(...) -> AgentTurn</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Cancel one specific agent turn.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```python
-from bctrl import Bctrl
-from bctrl.environment import BctrlEnvironment
-
-client = Bctrl(
-    token="<token>",
-    environment=BctrlEnvironment.PRODUCTION,
-)
-
-client.conversations.turns.cancel(
-    conversation_id="conversationId",
-    turn_id="turnId",
-)
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**conversation_id:** `str` — Unique conversation identifier generated by BCTRL.
+**actor:** `typing.Optional[str]` — Actor ID.
     
 </dd>
 </dl>
@@ -14563,7 +14974,7 @@ client.conversations.turns.cancel(
 <dl>
 <dd>
 
-**turn_id:** `str` — Unique agentTurn identifier generated by BCTRL.
+**actor_type:** `typing.Optional[StreamEventsRequestActorType]` 
     
 </dd>
 </dl>
@@ -14571,7 +14982,47 @@ client.conversations.turns.cancel(
 <dl>
 <dd>
 
-**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+**channel:** `typing.Optional[StreamEventsRequestChannel]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**outcome:** `typing.Optional[StreamEventsRequestOutcome]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**from:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**to:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**after:** `typing.Optional[str]` — Resume after this Event ID from the same Conversation history.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**last_event_id:** `typing.Optional[str]` — Optional last delivered event identifier used to resume an SSE stream.
     
 </dd>
 </dl>
@@ -14758,7 +15209,7 @@ client.environments.connections.delete(
 <dl>
 <dd>
 
-Open direct terminal access to a ready Environment. Returns a WebSocket URL and a one-time ticket. Refused while a managed conversation turn is using the Environment.
+Open direct terminal access to a ready Environment. Returns a WebSocket URL and a one-time ticket. Refused while a Task is using the Environment.
 </dd>
 </dl>
 </dd>
@@ -17585,6 +18036,458 @@ client.subaccounts.usage.list()
 </dl>
 </details>
 
+## Tasks Events
+<details><summary><code>client.tasks.events.<a href="src/bctrl/tasks/events/client.py">list</a>(...) -> TasksEventsListResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Read the Task’s canonical history. Events inside its runtimes remain in each Run log.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+import datetime
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.tasks.events.list(
+    task_id="taskId",
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**task_id:** `str` — Unique task identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**category:** `typing.Optional[ListEventsRequestCategory]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type:** `typing.Optional[typing.Union[str, typing.Sequence[str]]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor:** `typing.Optional[str]` — Actor ID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor_type:** `typing.Optional[ListEventsRequestActorType]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**channel:** `typing.Optional[ListEventsRequestChannel]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**outcome:** `typing.Optional[ListEventsRequestOutcome]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**from:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**to:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cursor:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**order:** `typing.Optional[ListEventsRequestOrder]` — Order by createdAt and ID. Defaults to desc.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.tasks.events.<a href="src/bctrl/tasks/events/client.py">stream</a>(...) -> typing.Iterator[bytes]</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Resume canonical Task history by Event ID. The stream stays pinned to this Task and rechecks reader authority.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+import datetime
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.tasks.events.stream(
+    task_id="taskId",
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    after="evt_uAAAAAAAAAAAAAAAAAAAAAA",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**task_id:** `str` — Unique task identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**category:** `typing.Optional[StreamEventsRequestCategory]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**type:** `typing.Optional[typing.Union[str, typing.Sequence[str]]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor:** `typing.Optional[str]` — Actor ID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**actor_type:** `typing.Optional[StreamEventsRequestActorType]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**channel:** `typing.Optional[StreamEventsRequestChannel]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**outcome:** `typing.Optional[StreamEventsRequestOutcome]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**from:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**to:** `typing.Optional[Rfc3339Timestamp]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**after:** `typing.Optional[str]` — Resume after this Event ID from the same Task history.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**last_event_id:** `typing.Optional[str]` — Optional last delivered event identifier used to resume an SSE stream.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Tasks Trace
+<details><summary><code>client.tasks.trace.<a href="src/bctrl/tasks/trace/client.py">list</a>(...) -> TasksTraceListResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Page spans across the Runs opened by this Task, retaining each Run and parent span ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.tasks.trace.list(
+    task_id="taskId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**task_id:** `str` — Unique task identifier generated by BCTRL.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**parent_id:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**kind:** `typing.Optional[ListTraceRequestKind]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**status:** `typing.Optional[ListTraceRequestStatus]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**resource_type:** `typing.Optional[ListTraceRequestResourceType]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cursor:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**order:** `typing.Optional[ListTraceRequestOrder]` — Order by createdAt and ID. Defaults to desc.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Tools Calls
 <details><summary><code>client.tools.calls.<a href="src/bctrl/tools/calls/client.py">create</a>(...) -> ToolCall</code></summary>
 <dl>
@@ -17598,7 +18501,7 @@ client.subaccounts.usage.list()
 <dl>
 <dd>
 
-Start one durable asynchronous tool call.
+Create a durable ToolCall and optionally wait for its status.
 </dd>
 </dl>
 </dd>
@@ -17623,7 +18526,7 @@ client = Bctrl(
 
 client.tools.calls.create(
     tool_ref="toolRef",
-    request={},
+    input={},
 )
 
 ```
@@ -17648,7 +18551,7 @@ client.tools.calls.create(
 <dl>
 <dd>
 
-**request:** `JsonObject` 
+**input:** `JsonObject` 
     
 </dd>
 </dl>
@@ -17656,7 +18559,7 @@ client.tools.calls.create(
 <dl>
 <dd>
 
-**bctrl_runtime_id:** `typing.Optional[str]` — Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.
+**wait:** `typing.Optional[int]` 
     
 </dd>
 </dl>
@@ -17665,6 +18568,14 @@ client.tools.calls.create(
 <dd>
 
 **idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**runtime_id:** `typing.Optional[str]` — Unique browser identifier generated by BCTRL.
     
 </dd>
 </dl>

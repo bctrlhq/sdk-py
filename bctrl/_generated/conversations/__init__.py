@@ -6,13 +6,15 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .types import ListConversationsRequestOrder, ListConversationsRequestStatus
-    from . import messages, turns
+    from .types import ListConversationsRequestOrder
+    from . import events
+    from .events import ListEventsRequestActorType, ListEventsRequestOrder, StreamEventsRequestActorType
 _dynamic_imports: typing.Dict[str, str] = {
     "ListConversationsRequestOrder": ".types",
-    "ListConversationsRequestStatus": ".types",
-    "messages": ".messages",
-    "turns": ".turns",
+    "ListEventsRequestActorType": ".events",
+    "ListEventsRequestOrder": ".events",
+    "StreamEventsRequestActorType": ".events",
+    "events": ".events",
 }
 
 
@@ -37,4 +39,10 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["ListConversationsRequestOrder", "ListConversationsRequestStatus", "messages", "turns"]
+__all__ = [
+    "ListConversationsRequestOrder",
+    "ListEventsRequestActorType",
+    "ListEventsRequestOrder",
+    "StreamEventsRequestActorType",
+    "events",
+]

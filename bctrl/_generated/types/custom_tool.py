@@ -7,7 +7,6 @@ import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .custom_tool_implementation import CustomToolImplementation
-from .custom_tool_modes_item import CustomToolModesItem
 from .custom_tool_object import CustomToolObject
 from .custom_tool_runtime_types_item import CustomToolRuntimeTypesItem
 from .json_object import JsonObject
@@ -37,7 +36,6 @@ class CustomTool(UniversalBaseModel):
     input_schema: typing_extensions.Annotated[
         JsonObject, FieldMetadata(alias="inputSchema"), pydantic.Field(alias="inputSchema")
     ]
-    modes: typing.List[CustomToolModesItem]
     name: str
     object: CustomToolObject
     output_schema: typing_extensions.Annotated[

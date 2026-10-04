@@ -15,7 +15,6 @@ if typing.TYPE_CHECKING:
     from .tool_update_request_implementation_code import ToolUpdateRequestImplementationCode
     from .tool_update_request_implementation_code_language import ToolUpdateRequestImplementationCodeLanguage
     from .tool_update_request_implementation_webhook import ToolUpdateRequestImplementationWebhook
-    from .tool_update_request_modes_item import ToolUpdateRequestModesItem
     from .tool_update_request_runtime_types_item import ToolUpdateRequestRuntimeTypesItem
 _dynamic_imports: typing.Dict[str, str] = {
     "ListToolsRequestOrder": ".list_tools_request_order",
@@ -25,7 +24,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ToolUpdateRequestImplementationWebhook": ".tool_update_request_implementation_webhook",
     "ToolUpdateRequestImplementation_Code": ".tool_update_request_implementation",
     "ToolUpdateRequestImplementation_Webhook": ".tool_update_request_implementation",
-    "ToolUpdateRequestModesItem": ".tool_update_request_modes_item",
     "ToolUpdateRequestRuntimeTypesItem": ".tool_update_request_runtime_types_item",
 }
 
@@ -59,6 +57,5 @@ __all__ = [
     "ToolUpdateRequestImplementationWebhook",
     "ToolUpdateRequestImplementation_Code",
     "ToolUpdateRequestImplementation_Webhook",
-    "ToolUpdateRequestModesItem",
     "ToolUpdateRequestRuntimeTypesItem",
 ]

@@ -145,7 +145,7 @@ class RawViewsClient:
             Allow live browser interaction and actions from the notification center.
 
         conversation_send : typing.Optional[bool]
-            Allow sending messages to and cancelling turns in the included conversations. Defaults to the value of control.
+            Allow giving input to and cancelling Tasks in the included conversations. Defaults to the value of control.
 
         expires_in_seconds : typing.Optional[int]
             View lifetime in seconds. Defaults to 8 hours; maximum 30 days.
@@ -567,7 +567,7 @@ class AsyncRawViewsClient:
             Allow live browser interaction and actions from the notification center.
 
         conversation_send : typing.Optional[bool]
-            Allow sending messages to and cancelling turns in the included conversations. Defaults to the value of control.
+            Allow giving input to and cancelling Tasks in the included conversations. Defaults to the value of control.
 
         expires_in_seconds : typing.Optional[int]
             View lifetime in seconds. Defaults to 8 hours; maximum 30 days.

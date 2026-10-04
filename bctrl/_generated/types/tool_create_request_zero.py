@@ -8,7 +8,6 @@ from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .json_object import JsonObject
 from .tool_create_request_zero_implementation import ToolCreateRequestZeroImplementation
-from .tool_create_request_zero_modes_item import ToolCreateRequestZeroModesItem
 from .tool_create_request_zero_runtime_types_item import ToolCreateRequestZeroRuntimeTypesItem
 from .tool_create_request_zero_space_id import ToolCreateRequestZeroSpaceId
 
@@ -19,7 +18,6 @@ class ToolCreateRequestZero(UniversalBaseModel):
     input_schema: typing_extensions.Annotated[
         JsonObject, FieldMetadata(alias="inputSchema"), pydantic.Field(alias="inputSchema")
     ]
-    modes: typing.Optional[typing.List[ToolCreateRequestZeroModesItem]] = None
     name: str
     output_schema: typing_extensions.Annotated[
         JsonObject, FieldMetadata(alias="outputSchema"), pydantic.Field(alias="outputSchema")

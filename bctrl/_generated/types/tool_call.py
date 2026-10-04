@@ -9,9 +9,12 @@ import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .rfc3339timestamp import Rfc3339Timestamp
-from .tool_call_cancelled_caller_type import ToolCallCancelledCallerType
-from .tool_call_cancelled_object import ToolCallCancelledObject
-from .tool_call_cancelled_tool import ToolCallCancelledTool
+from .tool_call_awaiting_input_caller_type import ToolCallAwaitingInputCallerType
+from .tool_call_awaiting_input_object import ToolCallAwaitingInputObject
+from .tool_call_awaiting_input_tool import ToolCallAwaitingInputTool
+from .tool_call_canceled_caller_type import ToolCallCanceledCallerType
+from .tool_call_canceled_object import ToolCallCanceledObject
+from .tool_call_canceled_tool import ToolCallCanceledTool
 from .tool_call_error import ToolCallError
 from .tool_call_failed_caller_type import ToolCallFailedCallerType
 from .tool_call_failed_object import ToolCallFailedObject
@@ -20,18 +23,16 @@ from .tool_call_input_request import ToolCallInputRequest
 from .tool_call_queued_caller_type import ToolCallQueuedCallerType
 from .tool_call_queued_object import ToolCallQueuedObject
 from .tool_call_queued_tool import ToolCallQueuedTool
-from .tool_call_requires_input_caller_type import ToolCallRequiresInputCallerType
-from .tool_call_requires_input_object import ToolCallRequiresInputObject
-from .tool_call_requires_input_tool import ToolCallRequiresInputTool
 from .tool_call_running_caller_type import ToolCallRunningCallerType
 from .tool_call_running_object import ToolCallRunningObject
 from .tool_call_running_tool import ToolCallRunningTool
 from .tool_call_succeeded_caller_type import ToolCallSucceededCallerType
 from .tool_call_succeeded_object import ToolCallSucceededObject
 from .tool_call_succeeded_tool import ToolCallSucceededTool
-from .tool_call_timed_out_caller_type import ToolCallTimedOutCallerType
-from .tool_call_timed_out_object import ToolCallTimedOutObject
-from .tool_call_timed_out_tool import ToolCallTimedOutTool
+from .tool_call_unknown_caller_type import ToolCallUnknownCallerType
+from .tool_call_unknown_error import ToolCallUnknownError
+from .tool_call_unknown_object import ToolCallUnknownObject
+from .tool_call_unknown_tool import ToolCallUnknownTool
 
 
 class ToolCall_Queued(UniversalBaseModel):
@@ -69,10 +70,10 @@ class ToolCall_Queued(UniversalBaseModel):
     started_at: typing_extensions.Annotated[
         typing.Optional[Rfc3339Timestamp], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt")
     ] = None
-    tool: ToolCallQueuedTool
-    turn_id: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="turnId"), pydantic.Field(alias="turnId")
+    task_id: typing_extensions.Annotated[
+        typing.Optional[str], FieldMetadata(alias="taskId"), pydantic.Field(alias="taskId")
     ] = None
+    tool: ToolCallQueuedTool
     updated_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]
@@ -122,10 +123,10 @@ class ToolCall_Running(UniversalBaseModel):
     started_at: typing_extensions.Annotated[
         typing.Optional[Rfc3339Timestamp], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt")
     ] = None
-    tool: ToolCallRunningTool
-    turn_id: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="turnId"), pydantic.Field(alias="turnId")
+    task_id: typing_extensions.Annotated[
+        typing.Optional[str], FieldMetadata(alias="taskId"), pydantic.Field(alias="taskId")
     ] = None
+    tool: ToolCallRunningTool
     updated_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]
@@ -140,10 +141,10 @@ class ToolCall_Running(UniversalBaseModel):
             extra = pydantic.Extra.allow
 
 
-class ToolCall_RequiresInput(UniversalBaseModel):
-    status: typing.Literal["requires_input"] = "requires_input"
+class ToolCall_AwaitingInput(UniversalBaseModel):
+    status: typing.Literal["awaiting_input"] = "awaiting_input"
     caller_type: typing_extensions.Annotated[
-        ToolCallRequiresInputCallerType, FieldMetadata(alias="callerType"), pydantic.Field(alias="callerType")
+        ToolCallAwaitingInputCallerType, FieldMetadata(alias="callerType"), pydantic.Field(alias="callerType")
     ]
     created_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="createdAt"), pydantic.Field(alias="createdAt")
@@ -156,7 +157,7 @@ class ToolCall_RequiresInput(UniversalBaseModel):
     input_request: typing_extensions.Annotated[
         ToolCallInputRequest, FieldMetadata(alias="inputRequest"), pydantic.Field(alias="inputRequest")
     ]
-    object: ToolCallRequiresInputObject
+    object: ToolCallAwaitingInputObject
     parent_id: typing_extensions.Annotated[
         typing.Optional[str], FieldMetadata(alias="parentId"), pydantic.Field(alias="parentId")
     ] = None
@@ -175,10 +176,10 @@ class ToolCall_RequiresInput(UniversalBaseModel):
     started_at: typing_extensions.Annotated[
         typing.Optional[Rfc3339Timestamp], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt")
     ] = None
-    tool: ToolCallRequiresInputTool
-    turn_id: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="turnId"), pydantic.Field(alias="turnId")
+    task_id: typing_extensions.Annotated[
+        typing.Optional[str], FieldMetadata(alias="taskId"), pydantic.Field(alias="taskId")
     ] = None
+    tool: ToolCallAwaitingInputTool
     updated_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]
@@ -228,10 +229,10 @@ class ToolCall_Succeeded(UniversalBaseModel):
     started_at: typing_extensions.Annotated[
         typing.Optional[Rfc3339Timestamp], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt")
     ] = None
-    tool: ToolCallSucceededTool
-    turn_id: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="turnId"), pydantic.Field(alias="turnId")
+    task_id: typing_extensions.Annotated[
+        typing.Optional[str], FieldMetadata(alias="taskId"), pydantic.Field(alias="taskId")
     ] = None
+    tool: ToolCallSucceededTool
     updated_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]
@@ -281,10 +282,10 @@ class ToolCall_Failed(UniversalBaseModel):
     started_at: typing_extensions.Annotated[
         typing.Optional[Rfc3339Timestamp], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt")
     ] = None
+    task_id: typing_extensions.Annotated[
+        typing.Optional[str], FieldMetadata(alias="taskId"), pydantic.Field(alias="taskId")
+    ] = None
     tool: ToolCallFailedTool
-    turn_id: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="turnId"), pydantic.Field(alias="turnId")
-    ] = None
     updated_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]
@@ -299,10 +300,10 @@ class ToolCall_Failed(UniversalBaseModel):
             extra = pydantic.Extra.allow
 
 
-class ToolCall_Cancelled(UniversalBaseModel):
-    status: typing.Literal["cancelled"] = "cancelled"
+class ToolCall_Canceled(UniversalBaseModel):
+    status: typing.Literal["canceled"] = "canceled"
     caller_type: typing_extensions.Annotated[
-        ToolCallCancelledCallerType, FieldMetadata(alias="callerType"), pydantic.Field(alias="callerType")
+        ToolCallCanceledCallerType, FieldMetadata(alias="callerType"), pydantic.Field(alias="callerType")
     ]
     created_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="createdAt"), pydantic.Field(alias="createdAt")
@@ -315,7 +316,7 @@ class ToolCall_Cancelled(UniversalBaseModel):
     input_request: typing_extensions.Annotated[
         typing.Optional[typing.Any], FieldMetadata(alias="inputRequest"), pydantic.Field(alias="inputRequest")
     ] = None
-    object: ToolCallCancelledObject
+    object: ToolCallCanceledObject
     parent_id: typing_extensions.Annotated[
         typing.Optional[str], FieldMetadata(alias="parentId"), pydantic.Field(alias="parentId")
     ] = None
@@ -334,10 +335,10 @@ class ToolCall_Cancelled(UniversalBaseModel):
     started_at: typing_extensions.Annotated[
         typing.Optional[Rfc3339Timestamp], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt")
     ] = None
-    tool: ToolCallCancelledTool
-    turn_id: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="turnId"), pydantic.Field(alias="turnId")
+    task_id: typing_extensions.Annotated[
+        typing.Optional[str], FieldMetadata(alias="taskId"), pydantic.Field(alias="taskId")
     ] = None
+    tool: ToolCallCanceledTool
     updated_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]
@@ -352,15 +353,15 @@ class ToolCall_Cancelled(UniversalBaseModel):
             extra = pydantic.Extra.allow
 
 
-class ToolCall_TimedOut(UniversalBaseModel):
-    status: typing.Literal["timed_out"] = "timed_out"
+class ToolCall_Unknown(UniversalBaseModel):
+    status: typing.Literal["unknown"] = "unknown"
     caller_type: typing_extensions.Annotated[
-        ToolCallTimedOutCallerType, FieldMetadata(alias="callerType"), pydantic.Field(alias="callerType")
+        ToolCallUnknownCallerType, FieldMetadata(alias="callerType"), pydantic.Field(alias="callerType")
     ]
     created_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="createdAt"), pydantic.Field(alias="createdAt")
     ]
-    error: ToolCallError
+    error: ToolCallUnknownError
     finished_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="finishedAt"), pydantic.Field(alias="finishedAt")
     ]
@@ -368,7 +369,7 @@ class ToolCall_TimedOut(UniversalBaseModel):
     input_request: typing_extensions.Annotated[
         typing.Optional[typing.Any], FieldMetadata(alias="inputRequest"), pydantic.Field(alias="inputRequest")
     ] = None
-    object: ToolCallTimedOutObject
+    object: ToolCallUnknownObject
     parent_id: typing_extensions.Annotated[
         typing.Optional[str], FieldMetadata(alias="parentId"), pydantic.Field(alias="parentId")
     ] = None
@@ -387,10 +388,10 @@ class ToolCall_TimedOut(UniversalBaseModel):
     started_at: typing_extensions.Annotated[
         typing.Optional[Rfc3339Timestamp], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt")
     ] = None
-    tool: ToolCallTimedOutTool
-    turn_id: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="turnId"), pydantic.Field(alias="turnId")
+    task_id: typing_extensions.Annotated[
+        typing.Optional[str], FieldMetadata(alias="taskId"), pydantic.Field(alias="taskId")
     ] = None
+    tool: ToolCallUnknownTool
     updated_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]
@@ -409,11 +410,11 @@ ToolCall = typing_extensions.Annotated[
     typing.Union[
         ToolCall_Queued,
         ToolCall_Running,
-        ToolCall_RequiresInput,
+        ToolCall_AwaitingInput,
         ToolCall_Succeeded,
         ToolCall_Failed,
-        ToolCall_Cancelled,
-        ToolCall_TimedOut,
+        ToolCall_Canceled,
+        ToolCall_Unknown,
     ],
     pydantic.Field(discriminator="status"),
 ]

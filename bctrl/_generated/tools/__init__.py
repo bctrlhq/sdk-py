@@ -14,7 +14,6 @@ if typing.TYPE_CHECKING:
         ToolUpdateRequestImplementationWebhook,
         ToolUpdateRequestImplementation_Code,
         ToolUpdateRequestImplementation_Webhook,
-        ToolUpdateRequestModesItem,
         ToolUpdateRequestRuntimeTypesItem,
     )
     from . import calls
@@ -26,7 +25,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ToolUpdateRequestImplementationWebhook": ".types",
     "ToolUpdateRequestImplementation_Code": ".types",
     "ToolUpdateRequestImplementation_Webhook": ".types",
-    "ToolUpdateRequestModesItem": ".types",
     "ToolUpdateRequestRuntimeTypesItem": ".types",
     "calls": ".calls",
 }
@@ -61,7 +59,6 @@ __all__ = [
     "ToolUpdateRequestImplementationWebhook",
     "ToolUpdateRequestImplementation_Code",
     "ToolUpdateRequestImplementation_Webhook",
-    "ToolUpdateRequestModesItem",
     "ToolUpdateRequestRuntimeTypesItem",
     "calls",
 ]

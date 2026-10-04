@@ -14,22 +14,16 @@ from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.bad_request_error import BadRequestError
 from ..errors.conflict_error import ConflictError
 from ..errors.forbidden_error import ForbiddenError
-from ..errors.internal_server_error import InternalServerError
 from ..errors.not_found_error import NotFoundError
-from ..errors.payment_required_error import PaymentRequiredError
-from ..errors.service_unavailable_error import ServiceUnavailableError
 from ..errors.too_many_requests_error import TooManyRequestsError
 from ..errors.unauthorized_error import UnauthorizedError
-from ..types.error_response import ErrorResponse
 from ..types.json_object import JsonObject
-from ..types.json_value import JsonValue
 from ..types.tool import Tool
 from ..types.tool_create_request import ToolCreateRequest
 from ..types.tool_delete_response import ToolDeleteResponse
 from ..types.tool_list_response import ToolListResponse
 from .types.list_tools_request_order import ListToolsRequestOrder
 from .types.tool_update_request_implementation import ToolUpdateRequestImplementation
-from .types.tool_update_request_modes_item import ToolUpdateRequestModesItem
 from .types.tool_update_request_runtime_types_item import ToolUpdateRequestRuntimeTypesItem
 from pydantic import ValidationError
 
@@ -133,7 +127,7 @@ class RawToolsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[Tool]:
         """
-        Create an organization custom callable tool. Agents can use these tools through space toolsets during hosted work.
+        Create an organization custom callable tool. Agents select these tools in their immutable version definitions.
 
         Parameters
         ----------
@@ -415,7 +409,6 @@ class RawToolsClient:
         description: typing.Optional[str] = OMIT,
         implementation: typing.Optional[ToolUpdateRequestImplementation] = OMIT,
         input_schema: typing.Optional[JsonObject] = OMIT,
-        modes: typing.Optional[typing.Sequence[ToolUpdateRequestModesItem]] = OMIT,
         output_schema: typing.Optional[JsonObject] = OMIT,
         runtime_types: typing.Optional[typing.Sequence[ToolUpdateRequestRuntimeTypesItem]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -439,8 +432,6 @@ class RawToolsClient:
 
         input_schema : typing.Optional[JsonObject]
 
-        modes : typing.Optional[typing.Sequence[ToolUpdateRequestModesItem]]
-
         output_schema : typing.Optional[JsonObject]
 
         runtime_types : typing.Optional[typing.Sequence[ToolUpdateRequestRuntimeTypesItem]]
@@ -463,7 +454,6 @@ class RawToolsClient:
                     object_=implementation, annotation=ToolUpdateRequestImplementation, direction="write"
                 ),
                 "inputSchema": input_schema,
-                "modes": modes,
                 "outputSchema": output_schema,
                 "runtimeTypes": runtime_types,
             },
@@ -546,170 +536,6 @@ class RawToolsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(
-                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
-            )
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    def call(
-        self,
-        tool_ref: str,
-        *,
-        request: JsonObject,
-        bctrl_runtime_id: typing.Optional[str] = None,
-        idempotency_key: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[JsonValue]:
-        """
-        Call a synchronous tool and wait for its validated result.
-
-        Parameters
-        ----------
-        tool_ref : str
-
-        request : JsonObject
-
-        bctrl_runtime_id : typing.Optional[str]
-            Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        HttpResponse[JsonValue]
-            OK
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            f"v1/tools/{quote_path_param(tool_ref)}/call",
-            method="POST",
-            json=request,
-            headers={
-                "content-type": "application/json",
-                "BCTRL-Runtime-Id": str(bctrl_runtime_id) if bctrl_runtime_id is not None else None,
-                "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
-            },
-            request_options=request_options,
-            omit=OMIT,
-        )
-        try:
-            if _response is None or not _response.text.strip():
-                return HttpResponse(response=_response, data=None)
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    JsonValue,
-                    parse_obj_as(
-                        type_=JsonValue,  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 402:
-                raise PaymentRequiredError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 409:
-                raise ConflictError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 500:
-                raise InternalServerError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        ErrorResponse,
-                        parse_obj_as(
-                            type_=ErrorResponse,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        ErrorResponse,
-                        parse_obj_as(
-                            type_=ErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),
@@ -820,7 +646,7 @@ class AsyncRawToolsClient:
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[Tool]:
         """
-        Create an organization custom callable tool. Agents can use these tools through space toolsets during hosted work.
+        Create an organization custom callable tool. Agents select these tools in their immutable version definitions.
 
         Parameters
         ----------
@@ -1104,7 +930,6 @@ class AsyncRawToolsClient:
         description: typing.Optional[str] = OMIT,
         implementation: typing.Optional[ToolUpdateRequestImplementation] = OMIT,
         input_schema: typing.Optional[JsonObject] = OMIT,
-        modes: typing.Optional[typing.Sequence[ToolUpdateRequestModesItem]] = OMIT,
         output_schema: typing.Optional[JsonObject] = OMIT,
         runtime_types: typing.Optional[typing.Sequence[ToolUpdateRequestRuntimeTypesItem]] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -1128,8 +953,6 @@ class AsyncRawToolsClient:
 
         input_schema : typing.Optional[JsonObject]
 
-        modes : typing.Optional[typing.Sequence[ToolUpdateRequestModesItem]]
-
         output_schema : typing.Optional[JsonObject]
 
         runtime_types : typing.Optional[typing.Sequence[ToolUpdateRequestRuntimeTypesItem]]
@@ -1152,7 +975,6 @@ class AsyncRawToolsClient:
                     object_=implementation, annotation=ToolUpdateRequestImplementation, direction="write"
                 ),
                 "inputSchema": input_schema,
-                "modes": modes,
                 "outputSchema": output_schema,
                 "runtimeTypes": runtime_types,
             },
@@ -1235,170 +1057,6 @@ class AsyncRawToolsClient:
                         typing.Any,
                         parse_obj_as(
                             type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(
-                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
-            )
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    async def call(
-        self,
-        tool_ref: str,
-        *,
-        request: JsonObject,
-        bctrl_runtime_id: typing.Optional[str] = None,
-        idempotency_key: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[JsonValue]:
-        """
-        Call a synchronous tool and wait for its validated result.
-
-        Parameters
-        ----------
-        tool_ref : str
-
-        request : JsonObject
-
-        bctrl_runtime_id : typing.Optional[str]
-            Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        AsyncHttpResponse[JsonValue]
-            OK
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"v1/tools/{quote_path_param(tool_ref)}/call",
-            method="POST",
-            json=request,
-            headers={
-                "content-type": "application/json",
-                "BCTRL-Runtime-Id": str(bctrl_runtime_id) if bctrl_runtime_id is not None else None,
-                "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
-            },
-            request_options=request_options,
-            omit=OMIT,
-        )
-        try:
-            if _response is None or not _response.text.strip():
-                return AsyncHttpResponse(response=_response, data=None)
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    JsonValue,
-                    parse_obj_as(
-                        type_=JsonValue,  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 400:
-                raise BadRequestError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 402:
-                raise PaymentRequiredError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 409:
-                raise ConflictError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 500:
-                raise InternalServerError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        ErrorResponse,
-                        parse_obj_as(
-                            type_=ErrorResponse,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 503:
-                raise ServiceUnavailableError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        ErrorResponse,
-                        parse_obj_as(
-                            type_=ErrorResponse,  # type: ignore
                             object_=_response.json(),
                         ),
                     ),

@@ -7,7 +7,6 @@ import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .tool_create_request_description_implementation import ToolCreateRequestDescriptionImplementation
-from .tool_create_request_description_modes_item import ToolCreateRequestDescriptionModesItem
 from .tool_create_request_description_runtime_types_item import ToolCreateRequestDescriptionRuntimeTypesItem
 from .tool_create_request_description_space_id import ToolCreateRequestDescriptionSpaceId
 
@@ -15,7 +14,6 @@ from .tool_create_request_description_space_id import ToolCreateRequestDescripti
 class ToolCreateRequestDescription(UniversalBaseModel):
     description: typing.Optional[str] = None
     implementation: ToolCreateRequestDescriptionImplementation
-    modes: typing.Optional[typing.List[ToolCreateRequestDescriptionModesItem]] = None
     name: str
     runtime_types: typing_extensions.Annotated[
         typing.Optional[typing.List[ToolCreateRequestDescriptionRuntimeTypesItem]],

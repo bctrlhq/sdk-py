@@ -3,5 +3,5 @@
 import typing
 
 ListToolCallsRequestStatus = typing.Union[
-    typing.Literal["queued", "running", "requires_input", "succeeded", "failed", "cancelled", "timed_out"], typing.Any
+    typing.Literal["queued", "running", "awaiting_input", "succeeded", "failed", "canceled", "unknown"], typing.Any
 ]

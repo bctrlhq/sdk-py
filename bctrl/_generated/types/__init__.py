@@ -16,12 +16,17 @@ if typing.TYPE_CHECKING:
     from .account_usage_object import AccountUsageObject
     from .activate_pages_request_space_id import ActivatePagesRequestSpaceId
     from .activate_pages_request_space_id_one import ActivatePagesRequestSpaceIdOne
-    from .agent_turn import AgentTurn
-    from .agent_turn_accepted import AgentTurnAccepted
-    from .agent_turn_accepted_object import AgentTurnAcceptedObject
-    from .agent_turn_accepted_status import AgentTurnAcceptedStatus
-    from .agent_turn_object import AgentTurnObject
-    from .agent_turn_status import AgentTurnStatus
+    from .agent import Agent
+    from .agent_object import AgentObject
+    from .agent_scope import AgentScope
+    from .agent_version import AgentVersion
+    from .agent_version_memory import AgentVersionMemory
+    from .agent_version_object import AgentVersionObject
+    from .agent_version_tools_item import AgentVersionToolsItem
+    from .agent_version_tools_item_zero import AgentVersionToolsItemZero
+    from .agents_delete_response import AgentsDeleteResponse
+    from .agents_list_response import AgentsListResponse
+    from .agents_versions_list_response import AgentsVersionsListResponse
     from .ai_credential import AiCredential
     from .ai_credential_delete_response import AiCredentialDeleteResponse
     from .ai_credential_delete_response_object import AiCredentialDeleteResponseObject
@@ -283,7 +288,6 @@ if typing.TYPE_CHECKING:
     from .builtin_tool_implementation import BuiltinToolImplementation
     from .builtin_tool_implementation_name import BuiltinToolImplementationName
     from .builtin_tool_implementation_type import BuiltinToolImplementationType
-    from .builtin_tool_modes_item import BuiltinToolModesItem
     from .builtin_tool_name import BuiltinToolName
     from .builtin_tool_object import BuiltinToolObject
     from .builtin_tool_runtime_types_item import BuiltinToolRuntimeTypesItem
@@ -340,59 +344,12 @@ if typing.TYPE_CHECKING:
     from .computer_use_output_image_mime_type import ComputerUseOutputImageMimeType
     from .conflict_error_body import ConflictErrorBody
     from .conflict_error_body_error import ConflictErrorBodyError
-    from .conversation import Conversation
-    from .conversation_cancel_response import ConversationCancelResponse
-    from .conversation_cancel_response_object import ConversationCancelResponseObject
-    from .conversation_detail import ConversationDetail
-    from .conversation_detail_object import ConversationDetailObject
-    from .conversation_detail_status import ConversationDetailStatus
-    from .conversation_event import (
-        ConversationEvent,
-        ConversationEvent_InputRequired,
-        ConversationEvent_InputResponded,
-        ConversationEvent_MessageCompleted,
-        ConversationEvent_MessageDelta,
-        ConversationEvent_MessageStarted,
-        ConversationEvent_ToolCompleted,
-        ConversationEvent_ToolFailed,
-        ConversationEvent_ToolProgress,
-        ConversationEvent_ToolRequiresInput,
-        ConversationEvent_ToolStarted,
-        ConversationEvent_TurnCancelled,
-        ConversationEvent_TurnCompleted,
-        ConversationEvent_TurnFailed,
-        ConversationEvent_TurnProgress,
-        ConversationEvent_TurnStarted,
-        ConversationEvent_TurnTimedOut,
-    )
-    from .conversation_event_input_required import ConversationEventInputRequired
-    from .conversation_event_input_responded import ConversationEventInputResponded
-    from .conversation_event_message_completed import ConversationEventMessageCompleted
-    from .conversation_event_message_delta import ConversationEventMessageDelta
-    from .conversation_event_message_started import ConversationEventMessageStarted
-    from .conversation_event_tool_completed import ConversationEventToolCompleted
-    from .conversation_event_tool_failed import ConversationEventToolFailed
-    from .conversation_event_tool_progress import ConversationEventToolProgress
-    from .conversation_event_tool_requires_input import ConversationEventToolRequiresInput
-    from .conversation_event_tool_started import ConversationEventToolStarted
-    from .conversation_event_tool_started_tool import ConversationEventToolStartedTool
-    from .conversation_event_tool_started_tool_zero import ConversationEventToolStartedToolZero
-    from .conversation_event_turn_cancelled import ConversationEventTurnCancelled
-    from .conversation_event_turn_completed import ConversationEventTurnCompleted
-    from .conversation_event_turn_completed_execution_mode import ConversationEventTurnCompletedExecutionMode
-    from .conversation_event_turn_completed_replay_status import ConversationEventTurnCompletedReplayStatus
-    from .conversation_event_turn_failed import ConversationEventTurnFailed
-    from .conversation_event_turn_progress import ConversationEventTurnProgress
-    from .conversation_event_turn_started import ConversationEventTurnStarted
-    from .conversation_event_turn_timed_out import ConversationEventTurnTimedOut
+    from .conversation_delete_response import ConversationDeleteResponse
     from .conversation_list_response import ConversationListResponse
-    from .conversation_object import ConversationObject
-    from .conversation_start_accepted import ConversationStartAccepted
-    from .conversation_start_accepted_object import ConversationStartAcceptedObject
-    from .conversation_start_accepted_status import ConversationStartAcceptedStatus
-    from .conversation_status import ConversationStatus
-    from .conversation_variables import ConversationVariables
-    from .conversation_variables_value import ConversationVariablesValue
+    from .conversation_record import ConversationRecord
+    from .conversation_record_object import ConversationRecordObject
+    from .conversation_record_status import ConversationRecordStatus
+    from .conversations_events_list_response import ConversationsEventsListResponse
     from .cursor_computer_request_space_id import CursorComputerRequestSpaceId
     from .cursor_computer_request_space_id_one import CursorComputerRequestSpaceIdOne
     from .custom_tool import CustomTool
@@ -406,7 +363,6 @@ if typing.TYPE_CHECKING:
     from .custom_tool_implementation_code_language import CustomToolImplementationCodeLanguage
     from .custom_tool_implementation_webhook import CustomToolImplementationWebhook
     from .custom_tool_implementation_workflow import CustomToolImplementationWorkflow
-    from .custom_tool_modes_item import CustomToolModesItem
     from .custom_tool_object import CustomToolObject
     from .custom_tool_runtime_types_item import CustomToolRuntimeTypesItem
     from .delete_browsers_request_space_id import DeleteBrowsersRequestSpaceId
@@ -539,6 +495,8 @@ if typing.TYPE_CHECKING:
     from .hosted_view_object import HostedViewObject
     from .hosted_view_presentation import HostedViewPresentation
     from .hosted_view_presentation_mode import HostedViewPresentationMode
+    from .input_request import InputRequest
+    from .input_request_kind import InputRequestKind
     from .json_object import JsonObject
     from .json_value import JsonValue
     from .key_computer_request_space_id import KeyComputerRequestSpaceId
@@ -566,6 +524,12 @@ if typing.TYPE_CHECKING:
     from .list_runs_request_status import ListRunsRequestStatus
     from .list_runs_request_status_one_item import ListRunsRequestStatusOneItem
     from .list_runs_request_status_zero import ListRunsRequestStatusZero
+    from .list_trace_request_kind import ListTraceRequestKind
+    from .list_trace_request_kind_one_item import ListTraceRequestKindOneItem
+    from .list_trace_request_kind_zero import ListTraceRequestKindZero
+    from .list_trace_request_status import ListTraceRequestStatus
+    from .list_trace_request_status_one_item import ListTraceRequestStatusOneItem
+    from .list_trace_request_status_zero import ListTraceRequestStatusZero
     from .location import Location
     from .location_home_regions_item import LocationHomeRegionsItem
     from .location_id import LocationId
@@ -581,9 +545,6 @@ if typing.TYPE_CHECKING:
     from .managed_static_proxy_pricing import ManagedStaticProxyPricing
     from .managed_static_proxy_status import ManagedStaticProxyStatus
     from .managed_static_proxy_type import ManagedStaticProxyType
-    from .message import Message
-    from .message_object import MessageObject
-    from .message_role import MessageRole
     from .move_computer_request_space_id import MoveComputerRequestSpaceId
     from .move_computer_request_space_id_one import MoveComputerRequestSpaceIdOne
     from .move_files_request_space_id import MoveFilesRequestSpaceId
@@ -755,7 +716,6 @@ if typing.TYPE_CHECKING:
     from .run_stream_event import (
         RunStreamEvent,
         RunStreamEvent_ControlChanged,
-        RunStreamEvent_ConversationEvent,
         RunStreamEvent_RunEnded,
         RunStreamEvent_RuntimeEvent,
         RunStreamEvent_SpanCompleted,
@@ -764,7 +724,6 @@ if typing.TYPE_CHECKING:
     )
     from .run_stream_event_control_changed import RunStreamEventControlChanged
     from .run_stream_event_control_changed_holder import RunStreamEventControlChangedHolder
-    from .run_stream_event_conversation_event import RunStreamEventConversationEvent
     from .run_stream_event_run_ended import RunStreamEventRunEnded
     from .run_stream_event_run_ended_status import RunStreamEventRunEndedStatus
     from .run_stream_event_runtime_event import RunStreamEventRuntimeEvent
@@ -848,24 +807,42 @@ if typing.TYPE_CHECKING:
     from .subaccount_usage_spaces import SubaccountUsageSpaces
     from .take_control_request_space_id import TakeControlRequestSpaceId
     from .take_control_request_space_id_one import TakeControlRequestSpaceIdOne
+    from .task import Task
+    from .task_artifact import TaskArtifact
+    from .task_input import TaskInput
+    from .task_input_part import TaskInputPart, TaskInputPart_File, TaskInputPart_Json, TaskInputPart_Text
+    from .task_input_part_file import TaskInputPartFile
+    from .task_input_part_json import TaskInputPartJson
+    from .task_input_part_text import TaskInputPartText
+    from .task_object import TaskObject
+    from .task_status import TaskStatus
+    from .task_usage import TaskUsage
+    from .tasks_events_list_response import TasksEventsListResponse
+    from .tasks_list_response import TasksListResponse
+    from .tasks_trace_list_response import TasksTraceListResponse
     from .too_many_requests_error_body import TooManyRequestsErrorBody
     from .too_many_requests_error_body_error import TooManyRequestsErrorBodyError
     from .tool import Tool
     from .tool_call import (
         ToolCall,
-        ToolCall_Cancelled,
+        ToolCall_AwaitingInput,
+        ToolCall_Canceled,
         ToolCall_Failed,
         ToolCall_Queued,
-        ToolCall_RequiresInput,
         ToolCall_Running,
         ToolCall_Succeeded,
-        ToolCall_TimedOut,
+        ToolCall_Unknown,
     )
-    from .tool_call_cancelled import ToolCallCancelled
-    from .tool_call_cancelled_caller_type import ToolCallCancelledCallerType
-    from .tool_call_cancelled_object import ToolCallCancelledObject
-    from .tool_call_cancelled_tool import ToolCallCancelledTool
-    from .tool_call_cancelled_tool_zero import ToolCallCancelledToolZero
+    from .tool_call_awaiting_input import ToolCallAwaitingInput
+    from .tool_call_awaiting_input_caller_type import ToolCallAwaitingInputCallerType
+    from .tool_call_awaiting_input_object import ToolCallAwaitingInputObject
+    from .tool_call_awaiting_input_tool import ToolCallAwaitingInputTool
+    from .tool_call_awaiting_input_tool_zero import ToolCallAwaitingInputToolZero
+    from .tool_call_canceled import ToolCallCanceled
+    from .tool_call_canceled_caller_type import ToolCallCanceledCallerType
+    from .tool_call_canceled_object import ToolCallCanceledObject
+    from .tool_call_canceled_tool import ToolCallCanceledTool
+    from .tool_call_canceled_tool_zero import ToolCallCanceledToolZero
     from .tool_call_error import ToolCallError
     from .tool_call_failed import ToolCallFailed
     from .tool_call_failed_caller_type import ToolCallFailedCallerType
@@ -879,11 +856,6 @@ if typing.TYPE_CHECKING:
     from .tool_call_queued_object import ToolCallQueuedObject
     from .tool_call_queued_tool import ToolCallQueuedTool
     from .tool_call_queued_tool_zero import ToolCallQueuedToolZero
-    from .tool_call_requires_input import ToolCallRequiresInput
-    from .tool_call_requires_input_caller_type import ToolCallRequiresInputCallerType
-    from .tool_call_requires_input_object import ToolCallRequiresInputObject
-    from .tool_call_requires_input_tool import ToolCallRequiresInputTool
-    from .tool_call_requires_input_tool_zero import ToolCallRequiresInputToolZero
     from .tool_call_running import ToolCallRunning
     from .tool_call_running_caller_type import ToolCallRunningCallerType
     from .tool_call_running_object import ToolCallRunningObject
@@ -894,16 +866,16 @@ if typing.TYPE_CHECKING:
     from .tool_call_succeeded_object import ToolCallSucceededObject
     from .tool_call_succeeded_tool import ToolCallSucceededTool
     from .tool_call_succeeded_tool_zero import ToolCallSucceededToolZero
-    from .tool_call_timed_out import ToolCallTimedOut
-    from .tool_call_timed_out_caller_type import ToolCallTimedOutCallerType
-    from .tool_call_timed_out_object import ToolCallTimedOutObject
-    from .tool_call_timed_out_tool import ToolCallTimedOutTool
-    from .tool_call_timed_out_tool_zero import ToolCallTimedOutToolZero
+    from .tool_call_unknown import ToolCallUnknown
+    from .tool_call_unknown_caller_type import ToolCallUnknownCallerType
+    from .tool_call_unknown_error import ToolCallUnknownError
+    from .tool_call_unknown_object import ToolCallUnknownObject
+    from .tool_call_unknown_tool import ToolCallUnknownTool
+    from .tool_call_unknown_tool_zero import ToolCallUnknownToolZero
     from .tool_create_request import ToolCreateRequest
     from .tool_create_request_description import ToolCreateRequestDescription
     from .tool_create_request_description_implementation import ToolCreateRequestDescriptionImplementation
     from .tool_create_request_description_implementation_type import ToolCreateRequestDescriptionImplementationType
-    from .tool_create_request_description_modes_item import ToolCreateRequestDescriptionModesItem
     from .tool_create_request_description_runtime_types_item import ToolCreateRequestDescriptionRuntimeTypesItem
     from .tool_create_request_description_space_id import ToolCreateRequestDescriptionSpaceId
     from .tool_create_request_description_space_id_one import ToolCreateRequestDescriptionSpaceIdOne
@@ -911,27 +883,18 @@ if typing.TYPE_CHECKING:
     from .tool_create_request_one_implementation import ToolCreateRequestOneImplementation
     from .tool_create_request_one_implementation_language import ToolCreateRequestOneImplementationLanguage
     from .tool_create_request_one_implementation_type import ToolCreateRequestOneImplementationType
-    from .tool_create_request_one_modes_item import ToolCreateRequestOneModesItem
     from .tool_create_request_one_runtime_types_item import ToolCreateRequestOneRuntimeTypesItem
     from .tool_create_request_one_space_id import ToolCreateRequestOneSpaceId
     from .tool_create_request_one_space_id_one import ToolCreateRequestOneSpaceIdOne
     from .tool_create_request_zero import ToolCreateRequestZero
     from .tool_create_request_zero_implementation import ToolCreateRequestZeroImplementation
     from .tool_create_request_zero_implementation_type import ToolCreateRequestZeroImplementationType
-    from .tool_create_request_zero_modes_item import ToolCreateRequestZeroModesItem
     from .tool_create_request_zero_runtime_types_item import ToolCreateRequestZeroRuntimeTypesItem
     from .tool_create_request_zero_space_id import ToolCreateRequestZeroSpaceId
     from .tool_create_request_zero_space_id_one import ToolCreateRequestZeroSpaceIdOne
     from .tool_delete_response import ToolDeleteResponse
     from .tool_delete_response_object import ToolDeleteResponseObject
     from .tool_list_response import ToolListResponse
-    from .toolset import Toolset
-    from .toolset_delete_response import ToolsetDeleteResponse
-    from .toolset_delete_response_object import ToolsetDeleteResponseObject
-    from .toolset_list_response import ToolsetListResponse
-    from .toolset_object import ToolsetObject
-    from .toolset_tools_item import ToolsetToolsItem
-    from .toolset_tools_item_zero import ToolsetToolsItemZero
     from .trace_span import TraceSpan
     from .trace_span_kind import TraceSpanKind
     from .trace_span_list_response import TraceSpanListResponse
@@ -1001,12 +964,17 @@ _dynamic_imports: typing.Dict[str, str] = {
     "AccountUsageObject": ".account_usage_object",
     "ActivatePagesRequestSpaceId": ".activate_pages_request_space_id",
     "ActivatePagesRequestSpaceIdOne": ".activate_pages_request_space_id_one",
-    "AgentTurn": ".agent_turn",
-    "AgentTurnAccepted": ".agent_turn_accepted",
-    "AgentTurnAcceptedObject": ".agent_turn_accepted_object",
-    "AgentTurnAcceptedStatus": ".agent_turn_accepted_status",
-    "AgentTurnObject": ".agent_turn_object",
-    "AgentTurnStatus": ".agent_turn_status",
+    "Agent": ".agent",
+    "AgentObject": ".agent_object",
+    "AgentScope": ".agent_scope",
+    "AgentVersion": ".agent_version",
+    "AgentVersionMemory": ".agent_version_memory",
+    "AgentVersionObject": ".agent_version_object",
+    "AgentVersionToolsItem": ".agent_version_tools_item",
+    "AgentVersionToolsItemZero": ".agent_version_tools_item_zero",
+    "AgentsDeleteResponse": ".agents_delete_response",
+    "AgentsListResponse": ".agents_list_response",
+    "AgentsVersionsListResponse": ".agents_versions_list_response",
     "AiCredential": ".ai_credential",
     "AiCredentialDeleteResponse": ".ai_credential_delete_response",
     "AiCredentialDeleteResponseObject": ".ai_credential_delete_response_object",
@@ -1223,7 +1191,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BuiltinToolImplementation": ".builtin_tool_implementation",
     "BuiltinToolImplementationName": ".builtin_tool_implementation_name",
     "BuiltinToolImplementationType": ".builtin_tool_implementation_type",
-    "BuiltinToolModesItem": ".builtin_tool_modes_item",
     "BuiltinToolName": ".builtin_tool_name",
     "BuiltinToolObject": ".builtin_tool_object",
     "BuiltinToolRuntimeTypesItem": ".builtin_tool_runtime_types_item",
@@ -1278,57 +1245,12 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ComputerUseOutputImageMimeType": ".computer_use_output_image_mime_type",
     "ConflictErrorBody": ".conflict_error_body",
     "ConflictErrorBodyError": ".conflict_error_body_error",
-    "Conversation": ".conversation",
-    "ConversationCancelResponse": ".conversation_cancel_response",
-    "ConversationCancelResponseObject": ".conversation_cancel_response_object",
-    "ConversationDetail": ".conversation_detail",
-    "ConversationDetailObject": ".conversation_detail_object",
-    "ConversationDetailStatus": ".conversation_detail_status",
-    "ConversationEvent": ".conversation_event",
-    "ConversationEventInputRequired": ".conversation_event_input_required",
-    "ConversationEventInputResponded": ".conversation_event_input_responded",
-    "ConversationEventMessageCompleted": ".conversation_event_message_completed",
-    "ConversationEventMessageDelta": ".conversation_event_message_delta",
-    "ConversationEventMessageStarted": ".conversation_event_message_started",
-    "ConversationEventToolCompleted": ".conversation_event_tool_completed",
-    "ConversationEventToolFailed": ".conversation_event_tool_failed",
-    "ConversationEventToolProgress": ".conversation_event_tool_progress",
-    "ConversationEventToolRequiresInput": ".conversation_event_tool_requires_input",
-    "ConversationEventToolStarted": ".conversation_event_tool_started",
-    "ConversationEventToolStartedTool": ".conversation_event_tool_started_tool",
-    "ConversationEventToolStartedToolZero": ".conversation_event_tool_started_tool_zero",
-    "ConversationEventTurnCancelled": ".conversation_event_turn_cancelled",
-    "ConversationEventTurnCompleted": ".conversation_event_turn_completed",
-    "ConversationEventTurnCompletedExecutionMode": ".conversation_event_turn_completed_execution_mode",
-    "ConversationEventTurnCompletedReplayStatus": ".conversation_event_turn_completed_replay_status",
-    "ConversationEventTurnFailed": ".conversation_event_turn_failed",
-    "ConversationEventTurnProgress": ".conversation_event_turn_progress",
-    "ConversationEventTurnStarted": ".conversation_event_turn_started",
-    "ConversationEventTurnTimedOut": ".conversation_event_turn_timed_out",
-    "ConversationEvent_InputRequired": ".conversation_event",
-    "ConversationEvent_InputResponded": ".conversation_event",
-    "ConversationEvent_MessageCompleted": ".conversation_event",
-    "ConversationEvent_MessageDelta": ".conversation_event",
-    "ConversationEvent_MessageStarted": ".conversation_event",
-    "ConversationEvent_ToolCompleted": ".conversation_event",
-    "ConversationEvent_ToolFailed": ".conversation_event",
-    "ConversationEvent_ToolProgress": ".conversation_event",
-    "ConversationEvent_ToolRequiresInput": ".conversation_event",
-    "ConversationEvent_ToolStarted": ".conversation_event",
-    "ConversationEvent_TurnCancelled": ".conversation_event",
-    "ConversationEvent_TurnCompleted": ".conversation_event",
-    "ConversationEvent_TurnFailed": ".conversation_event",
-    "ConversationEvent_TurnProgress": ".conversation_event",
-    "ConversationEvent_TurnStarted": ".conversation_event",
-    "ConversationEvent_TurnTimedOut": ".conversation_event",
+    "ConversationDeleteResponse": ".conversation_delete_response",
     "ConversationListResponse": ".conversation_list_response",
-    "ConversationObject": ".conversation_object",
-    "ConversationStartAccepted": ".conversation_start_accepted",
-    "ConversationStartAcceptedObject": ".conversation_start_accepted_object",
-    "ConversationStartAcceptedStatus": ".conversation_start_accepted_status",
-    "ConversationStatus": ".conversation_status",
-    "ConversationVariables": ".conversation_variables",
-    "ConversationVariablesValue": ".conversation_variables_value",
+    "ConversationRecord": ".conversation_record",
+    "ConversationRecordObject": ".conversation_record_object",
+    "ConversationRecordStatus": ".conversation_record_status",
+    "ConversationsEventsListResponse": ".conversations_events_list_response",
     "CursorComputerRequestSpaceId": ".cursor_computer_request_space_id",
     "CursorComputerRequestSpaceIdOne": ".cursor_computer_request_space_id_one",
     "CustomTool": ".custom_tool",
@@ -1340,7 +1262,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "CustomToolImplementation_Code": ".custom_tool_implementation",
     "CustomToolImplementation_Webhook": ".custom_tool_implementation",
     "CustomToolImplementation_Workflow": ".custom_tool_implementation",
-    "CustomToolModesItem": ".custom_tool_modes_item",
     "CustomToolObject": ".custom_tool_object",
     "CustomToolRuntimeTypesItem": ".custom_tool_runtime_types_item",
     "DeleteBrowsersRequestSpaceId": ".delete_browsers_request_space_id",
@@ -1471,6 +1392,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "HostedViewObject": ".hosted_view_object",
     "HostedViewPresentation": ".hosted_view_presentation",
     "HostedViewPresentationMode": ".hosted_view_presentation_mode",
+    "InputRequest": ".input_request",
+    "InputRequestKind": ".input_request_kind",
     "JsonObject": ".json_object",
     "JsonValue": ".json_value",
     "KeyComputerRequestSpaceId": ".key_computer_request_space_id",
@@ -1498,6 +1421,12 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ListRunsRequestStatus": ".list_runs_request_status",
     "ListRunsRequestStatusOneItem": ".list_runs_request_status_one_item",
     "ListRunsRequestStatusZero": ".list_runs_request_status_zero",
+    "ListTraceRequestKind": ".list_trace_request_kind",
+    "ListTraceRequestKindOneItem": ".list_trace_request_kind_one_item",
+    "ListTraceRequestKindZero": ".list_trace_request_kind_zero",
+    "ListTraceRequestStatus": ".list_trace_request_status",
+    "ListTraceRequestStatusOneItem": ".list_trace_request_status_one_item",
+    "ListTraceRequestStatusZero": ".list_trace_request_status_zero",
     "Location": ".location",
     "LocationHomeRegionsItem": ".location_home_regions_item",
     "LocationId": ".location_id",
@@ -1513,9 +1442,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ManagedStaticProxyPricing": ".managed_static_proxy_pricing",
     "ManagedStaticProxyStatus": ".managed_static_proxy_status",
     "ManagedStaticProxyType": ".managed_static_proxy_type",
-    "Message": ".message",
-    "MessageObject": ".message_object",
-    "MessageRole": ".message_role",
     "MoveComputerRequestSpaceId": ".move_computer_request_space_id",
     "MoveComputerRequestSpaceIdOne": ".move_computer_request_space_id_one",
     "MoveFilesRequestSpaceId": ".move_files_request_space_id",
@@ -1681,7 +1607,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "RunStreamEvent": ".run_stream_event",
     "RunStreamEventControlChanged": ".run_stream_event_control_changed",
     "RunStreamEventControlChangedHolder": ".run_stream_event_control_changed_holder",
-    "RunStreamEventConversationEvent": ".run_stream_event_conversation_event",
     "RunStreamEventRunEnded": ".run_stream_event_run_ended",
     "RunStreamEventRunEndedStatus": ".run_stream_event_run_ended_status",
     "RunStreamEventRuntimeEvent": ".run_stream_event_runtime_event",
@@ -1689,7 +1614,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "RunStreamEventSpanStarted": ".run_stream_event_span_started",
     "RunStreamEventSpanUpdated": ".run_stream_event_span_updated",
     "RunStreamEvent_ControlChanged": ".run_stream_event",
-    "RunStreamEvent_ConversationEvent": ".run_stream_event",
     "RunStreamEvent_RunEnded": ".run_stream_event",
     "RunStreamEvent_RuntimeEvent": ".run_stream_event",
     "RunStreamEvent_SpanCompleted": ".run_stream_event",
@@ -1772,15 +1696,36 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SubaccountUsageSpaces": ".subaccount_usage_spaces",
     "TakeControlRequestSpaceId": ".take_control_request_space_id",
     "TakeControlRequestSpaceIdOne": ".take_control_request_space_id_one",
+    "Task": ".task",
+    "TaskArtifact": ".task_artifact",
+    "TaskInput": ".task_input",
+    "TaskInputPart": ".task_input_part",
+    "TaskInputPartFile": ".task_input_part_file",
+    "TaskInputPartJson": ".task_input_part_json",
+    "TaskInputPartText": ".task_input_part_text",
+    "TaskInputPart_File": ".task_input_part",
+    "TaskInputPart_Json": ".task_input_part",
+    "TaskInputPart_Text": ".task_input_part",
+    "TaskObject": ".task_object",
+    "TaskStatus": ".task_status",
+    "TaskUsage": ".task_usage",
+    "TasksEventsListResponse": ".tasks_events_list_response",
+    "TasksListResponse": ".tasks_list_response",
+    "TasksTraceListResponse": ".tasks_trace_list_response",
     "TooManyRequestsErrorBody": ".too_many_requests_error_body",
     "TooManyRequestsErrorBodyError": ".too_many_requests_error_body_error",
     "Tool": ".tool",
     "ToolCall": ".tool_call",
-    "ToolCallCancelled": ".tool_call_cancelled",
-    "ToolCallCancelledCallerType": ".tool_call_cancelled_caller_type",
-    "ToolCallCancelledObject": ".tool_call_cancelled_object",
-    "ToolCallCancelledTool": ".tool_call_cancelled_tool",
-    "ToolCallCancelledToolZero": ".tool_call_cancelled_tool_zero",
+    "ToolCallAwaitingInput": ".tool_call_awaiting_input",
+    "ToolCallAwaitingInputCallerType": ".tool_call_awaiting_input_caller_type",
+    "ToolCallAwaitingInputObject": ".tool_call_awaiting_input_object",
+    "ToolCallAwaitingInputTool": ".tool_call_awaiting_input_tool",
+    "ToolCallAwaitingInputToolZero": ".tool_call_awaiting_input_tool_zero",
+    "ToolCallCanceled": ".tool_call_canceled",
+    "ToolCallCanceledCallerType": ".tool_call_canceled_caller_type",
+    "ToolCallCanceledObject": ".tool_call_canceled_object",
+    "ToolCallCanceledTool": ".tool_call_canceled_tool",
+    "ToolCallCanceledToolZero": ".tool_call_canceled_tool_zero",
     "ToolCallError": ".tool_call_error",
     "ToolCallFailed": ".tool_call_failed",
     "ToolCallFailedCallerType": ".tool_call_failed_caller_type",
@@ -1794,11 +1739,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ToolCallQueuedObject": ".tool_call_queued_object",
     "ToolCallQueuedTool": ".tool_call_queued_tool",
     "ToolCallQueuedToolZero": ".tool_call_queued_tool_zero",
-    "ToolCallRequiresInput": ".tool_call_requires_input",
-    "ToolCallRequiresInputCallerType": ".tool_call_requires_input_caller_type",
-    "ToolCallRequiresInputObject": ".tool_call_requires_input_object",
-    "ToolCallRequiresInputTool": ".tool_call_requires_input_tool",
-    "ToolCallRequiresInputToolZero": ".tool_call_requires_input_tool_zero",
     "ToolCallRunning": ".tool_call_running",
     "ToolCallRunningCallerType": ".tool_call_running_caller_type",
     "ToolCallRunningObject": ".tool_call_running_object",
@@ -1809,23 +1749,23 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ToolCallSucceededObject": ".tool_call_succeeded_object",
     "ToolCallSucceededTool": ".tool_call_succeeded_tool",
     "ToolCallSucceededToolZero": ".tool_call_succeeded_tool_zero",
-    "ToolCallTimedOut": ".tool_call_timed_out",
-    "ToolCallTimedOutCallerType": ".tool_call_timed_out_caller_type",
-    "ToolCallTimedOutObject": ".tool_call_timed_out_object",
-    "ToolCallTimedOutTool": ".tool_call_timed_out_tool",
-    "ToolCallTimedOutToolZero": ".tool_call_timed_out_tool_zero",
-    "ToolCall_Cancelled": ".tool_call",
+    "ToolCallUnknown": ".tool_call_unknown",
+    "ToolCallUnknownCallerType": ".tool_call_unknown_caller_type",
+    "ToolCallUnknownError": ".tool_call_unknown_error",
+    "ToolCallUnknownObject": ".tool_call_unknown_object",
+    "ToolCallUnknownTool": ".tool_call_unknown_tool",
+    "ToolCallUnknownToolZero": ".tool_call_unknown_tool_zero",
+    "ToolCall_AwaitingInput": ".tool_call",
+    "ToolCall_Canceled": ".tool_call",
     "ToolCall_Failed": ".tool_call",
     "ToolCall_Queued": ".tool_call",
-    "ToolCall_RequiresInput": ".tool_call",
     "ToolCall_Running": ".tool_call",
     "ToolCall_Succeeded": ".tool_call",
-    "ToolCall_TimedOut": ".tool_call",
+    "ToolCall_Unknown": ".tool_call",
     "ToolCreateRequest": ".tool_create_request",
     "ToolCreateRequestDescription": ".tool_create_request_description",
     "ToolCreateRequestDescriptionImplementation": ".tool_create_request_description_implementation",
     "ToolCreateRequestDescriptionImplementationType": ".tool_create_request_description_implementation_type",
-    "ToolCreateRequestDescriptionModesItem": ".tool_create_request_description_modes_item",
     "ToolCreateRequestDescriptionRuntimeTypesItem": ".tool_create_request_description_runtime_types_item",
     "ToolCreateRequestDescriptionSpaceId": ".tool_create_request_description_space_id",
     "ToolCreateRequestDescriptionSpaceIdOne": ".tool_create_request_description_space_id_one",
@@ -1833,27 +1773,18 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ToolCreateRequestOneImplementation": ".tool_create_request_one_implementation",
     "ToolCreateRequestOneImplementationLanguage": ".tool_create_request_one_implementation_language",
     "ToolCreateRequestOneImplementationType": ".tool_create_request_one_implementation_type",
-    "ToolCreateRequestOneModesItem": ".tool_create_request_one_modes_item",
     "ToolCreateRequestOneRuntimeTypesItem": ".tool_create_request_one_runtime_types_item",
     "ToolCreateRequestOneSpaceId": ".tool_create_request_one_space_id",
     "ToolCreateRequestOneSpaceIdOne": ".tool_create_request_one_space_id_one",
     "ToolCreateRequestZero": ".tool_create_request_zero",
     "ToolCreateRequestZeroImplementation": ".tool_create_request_zero_implementation",
     "ToolCreateRequestZeroImplementationType": ".tool_create_request_zero_implementation_type",
-    "ToolCreateRequestZeroModesItem": ".tool_create_request_zero_modes_item",
     "ToolCreateRequestZeroRuntimeTypesItem": ".tool_create_request_zero_runtime_types_item",
     "ToolCreateRequestZeroSpaceId": ".tool_create_request_zero_space_id",
     "ToolCreateRequestZeroSpaceIdOne": ".tool_create_request_zero_space_id_one",
     "ToolDeleteResponse": ".tool_delete_response",
     "ToolDeleteResponseObject": ".tool_delete_response_object",
     "ToolListResponse": ".tool_list_response",
-    "Toolset": ".toolset",
-    "ToolsetDeleteResponse": ".toolset_delete_response",
-    "ToolsetDeleteResponseObject": ".toolset_delete_response_object",
-    "ToolsetListResponse": ".toolset_list_response",
-    "ToolsetObject": ".toolset_object",
-    "ToolsetToolsItem": ".toolset_tools_item",
-    "ToolsetToolsItemZero": ".toolset_tools_item_zero",
     "TraceSpan": ".trace_span",
     "TraceSpanKind": ".trace_span_kind",
     "TraceSpanListResponse": ".trace_span_list_response",
@@ -1949,12 +1880,17 @@ __all__ = [
     "AccountUsageObject",
     "ActivatePagesRequestSpaceId",
     "ActivatePagesRequestSpaceIdOne",
-    "AgentTurn",
-    "AgentTurnAccepted",
-    "AgentTurnAcceptedObject",
-    "AgentTurnAcceptedStatus",
-    "AgentTurnObject",
-    "AgentTurnStatus",
+    "Agent",
+    "AgentObject",
+    "AgentScope",
+    "AgentVersion",
+    "AgentVersionMemory",
+    "AgentVersionObject",
+    "AgentVersionToolsItem",
+    "AgentVersionToolsItemZero",
+    "AgentsDeleteResponse",
+    "AgentsListResponse",
+    "AgentsVersionsListResponse",
     "AiCredential",
     "AiCredentialDeleteResponse",
     "AiCredentialDeleteResponseObject",
@@ -2171,7 +2107,6 @@ __all__ = [
     "BuiltinToolImplementation",
     "BuiltinToolImplementationName",
     "BuiltinToolImplementationType",
-    "BuiltinToolModesItem",
     "BuiltinToolName",
     "BuiltinToolObject",
     "BuiltinToolRuntimeTypesItem",
@@ -2226,57 +2161,12 @@ __all__ = [
     "ComputerUseOutputImageMimeType",
     "ConflictErrorBody",
     "ConflictErrorBodyError",
-    "Conversation",
-    "ConversationCancelResponse",
-    "ConversationCancelResponseObject",
-    "ConversationDetail",
-    "ConversationDetailObject",
-    "ConversationDetailStatus",
-    "ConversationEvent",
-    "ConversationEventInputRequired",
-    "ConversationEventInputResponded",
-    "ConversationEventMessageCompleted",
-    "ConversationEventMessageDelta",
-    "ConversationEventMessageStarted",
-    "ConversationEventToolCompleted",
-    "ConversationEventToolFailed",
-    "ConversationEventToolProgress",
-    "ConversationEventToolRequiresInput",
-    "ConversationEventToolStarted",
-    "ConversationEventToolStartedTool",
-    "ConversationEventToolStartedToolZero",
-    "ConversationEventTurnCancelled",
-    "ConversationEventTurnCompleted",
-    "ConversationEventTurnCompletedExecutionMode",
-    "ConversationEventTurnCompletedReplayStatus",
-    "ConversationEventTurnFailed",
-    "ConversationEventTurnProgress",
-    "ConversationEventTurnStarted",
-    "ConversationEventTurnTimedOut",
-    "ConversationEvent_InputRequired",
-    "ConversationEvent_InputResponded",
-    "ConversationEvent_MessageCompleted",
-    "ConversationEvent_MessageDelta",
-    "ConversationEvent_MessageStarted",
-    "ConversationEvent_ToolCompleted",
-    "ConversationEvent_ToolFailed",
-    "ConversationEvent_ToolProgress",
-    "ConversationEvent_ToolRequiresInput",
-    "ConversationEvent_ToolStarted",
-    "ConversationEvent_TurnCancelled",
-    "ConversationEvent_TurnCompleted",
-    "ConversationEvent_TurnFailed",
-    "ConversationEvent_TurnProgress",
-    "ConversationEvent_TurnStarted",
-    "ConversationEvent_TurnTimedOut",
+    "ConversationDeleteResponse",
     "ConversationListResponse",
-    "ConversationObject",
-    "ConversationStartAccepted",
-    "ConversationStartAcceptedObject",
-    "ConversationStartAcceptedStatus",
-    "ConversationStatus",
-    "ConversationVariables",
-    "ConversationVariablesValue",
+    "ConversationRecord",
+    "ConversationRecordObject",
+    "ConversationRecordStatus",
+    "ConversationsEventsListResponse",
     "CursorComputerRequestSpaceId",
     "CursorComputerRequestSpaceIdOne",
     "CustomTool",
@@ -2288,7 +2178,6 @@ __all__ = [
     "CustomToolImplementation_Code",
     "CustomToolImplementation_Webhook",
     "CustomToolImplementation_Workflow",
-    "CustomToolModesItem",
     "CustomToolObject",
     "CustomToolRuntimeTypesItem",
     "DeleteBrowsersRequestSpaceId",
@@ -2419,6 +2308,8 @@ __all__ = [
     "HostedViewObject",
     "HostedViewPresentation",
     "HostedViewPresentationMode",
+    "InputRequest",
+    "InputRequestKind",
     "JsonObject",
     "JsonValue",
     "KeyComputerRequestSpaceId",
@@ -2446,6 +2337,12 @@ __all__ = [
     "ListRunsRequestStatus",
     "ListRunsRequestStatusOneItem",
     "ListRunsRequestStatusZero",
+    "ListTraceRequestKind",
+    "ListTraceRequestKindOneItem",
+    "ListTraceRequestKindZero",
+    "ListTraceRequestStatus",
+    "ListTraceRequestStatusOneItem",
+    "ListTraceRequestStatusZero",
     "Location",
     "LocationHomeRegionsItem",
     "LocationId",
@@ -2461,9 +2358,6 @@ __all__ = [
     "ManagedStaticProxyPricing",
     "ManagedStaticProxyStatus",
     "ManagedStaticProxyType",
-    "Message",
-    "MessageObject",
-    "MessageRole",
     "MoveComputerRequestSpaceId",
     "MoveComputerRequestSpaceIdOne",
     "MoveFilesRequestSpaceId",
@@ -2629,7 +2523,6 @@ __all__ = [
     "RunStreamEvent",
     "RunStreamEventControlChanged",
     "RunStreamEventControlChangedHolder",
-    "RunStreamEventConversationEvent",
     "RunStreamEventRunEnded",
     "RunStreamEventRunEndedStatus",
     "RunStreamEventRuntimeEvent",
@@ -2637,7 +2530,6 @@ __all__ = [
     "RunStreamEventSpanStarted",
     "RunStreamEventSpanUpdated",
     "RunStreamEvent_ControlChanged",
-    "RunStreamEvent_ConversationEvent",
     "RunStreamEvent_RunEnded",
     "RunStreamEvent_RuntimeEvent",
     "RunStreamEvent_SpanCompleted",
@@ -2720,15 +2612,36 @@ __all__ = [
     "SubaccountUsageSpaces",
     "TakeControlRequestSpaceId",
     "TakeControlRequestSpaceIdOne",
+    "Task",
+    "TaskArtifact",
+    "TaskInput",
+    "TaskInputPart",
+    "TaskInputPartFile",
+    "TaskInputPartJson",
+    "TaskInputPartText",
+    "TaskInputPart_File",
+    "TaskInputPart_Json",
+    "TaskInputPart_Text",
+    "TaskObject",
+    "TaskStatus",
+    "TaskUsage",
+    "TasksEventsListResponse",
+    "TasksListResponse",
+    "TasksTraceListResponse",
     "TooManyRequestsErrorBody",
     "TooManyRequestsErrorBodyError",
     "Tool",
     "ToolCall",
-    "ToolCallCancelled",
-    "ToolCallCancelledCallerType",
-    "ToolCallCancelledObject",
-    "ToolCallCancelledTool",
-    "ToolCallCancelledToolZero",
+    "ToolCallAwaitingInput",
+    "ToolCallAwaitingInputCallerType",
+    "ToolCallAwaitingInputObject",
+    "ToolCallAwaitingInputTool",
+    "ToolCallAwaitingInputToolZero",
+    "ToolCallCanceled",
+    "ToolCallCanceledCallerType",
+    "ToolCallCanceledObject",
+    "ToolCallCanceledTool",
+    "ToolCallCanceledToolZero",
     "ToolCallError",
     "ToolCallFailed",
     "ToolCallFailedCallerType",
@@ -2742,11 +2655,6 @@ __all__ = [
     "ToolCallQueuedObject",
     "ToolCallQueuedTool",
     "ToolCallQueuedToolZero",
-    "ToolCallRequiresInput",
-    "ToolCallRequiresInputCallerType",
-    "ToolCallRequiresInputObject",
-    "ToolCallRequiresInputTool",
-    "ToolCallRequiresInputToolZero",
     "ToolCallRunning",
     "ToolCallRunningCallerType",
     "ToolCallRunningObject",
@@ -2757,23 +2665,23 @@ __all__ = [
     "ToolCallSucceededObject",
     "ToolCallSucceededTool",
     "ToolCallSucceededToolZero",
-    "ToolCallTimedOut",
-    "ToolCallTimedOutCallerType",
-    "ToolCallTimedOutObject",
-    "ToolCallTimedOutTool",
-    "ToolCallTimedOutToolZero",
-    "ToolCall_Cancelled",
+    "ToolCallUnknown",
+    "ToolCallUnknownCallerType",
+    "ToolCallUnknownError",
+    "ToolCallUnknownObject",
+    "ToolCallUnknownTool",
+    "ToolCallUnknownToolZero",
+    "ToolCall_AwaitingInput",
+    "ToolCall_Canceled",
     "ToolCall_Failed",
     "ToolCall_Queued",
-    "ToolCall_RequiresInput",
     "ToolCall_Running",
     "ToolCall_Succeeded",
-    "ToolCall_TimedOut",
+    "ToolCall_Unknown",
     "ToolCreateRequest",
     "ToolCreateRequestDescription",
     "ToolCreateRequestDescriptionImplementation",
     "ToolCreateRequestDescriptionImplementationType",
-    "ToolCreateRequestDescriptionModesItem",
     "ToolCreateRequestDescriptionRuntimeTypesItem",
     "ToolCreateRequestDescriptionSpaceId",
     "ToolCreateRequestDescriptionSpaceIdOne",
@@ -2781,27 +2689,18 @@ __all__ = [
     "ToolCreateRequestOneImplementation",
     "ToolCreateRequestOneImplementationLanguage",
     "ToolCreateRequestOneImplementationType",
-    "ToolCreateRequestOneModesItem",
     "ToolCreateRequestOneRuntimeTypesItem",
     "ToolCreateRequestOneSpaceId",
     "ToolCreateRequestOneSpaceIdOne",
     "ToolCreateRequestZero",
     "ToolCreateRequestZeroImplementation",
     "ToolCreateRequestZeroImplementationType",
-    "ToolCreateRequestZeroModesItem",
     "ToolCreateRequestZeroRuntimeTypesItem",
     "ToolCreateRequestZeroSpaceId",
     "ToolCreateRequestZeroSpaceIdOne",
     "ToolDeleteResponse",
     "ToolDeleteResponseObject",
     "ToolListResponse",
-    "Toolset",
-    "ToolsetDeleteResponse",
-    "ToolsetDeleteResponseObject",
-    "ToolsetListResponse",
-    "ToolsetObject",
-    "ToolsetToolsItem",
-    "ToolsetToolsItemZero",
     "TraceSpan",
     "TraceSpanKind",
     "TraceSpanListResponse",

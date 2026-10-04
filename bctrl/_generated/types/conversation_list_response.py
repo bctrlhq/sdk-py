@@ -6,11 +6,11 @@ import pydantic
 import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
-from .conversation import Conversation
+from .conversation_record import ConversationRecord
 
 
 class ConversationListResponse(UniversalBaseModel):
-    data: typing.List[Conversation]
+    data: typing.List[ConversationRecord]
     has_more: typing_extensions.Annotated[bool, FieldMetadata(alias="hasMore"), pydantic.Field(alias="hasMore")]
     next_cursor: typing_extensions.Annotated[
         typing.Optional[str], FieldMetadata(alias="nextCursor"), pydantic.Field(alias="nextCursor")

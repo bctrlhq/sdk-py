@@ -36,14 +36,15 @@ A full reference for this library is available [here](./reference.md).
 Instantiate and use the client with the following:
 
 ```python
-from bctrl import Bctrl, ApiKeyCreateRequestZero
+from bctrl import Bctrl
 
 client = Bctrl(
     token="<token>",
 )
 
-client.api_keys.create(
-    request=ApiKeyCreateRequestZero(),
+client.agents.create(
+    model="model",
+    name="Production browser",
 )
 ```
 
@@ -75,8 +76,9 @@ client = AsyncBctrl(
 
 
 async def main() -> None:
-    await client.api_keys.create(
-        request=ApiKeyCreateRequestZero(),
+    await client.agents.create(
+        model="model",
+        name="Production browser",
     )
 
 
@@ -92,7 +94,7 @@ will be thrown.
 from bctrl.core.api_error import ApiError
 
 try:
-    client.api_keys.create(...)
+    client.agents.create(...)
 except ApiError as e:
     print(e.status_code)
     print(e.body)
@@ -109,8 +111,8 @@ client = Bctrl(
     token="<token>",
 )
 
-client.conversations.stream(
-    conversation_id="conversationId",
+client.runs.stream(
+    run_id="runId",
 )
 ```
 
@@ -125,7 +127,7 @@ The `.with_raw_response` property returns a "raw" client that can be used to acc
 from bctrl import Bctrl
 
 client = Bctrl(...)
-response = client.api_keys.with_raw_response.create(...)
+response = client.agents.with_raw_response.create(...)
 print(response.headers)  # access the response headers
 print(response.status_code)  # access the response status code
 print(response.data)  # access the underlying object
@@ -156,7 +158,7 @@ Which status codes are retried depends on the `retryStatusCodes` generator confi
 Use the `max_retries` request option to configure this behavior.
 
 ```python
-client.api_keys.create(..., request_options={
+client.agents.create(..., request_options={
     "max_retries": 1
 })
 ```
@@ -171,7 +173,7 @@ from bctrl import Bctrl
 client = Bctrl(..., timeout=20.0)
 
 # Override timeout for a specific method
-client.api_keys.create(..., request_options={
+client.agents.create(..., request_options={
     "timeout": 1
 })
 ```
