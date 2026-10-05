@@ -6108,6 +6108,14 @@ client.sandboxes.create()
 <dl>
 <dd>
 
+**snapshot_schedule:** `typing.Optional[SandboxSnapshotSchedule]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **space_id:** `typing.Optional[str]` — Opaque resource ID or unique resource name in the selected Space or tenant.
     
 </dd>
@@ -18495,6 +18503,178 @@ client.sandboxes.processes.stream(
 <dd>
 
 **last_event_id:** `typing.Optional[str]` — Optional last delivered event identifier used to resume an SSE stream.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Sandboxes SnapshotSchedule
+<details><summary><code>client.sandboxes.snapshot_schedule.<a href="src/bctrl/sandboxes/snapshot_schedule/client.py">set</a>(...) -> Sandbox</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Snapshot a sandbox on a schedule (it applies at once to a running sandbox and on every start). Scheduled snapshots are listed with its snapshots (scheduled: true) and deleted by the retention.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.sandboxes.snapshot_schedule.set(
+    sandbox_id="sandboxId",
+    interval_seconds=1,
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**sandbox_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request:** `SandboxSnapshotSchedule` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.sandboxes.snapshot_schedule.<a href="src/bctrl/sandboxes/snapshot_schedule/client.py">delete</a>(...) -> Sandbox</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Stop snapshotting a sandbox on a schedule. Scheduled snapshots already taken are kept until deleted.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.sandboxes.snapshot_schedule.delete(
+    sandbox_id="sandboxId",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**sandbox_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
     
 </dd>
 </dl>

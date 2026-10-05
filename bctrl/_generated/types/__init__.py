@@ -779,6 +779,7 @@ if typing.TYPE_CHECKING:
     from .sandbox_snapshot_delete_response import SandboxSnapshotDeleteResponse
     from .sandbox_snapshot_delete_response_object import SandboxSnapshotDeleteResponseObject
     from .sandbox_snapshot_object import SandboxSnapshotObject
+    from .sandbox_snapshot_schedule import SandboxSnapshotSchedule
     from .sandbox_ssh_session import SandboxSshSession
     from .sandbox_ssh_session_object import SandboxSshSessionObject
     from .sandbox_status import SandboxStatus
@@ -1719,6 +1720,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SandboxSnapshotDeleteResponse": ".sandbox_snapshot_delete_response",
     "SandboxSnapshotDeleteResponseObject": ".sandbox_snapshot_delete_response_object",
     "SandboxSnapshotObject": ".sandbox_snapshot_object",
+    "SandboxSnapshotSchedule": ".sandbox_snapshot_schedule",
     "SandboxSshSession": ".sandbox_ssh_session",
     "SandboxSshSessionObject": ".sandbox_ssh_session_object",
     "SandboxStatus": ".sandbox_status",
@@ -2686,6 +2688,7 @@ __all__ = [
     "SandboxSnapshotDeleteResponse",
     "SandboxSnapshotDeleteResponseObject",
     "SandboxSnapshotObject",
+    "SandboxSnapshotSchedule",
     "SandboxSshSession",
     "SandboxSshSessionObject",
     "SandboxStatus",

@@ -7,7 +7,7 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .types import ListSandboxesRequestOrder
-    from . import browser, connections, files, ports, processes, snapshots, ssh_sessions
+    from . import browser, connections, files, ports, processes, snapshot_schedule, snapshots, ssh_sessions
 _dynamic_imports: typing.Dict[str, str] = {
     "ListSandboxesRequestOrder": ".types",
     "browser": ".browser",
@@ -15,6 +15,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "files": ".files",
     "ports": ".ports",
     "processes": ".processes",
+    "snapshot_schedule": ".snapshot_schedule",
     "snapshots": ".snapshots",
     "ssh_sessions": ".ssh_sessions",
 }
@@ -48,6 +49,7 @@ __all__ = [
     "files",
     "ports",
     "processes",
+    "snapshot_schedule",
     "snapshots",
     "ssh_sessions",
 ]

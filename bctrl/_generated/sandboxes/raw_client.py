@@ -10,6 +10,7 @@ from ..core.jsonable_encoder import quote_path_param
 from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
+from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.bad_request_error import BadRequestError
 from ..errors.conflict_error import ConflictError
 from ..errors.forbidden_error import ForbiddenError
@@ -20,6 +21,7 @@ from ..errors.unauthorized_error import UnauthorizedError
 from ..types.resource_name import ResourceName
 from ..types.sandbox import Sandbox
 from ..types.sandbox_delete_response import SandboxDeleteResponse
+from ..types.sandbox_snapshot_schedule import SandboxSnapshotSchedule
 from ..types.sandboxes_list_response import SandboxesListResponse
 from .types.list_sandboxes_request_order import ListSandboxesRequestOrder
 from pydantic import ValidationError
@@ -123,6 +125,7 @@ class RawSandboxesClient:
         from_snapshot: typing.Optional[str] = OMIT,
         image: typing.Optional[str] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
+        snapshot_schedule: typing.Optional[SandboxSnapshotSchedule] = OMIT,
         space_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[Sandbox]:
@@ -142,6 +145,8 @@ class RawSandboxesClient:
 
         name : typing.Optional[ResourceName]
 
+        snapshot_schedule : typing.Optional[SandboxSnapshotSchedule]
+
         space_id : typing.Optional[str]
             Opaque resource ID or unique resource name in the selected Space or tenant.
 
@@ -160,6 +165,9 @@ class RawSandboxesClient:
                 "fromSnapshot": from_snapshot,
                 "image": image,
                 "name": name,
+                "snapshotSchedule": convert_and_respect_annotation_metadata(
+                    object_=snapshot_schedule, annotation=SandboxSnapshotSchedule, direction="write"
+                ),
                 "spaceId": space_id,
             },
             headers={
@@ -775,6 +783,7 @@ class AsyncRawSandboxesClient:
         from_snapshot: typing.Optional[str] = OMIT,
         image: typing.Optional[str] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
+        snapshot_schedule: typing.Optional[SandboxSnapshotSchedule] = OMIT,
         space_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[Sandbox]:
@@ -794,6 +803,8 @@ class AsyncRawSandboxesClient:
 
         name : typing.Optional[ResourceName]
 
+        snapshot_schedule : typing.Optional[SandboxSnapshotSchedule]
+
         space_id : typing.Optional[str]
             Opaque resource ID or unique resource name in the selected Space or tenant.
 
@@ -812,6 +823,9 @@ class AsyncRawSandboxesClient:
                 "fromSnapshot": from_snapshot,
                 "image": image,
                 "name": name,
+                "snapshotSchedule": convert_and_respect_annotation_metadata(
+                    object_=snapshot_schedule, annotation=SandboxSnapshotSchedule, direction="write"
+                ),
                 "spaceId": space_id,
             },
             headers={

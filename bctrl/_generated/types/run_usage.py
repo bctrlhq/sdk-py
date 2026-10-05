@@ -23,10 +23,16 @@ class RunUsage(UniversalBaseModel):
     computed_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="computedAt"), pydantic.Field(alias="computedAt")
     ]
+    cpu_seconds: typing_extensions.Annotated[
+        typing.Optional[float], FieldMetadata(alias="cpuSeconds"), pydantic.Field(alias="cpuSeconds")
+    ] = None
     credits_used: typing_extensions.Annotated[
         typing.Optional[float], FieldMetadata(alias="creditsUsed"), pydantic.Field(alias="creditsUsed")
     ] = None
     files_bytes: typing_extensions.Annotated[int, FieldMetadata(alias="filesBytes"), pydantic.Field(alias="filesBytes")]
+    memory_gb_seconds: typing_extensions.Annotated[
+        typing.Optional[float], FieldMetadata(alias="memoryGbSeconds"), pydantic.Field(alias="memoryGbSeconds")
+    ] = None
     proxy_bytes: typing_extensions.Annotated[
         typing.Optional[int], FieldMetadata(alias="proxyBytes"), pydantic.Field(alias="proxyBytes")
     ] = None

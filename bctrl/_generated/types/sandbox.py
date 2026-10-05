@@ -9,6 +9,7 @@ from ..core.serialization import FieldMetadata
 from .rfc3339timestamp import Rfc3339Timestamp
 from .sandbox_capabilities import SandboxCapabilities
 from .sandbox_object import SandboxObject
+from .sandbox_snapshot_schedule import SandboxSnapshotSchedule
 from .sandbox_status import SandboxStatus
 
 
@@ -46,6 +47,11 @@ class Sandbox(UniversalBaseModel):
     image: str
     name: typing.Optional[str] = None
     object: SandboxObject
+    snapshot_schedule: typing_extensions.Annotated[
+        typing.Optional[SandboxSnapshotSchedule],
+        FieldMetadata(alias="snapshotSchedule"),
+        pydantic.Field(alias="snapshotSchedule"),
+    ] = None
     space_id: typing_extensions.Annotated[
         str,
         FieldMetadata(alias="spaceId"),

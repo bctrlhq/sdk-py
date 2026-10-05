@@ -9,6 +9,7 @@ from ..core.request_options import RequestOptions
 from ..types.resource_name import ResourceName
 from ..types.sandbox import Sandbox
 from ..types.sandbox_delete_response import SandboxDeleteResponse
+from ..types.sandbox_snapshot_schedule import SandboxSnapshotSchedule
 from ..types.sandboxes_list_response import SandboxesListResponse
 from .raw_client import AsyncRawSandboxesClient, RawSandboxesClient
 from .types.list_sandboxes_request_order import ListSandboxesRequestOrder
@@ -19,6 +20,7 @@ if typing.TYPE_CHECKING:
     from .files.client import AsyncFilesClient, FilesClient
     from .ports.client import AsyncPortsClient, PortsClient
     from .processes.client import AsyncProcessesClient, ProcessesClient
+    from .snapshot_schedule.client import AsyncSnapshotScheduleClient, SnapshotScheduleClient
     from .snapshots.client import AsyncSnapshotsClient, SnapshotsClient
     from .ssh_sessions.client import AsyncSshSessionsClient, SshSessionsClient
 # this is used as the default value for optional parameters
@@ -34,6 +36,7 @@ class SandboxesClient:
         self._files: typing.Optional[FilesClient] = None
         self._ports: typing.Optional[PortsClient] = None
         self._processes: typing.Optional[ProcessesClient] = None
+        self._snapshot_schedule: typing.Optional[SnapshotScheduleClient] = None
         self._snapshots: typing.Optional[SnapshotsClient] = None
         self._ssh_sessions: typing.Optional[SshSessionsClient] = None
 
@@ -103,6 +106,7 @@ class SandboxesClient:
         from_snapshot: typing.Optional[str] = OMIT,
         image: typing.Optional[str] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
+        snapshot_schedule: typing.Optional[SandboxSnapshotSchedule] = OMIT,
         space_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Sandbox:
@@ -121,6 +125,8 @@ class SandboxesClient:
             An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.
 
         name : typing.Optional[ResourceName]
+
+        snapshot_schedule : typing.Optional[SandboxSnapshotSchedule]
 
         space_id : typing.Optional[str]
             Opaque resource ID or unique resource name in the selected Space or tenant.
@@ -149,6 +155,7 @@ class SandboxesClient:
             from_snapshot=from_snapshot,
             image=image,
             name=name,
+            snapshot_schedule=snapshot_schedule,
             space_id=space_id,
             request_options=request_options,
         )
@@ -358,6 +365,14 @@ class SandboxesClient:
         return self._processes
 
     @property
+    def snapshot_schedule(self):
+        if self._snapshot_schedule is None:
+            from .snapshot_schedule.client import SnapshotScheduleClient  # noqa: E402
+
+            self._snapshot_schedule = SnapshotScheduleClient(client_wrapper=self._client_wrapper)
+        return self._snapshot_schedule
+
+    @property
     def snapshots(self):
         if self._snapshots is None:
             from .snapshots.client import SnapshotsClient  # noqa: E402
@@ -383,6 +398,7 @@ class AsyncSandboxesClient:
         self._files: typing.Optional[AsyncFilesClient] = None
         self._ports: typing.Optional[AsyncPortsClient] = None
         self._processes: typing.Optional[AsyncProcessesClient] = None
+        self._snapshot_schedule: typing.Optional[AsyncSnapshotScheduleClient] = None
         self._snapshots: typing.Optional[AsyncSnapshotsClient] = None
         self._ssh_sessions: typing.Optional[AsyncSshSessionsClient] = None
 
@@ -460,6 +476,7 @@ class AsyncSandboxesClient:
         from_snapshot: typing.Optional[str] = OMIT,
         image: typing.Optional[str] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
+        snapshot_schedule: typing.Optional[SandboxSnapshotSchedule] = OMIT,
         space_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> Sandbox:
@@ -478,6 +495,8 @@ class AsyncSandboxesClient:
             An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.
 
         name : typing.Optional[ResourceName]
+
+        snapshot_schedule : typing.Optional[SandboxSnapshotSchedule]
 
         space_id : typing.Optional[str]
             Opaque resource ID or unique resource name in the selected Space or tenant.
@@ -514,6 +533,7 @@ class AsyncSandboxesClient:
             from_snapshot=from_snapshot,
             image=image,
             name=name,
+            snapshot_schedule=snapshot_schedule,
             space_id=space_id,
             request_options=request_options,
         )
@@ -755,6 +775,14 @@ class AsyncSandboxesClient:
 
             self._processes = AsyncProcessesClient(client_wrapper=self._client_wrapper)
         return self._processes
+
+    @property
+    def snapshot_schedule(self):
+        if self._snapshot_schedule is None:
+            from .snapshot_schedule.client import AsyncSnapshotScheduleClient  # noqa: E402
+
+            self._snapshot_schedule = AsyncSnapshotScheduleClient(client_wrapper=self._client_wrapper)
+        return self._snapshot_schedule
 
     @property
     def snapshots(self):

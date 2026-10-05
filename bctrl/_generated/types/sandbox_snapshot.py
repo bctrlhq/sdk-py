@@ -33,6 +33,7 @@ class SandboxSnapshot(UniversalBaseModel):
     The sandbox it was taken from; null once that sandbox is deleted.
     """
 
+    scheduled: bool
     size_bytes: typing_extensions.Annotated[
         typing.Optional[int], FieldMetadata(alias="sizeBytes"), pydantic.Field(alias="sizeBytes")
     ] = None
