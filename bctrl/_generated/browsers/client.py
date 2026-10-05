@@ -43,7 +43,6 @@ if typing.TYPE_CHECKING:
     from .computer.client import AsyncComputerClient, ComputerClient
     from .connections.client import AsyncConnectionsClient, ConnectionsClient
     from .control.client import AsyncControlClient, ControlClient
-    from .events.client import AsyncEventsClient, EventsClient
     from .files.client import AsyncFilesClient, FilesClient
     from .pages.client import AsyncPagesClient, PagesClient
     from .recording.client import AsyncRecordingClient, RecordingClient
@@ -59,7 +58,6 @@ class BrowsersClient:
         self._computer: typing.Optional[ComputerClient] = None
         self._connections: typing.Optional[ConnectionsClient] = None
         self._control: typing.Optional[ControlClient] = None
-        self._events: typing.Optional[EventsClient] = None
         self._files: typing.Optional[FilesClient] = None
         self._pages: typing.Optional[PagesClient] = None
         self._recording: typing.Optional[RecordingClient] = None
@@ -759,14 +757,6 @@ class BrowsersClient:
         return self._control
 
     @property
-    def events(self):
-        if self._events is None:
-            from .events.client import EventsClient  # noqa: E402
-
-            self._events = EventsClient(client_wrapper=self._client_wrapper)
-        return self._events
-
-    @property
     def files(self):
         if self._files is None:
             from .files.client import FilesClient  # noqa: E402
@@ -806,7 +796,6 @@ class AsyncBrowsersClient:
         self._computer: typing.Optional[AsyncComputerClient] = None
         self._connections: typing.Optional[AsyncConnectionsClient] = None
         self._control: typing.Optional[AsyncControlClient] = None
-        self._events: typing.Optional[AsyncEventsClient] = None
         self._files: typing.Optional[AsyncFilesClient] = None
         self._pages: typing.Optional[AsyncPagesClient] = None
         self._recording: typing.Optional[AsyncRecordingClient] = None
@@ -1579,14 +1568,6 @@ class AsyncBrowsersClient:
 
             self._control = AsyncControlClient(client_wrapper=self._client_wrapper)
         return self._control
-
-    @property
-    def events(self):
-        if self._events is None:
-            from .events.client import AsyncEventsClient  # noqa: E402
-
-            self._events = AsyncEventsClient(client_wrapper=self._client_wrapper)
-        return self._events
 
     @property
     def files(self):

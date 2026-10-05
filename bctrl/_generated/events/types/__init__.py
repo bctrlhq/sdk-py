@@ -8,9 +8,11 @@ from importlib import import_module
 if typing.TYPE_CHECKING:
     from .list_events_request_actor_type import ListEventsRequestActorType
     from .list_events_request_order import ListEventsRequestOrder
+    from .stream_events_request_actor_type import StreamEventsRequestActorType
 _dynamic_imports: typing.Dict[str, str] = {
     "ListEventsRequestActorType": ".list_events_request_actor_type",
     "ListEventsRequestOrder": ".list_events_request_order",
+    "StreamEventsRequestActorType": ".stream_events_request_actor_type",
 }
 
 
@@ -35,4 +37,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["ListEventsRequestActorType", "ListEventsRequestOrder"]
+__all__ = ["ListEventsRequestActorType", "ListEventsRequestOrder", "StreamEventsRequestActorType"]

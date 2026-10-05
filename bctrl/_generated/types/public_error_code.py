@@ -134,6 +134,7 @@ PublicErrorCode = typing.Union[
         "conversation.cursor_invalid",
         "conversation.message_cursor_invalid",
         "conversation.not_found",
+        "event.not_found",
         "conversation.busy",
         "device_session.denied",
         "device_session.expired",

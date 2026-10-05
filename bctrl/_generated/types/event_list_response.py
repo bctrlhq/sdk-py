@@ -9,7 +9,7 @@ from ..core.serialization import FieldMetadata
 from .event import Event
 
 
-class TasksEventsListResponse(UniversalBaseModel):
+class EventListResponse(UniversalBaseModel):
     data: typing.List[Event]
     has_more: typing_extensions.Annotated[bool, FieldMetadata(alias="hasMore"), pydantic.Field(alias="hasMore")]
     next_cursor: typing_extensions.Annotated[

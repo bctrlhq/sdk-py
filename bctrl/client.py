@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import Any
 from ._generated.client import Bctrl as GeneratedBctrl, AsyncBctrl as GeneratedAsyncBctrl
 from .browser_helpers import Browsers, AsyncBrowsers
+from .conversation_helpers import Conversations, AsyncConversations
 from .generated_surface import DEFAULT_API_VERSION
 from .pagination import paginate, async_paginate
 from .retries import SafeHttpClient, AsyncSafeHttpClient
@@ -23,6 +24,12 @@ class Bctrl(GeneratedBctrl):
             self._browsers = Browsers(client_wrapper=self._client_wrapper)
         return self._browsers
 
+    @property
+    def conversations(self) -> Conversations:
+        if self._conversations is None:
+            self._conversations = Conversations(client_wrapper=self._client_wrapper)
+        return self._conversations
+
     paginate = staticmethod(paginate)
     wait_for = staticmethod(wait_for)
 
@@ -39,6 +46,12 @@ class AsyncBctrl(GeneratedAsyncBctrl):
         if self._browsers is None:
             self._browsers = AsyncBrowsers(client_wrapper=self._client_wrapper)
         return self._browsers
+
+    @property
+    def conversations(self) -> AsyncConversations:
+        if self._conversations is None:
+            self._conversations = AsyncConversations(client_wrapper=self._client_wrapper)
+        return self._conversations
 
     paginate = staticmethod(async_paginate)
     wait_for = staticmethod(async_wait_for)

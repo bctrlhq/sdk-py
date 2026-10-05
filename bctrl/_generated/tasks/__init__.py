@@ -7,18 +7,13 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .types import ListTasksRequestOrder, ListTasksRequestStatus
-    from . import events, trace
-    from .events import ListEventsRequestActorType, ListEventsRequestOrder, StreamEventsRequestActorType
+    from . import trace
     from .trace import ListTraceRequestOrder, ListTraceRequestResourceType
 _dynamic_imports: typing.Dict[str, str] = {
-    "ListEventsRequestActorType": ".events",
-    "ListEventsRequestOrder": ".events",
     "ListTasksRequestOrder": ".types",
     "ListTasksRequestStatus": ".types",
     "ListTraceRequestOrder": ".trace",
     "ListTraceRequestResourceType": ".trace",
-    "StreamEventsRequestActorType": ".events",
-    "events": ".events",
     "trace": ".trace",
 }
 
@@ -45,13 +40,9 @@ def __dir__():
 
 
 __all__ = [
-    "ListEventsRequestActorType",
-    "ListEventsRequestOrder",
     "ListTasksRequestOrder",
     "ListTasksRequestStatus",
     "ListTraceRequestOrder",
     "ListTraceRequestResourceType",
-    "StreamEventsRequestActorType",
-    "events",
     "trace",
 ]

@@ -25,9 +25,8 @@ if typing.TYPE_CHECKING:
         BrowsersUpdateRequestViewport,
         ListBrowsersRequestOrder,
     )
-    from . import computer, connections, control, events, files, pages, recording, runs
+    from . import computer, connections, control, files, pages, recording, runs
     from .computer import BrowsersComputerClickRequestButton, BrowsersComputerScrollRequestDirection
-    from .events import StreamEventsRequestActorType
     from .files import DeleteFilesRequestRecursive, UploadFilesRequestCreateParents, UploadFilesRequestOverwrite
     from .pages import BrowsersPagesScreenshotRequestFormat
     from .runs import ListRunsRequestInclude, ListRunsRequestOrder
@@ -55,13 +54,11 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ListBrowsersRequestOrder": ".types",
     "ListRunsRequestInclude": ".runs",
     "ListRunsRequestOrder": ".runs",
-    "StreamEventsRequestActorType": ".events",
     "UploadFilesRequestCreateParents": ".files",
     "UploadFilesRequestOverwrite": ".files",
     "computer": ".computer",
     "connections": ".connections",
     "control": ".control",
-    "events": ".events",
     "files": ".files",
     "pages": ".pages",
     "recording": ".recording",
@@ -114,13 +111,11 @@ __all__ = [
     "ListBrowsersRequestOrder",
     "ListRunsRequestInclude",
     "ListRunsRequestOrder",
-    "StreamEventsRequestActorType",
     "UploadFilesRequestCreateParents",
     "UploadFilesRequestOverwrite",
     "computer",
     "connections",
     "control",
-    "events",
     "files",
     "pages",
     "recording",

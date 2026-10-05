@@ -9,11 +9,31 @@ from typing import Any, Iterator, AsyncIterator
 
 from pydantic import PrivateAttr
 from ._generated.browsers.client import BrowsersClient, AsyncBrowsersClient
+from ._generated.conversations.client import ConversationsClient, AsyncConversationsClient
+from ._generated.events.client import EventsClient, AsyncEventsClient
 from ._generated.types.browser_resource import BrowserResource
+
+
+class BrowserEvents:
+    """A browser's Events across its Runs: the one Event log filtered by ``browser``."""
+
+    def __init__(self, events: Any, browser_id: str):
+        self._events = events
+        self._browser_id = browser_id
+
+    def list(self, **kwargs: Any) -> Any:
+        return self._events.list(browser=self._browser_id, **kwargs)
+
+    def stream(self, **kwargs: Any) -> Any:
+        return self._events.stream(browser=self._browser_id, **kwargs)
 
 
 class Browser(BrowserResource):
     _client: Any = PrivateAttr()
+
+    @property
+    def events(self) -> BrowserEvents:
+        return BrowserEvents(self._client._events_client(), self.id)
 
     def wait_until_ready(self, *, timeout: float = 120) -> Browser:
         deadline = time.monotonic() + timeout
@@ -118,6 +138,9 @@ def _handle(resource: BrowserResource, client: Any, model: type[Browser]) -> Any
 
 
 class Browsers(BrowsersClient):
+    def _events_client(self) -> EventsClient:
+        return EventsClient(client_wrapper=self._client_wrapper)
+
     def create(self, **kwargs: Any) -> Browser:
         return _handle(super().create(**kwargs), self, Browser)
 
@@ -149,6 +172,9 @@ class Browsers(BrowsersClient):
 
 
 class AsyncBrowsers(AsyncBrowsersClient):
+    def _events_client(self) -> AsyncEventsClient:
+        return AsyncEventsClient(client_wrapper=self._client_wrapper)
+
     async def create(self, **kwargs: Any) -> AsyncBrowser:
         return _handle(await super().create(**kwargs), self, AsyncBrowser)
 

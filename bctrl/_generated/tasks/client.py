@@ -17,7 +17,6 @@ from .types.list_tasks_request_order import ListTasksRequestOrder
 from .types.list_tasks_request_status import ListTasksRequestStatus
 
 if typing.TYPE_CHECKING:
-    from .events.client import AsyncEventsClient, EventsClient
     from .trace.client import AsyncTraceClient, TraceClient
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
@@ -27,7 +26,6 @@ class TasksClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._raw_client = RawTasksClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
-        self._events: typing.Optional[EventsClient] = None
         self._trace: typing.Optional[TraceClient] = None
 
     @property
@@ -329,14 +327,6 @@ class TasksClient:
         return _response.data
 
     @property
-    def events(self):
-        if self._events is None:
-            from .events.client import EventsClient  # noqa: E402
-
-            self._events = EventsClient(client_wrapper=self._client_wrapper)
-        return self._events
-
-    @property
     def trace(self):
         if self._trace is None:
             from .trace.client import TraceClient  # noqa: E402
@@ -349,7 +339,6 @@ class AsyncTasksClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._raw_client = AsyncRawTasksClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
-        self._events: typing.Optional[AsyncEventsClient] = None
         self._trace: typing.Optional[AsyncTraceClient] = None
 
     @property
@@ -690,14 +679,6 @@ class AsyncTasksClient:
             request_options=request_options,
         )
         return _response.data
-
-    @property
-    def events(self):
-        if self._events is None:
-            from .events.client import AsyncEventsClient  # noqa: E402
-
-            self._events = AsyncEventsClient(client_wrapper=self._client_wrapper)
-        return self._events
 
     @property
     def trace(self):

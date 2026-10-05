@@ -20,7 +20,6 @@ from .types.list_runs_request_resource_type import ListRunsRequestResourceType
 from .types.list_runs_request_status_item import ListRunsRequestStatusItem
 
 if typing.TYPE_CHECKING:
-    from .events.client import AsyncEventsClient, EventsClient
     from .files.client import AsyncFilesClient, FilesClient
     from .recordings.client import AsyncRecordingsClient, RecordingsClient
     from .trace.client import AsyncTraceClient, TraceClient
@@ -30,7 +29,6 @@ class RunsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._raw_client = RawRunsClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
-        self._events: typing.Optional[EventsClient] = None
         self._files: typing.Optional[FilesClient] = None
         self._recordings: typing.Optional[RecordingsClient] = None
         self._trace: typing.Optional[TraceClient] = None
@@ -272,14 +270,6 @@ class RunsClient:
             yield from r.data
 
     @property
-    def events(self):
-        if self._events is None:
-            from .events.client import EventsClient  # noqa: E402
-
-            self._events = EventsClient(client_wrapper=self._client_wrapper)
-        return self._events
-
-    @property
     def files(self):
         if self._files is None:
             from .files.client import FilesClient  # noqa: E402
@@ -308,7 +298,6 @@ class AsyncRunsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._raw_client = AsyncRawRunsClient(client_wrapper=client_wrapper)
         self._client_wrapper = client_wrapper
-        self._events: typing.Optional[AsyncEventsClient] = None
         self._files: typing.Optional[AsyncFilesClient] = None
         self._recordings: typing.Optional[AsyncRecordingsClient] = None
         self._trace: typing.Optional[AsyncTraceClient] = None
@@ -582,14 +571,6 @@ class AsyncRunsClient:
         ) as r:
             async for _chunk in r.data:
                 yield _chunk
-
-    @property
-    def events(self):
-        if self._events is None:
-            from .events.client import AsyncEventsClient  # noqa: E402
-
-            self._events = AsyncEventsClient(client_wrapper=self._client_wrapper)
-        return self._events
 
     @property
     def files(self):

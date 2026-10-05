@@ -15,6 +15,7 @@ StreamEventsRequestCategoryOneItem = typing.Union[
         "console",
         "network",
         "captcha",
+        "vm",
     ],
     typing.Any,
 ]

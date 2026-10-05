@@ -106,13 +106,16 @@ The SDK supports streaming responses, as well, the response will be a generator 
 
 ```python
 from bctrl import Bctrl
+import datetime
 
 client = Bctrl(
     token="<token>",
 )
 
-client.runs.stream(
-    run_id="runId",
+client.events.stream(
+    from_=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    to=datetime.datetime.fromisoformat("2026-07-26T12:00:00+00:00"),
+    after="evt_uAAAAAAAAAAAAAAAAAAAAAA",
 )
 ```
 
