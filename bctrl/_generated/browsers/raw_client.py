@@ -39,6 +39,7 @@ from ..types.resource_name import ResourceName
 from ..types.start_browsers_request_space_id import StartBrowsersRequestSpaceId
 from ..types.stop_browsers_request_space_id import StopBrowsersRequestSpaceId
 from ..types.update_browsers_request_space_id import UpdateBrowsersRequestSpaceId
+from .types.browser_create_request_audit import BrowserCreateRequestAudit
 from .types.browser_create_request_captcha import BrowserCreateRequestCaptcha
 from .types.browser_create_request_proxy import BrowserCreateRequestProxy
 from .types.browser_create_request_space_id import BrowserCreateRequestSpaceId
@@ -48,6 +49,7 @@ from .types.browser_fetch_request_body_encoding import BrowserFetchRequestBodyEn
 from .types.browser_fetch_request_method import BrowserFetchRequestMethod
 from .types.browser_fetch_stream_request_body_encoding import BrowserFetchStreamRequestBodyEncoding
 from .types.browser_fetch_stream_request_method import BrowserFetchStreamRequestMethod
+from .types.browsers_update_request_audit import BrowsersUpdateRequestAudit
 from .types.browsers_update_request_captcha import BrowsersUpdateRequestCaptcha
 from .types.browsers_update_request_proxy import BrowsersUpdateRequestProxy
 from .types.browsers_update_request_stealth import BrowsersUpdateRequestStealth
@@ -169,6 +171,7 @@ class RawBrowsersClient:
         *,
         wait: typing.Optional[int] = None,
         idempotency_key: typing.Optional[str] = None,
+        audit: typing.Optional[BrowserCreateRequestAudit] = OMIT,
         auto_upgrade: typing.Optional[bool] = OMIT,
         captcha: typing.Optional[BrowserCreateRequestCaptcha] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
@@ -199,6 +202,9 @@ class RawBrowsersClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        audit : typing.Optional[BrowserCreateRequestAudit]
+            Machine audit detail (preview).
 
         auto_upgrade : typing.Optional[bool]
 
@@ -254,6 +260,9 @@ class RawBrowsersClient:
                 "wait": wait,
             },
             json={
+                "audit": convert_and_respect_annotation_metadata(
+                    object_=audit, annotation=BrowserCreateRequestAudit, direction="write"
+                ),
                 "autoUpgrade": auto_upgrade,
                 "captcha": convert_and_respect_annotation_metadata(
                     object_=captcha, annotation=BrowserCreateRequestCaptcha, direction="write"
@@ -607,6 +616,7 @@ class RawBrowsersClient:
         *,
         space_id: typing.Optional[UpdateBrowsersRequestSpaceId] = None,
         idempotency_key: typing.Optional[str] = None,
+        audit: typing.Optional[BrowsersUpdateRequestAudit] = OMIT,
         auto_upgrade: typing.Optional[bool] = OMIT,
         captcha: typing.Optional[BrowsersUpdateRequestCaptcha] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
@@ -638,6 +648,9 @@ class RawBrowsersClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        audit : typing.Optional[BrowsersUpdateRequestAudit]
+            Machine audit detail (preview).
 
         auto_upgrade : typing.Optional[bool]
 
@@ -691,6 +704,9 @@ class RawBrowsersClient:
                 "spaceId": space_id,
             },
             json={
+                "audit": convert_and_respect_annotation_metadata(
+                    object_=audit, annotation=BrowsersUpdateRequestAudit, direction="write"
+                ),
                 "autoUpgrade": auto_upgrade,
                 "captcha": convert_and_respect_annotation_metadata(
                     object_=captcha, annotation=BrowsersUpdateRequestCaptcha, direction="write"
@@ -1527,6 +1543,7 @@ class AsyncRawBrowsersClient:
         *,
         wait: typing.Optional[int] = None,
         idempotency_key: typing.Optional[str] = None,
+        audit: typing.Optional[BrowserCreateRequestAudit] = OMIT,
         auto_upgrade: typing.Optional[bool] = OMIT,
         captcha: typing.Optional[BrowserCreateRequestCaptcha] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
@@ -1557,6 +1574,9 @@ class AsyncRawBrowsersClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        audit : typing.Optional[BrowserCreateRequestAudit]
+            Machine audit detail (preview).
 
         auto_upgrade : typing.Optional[bool]
 
@@ -1612,6 +1632,9 @@ class AsyncRawBrowsersClient:
                 "wait": wait,
             },
             json={
+                "audit": convert_and_respect_annotation_metadata(
+                    object_=audit, annotation=BrowserCreateRequestAudit, direction="write"
+                ),
                 "autoUpgrade": auto_upgrade,
                 "captcha": convert_and_respect_annotation_metadata(
                     object_=captcha, annotation=BrowserCreateRequestCaptcha, direction="write"
@@ -1965,6 +1988,7 @@ class AsyncRawBrowsersClient:
         *,
         space_id: typing.Optional[UpdateBrowsersRequestSpaceId] = None,
         idempotency_key: typing.Optional[str] = None,
+        audit: typing.Optional[BrowsersUpdateRequestAudit] = OMIT,
         auto_upgrade: typing.Optional[bool] = OMIT,
         captcha: typing.Optional[BrowsersUpdateRequestCaptcha] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
@@ -1996,6 +2020,9 @@ class AsyncRawBrowsersClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        audit : typing.Optional[BrowsersUpdateRequestAudit]
+            Machine audit detail (preview).
 
         auto_upgrade : typing.Optional[bool]
 
@@ -2049,6 +2076,9 @@ class AsyncRawBrowsersClient:
                 "spaceId": space_id,
             },
             json={
+                "audit": convert_and_respect_annotation_metadata(
+                    object_=audit, annotation=BrowsersUpdateRequestAudit, direction="write"
+                ),
                 "autoUpgrade": auto_upgrade,
                 "captcha": convert_and_respect_annotation_metadata(
                     object_=captcha, annotation=BrowsersUpdateRequestCaptcha, direction="write"

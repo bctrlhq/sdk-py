@@ -8,6 +8,7 @@ from ..core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ..core.request_options import RequestOptions
 from ..types.resource_name import ResourceName
 from ..types.sandbox import Sandbox
+from ..types.sandbox_audit import SandboxAudit
 from ..types.sandbox_delete_response import SandboxDeleteResponse
 from ..types.sandbox_secret_env import SandboxSecretEnv
 from ..types.sandbox_snapshot_schedule import SandboxSnapshotSchedule
@@ -104,6 +105,7 @@ class SandboxesClient:
         self,
         *,
         idempotency_key: typing.Optional[str] = None,
+        audit: typing.Optional[SandboxAudit] = OMIT,
         from_snapshot: typing.Optional[str] = OMIT,
         image: typing.Optional[str] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
@@ -119,6 +121,8 @@ class SandboxesClient:
         ----------
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        audit : typing.Optional[SandboxAudit]
 
         from_snapshot : typing.Optional[str]
             Start as a fork of this snapshot (memory and disk), on the node that holds it. The image comes from the snapshot.
@@ -156,6 +160,7 @@ class SandboxesClient:
         """
         _response = self._raw_client.create(
             idempotency_key=idempotency_key,
+            audit=audit,
             from_snapshot=from_snapshot,
             image=image,
             name=name,
@@ -478,6 +483,7 @@ class AsyncSandboxesClient:
         self,
         *,
         idempotency_key: typing.Optional[str] = None,
+        audit: typing.Optional[SandboxAudit] = OMIT,
         from_snapshot: typing.Optional[str] = OMIT,
         image: typing.Optional[str] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
@@ -493,6 +499,8 @@ class AsyncSandboxesClient:
         ----------
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        audit : typing.Optional[SandboxAudit]
 
         from_snapshot : typing.Optional[str]
             Start as a fork of this snapshot (memory and disk), on the node that holds it. The image comes from the snapshot.
@@ -538,6 +546,7 @@ class AsyncSandboxesClient:
         """
         _response = await self._raw_client.create(
             idempotency_key=idempotency_key,
+            audit=audit,
             from_snapshot=from_snapshot,
             image=image,
             name=name,

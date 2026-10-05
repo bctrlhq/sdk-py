@@ -7,6 +7,7 @@ import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .rfc3339timestamp import Rfc3339Timestamp
+from .sandbox_audit import SandboxAudit
 from .sandbox_capabilities import SandboxCapabilities
 from .sandbox_object import SandboxObject
 from .sandbox_secret_env_state import SandboxSecretEnvState
@@ -15,6 +16,7 @@ from .sandbox_status import SandboxStatus
 
 
 class Sandbox(UniversalBaseModel):
+    audit: SandboxAudit
     browser_id: typing_extensions.Annotated[
         typing.Optional[str],
         FieldMetadata(alias="browserId"),

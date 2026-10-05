@@ -7,6 +7,7 @@ import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
 from ..core.serialization import FieldMetadata
 from .browser_network_traffic_config import BrowserNetworkTrafficConfig
+from .browser_resource_audit import BrowserResourceAudit
 from .browser_resource_captcha import BrowserResourceCaptcha
 from .browser_resource_object import BrowserResourceObject
 from .browser_resource_proxy import BrowserResourceProxy
@@ -22,6 +23,11 @@ from .run import Run
 
 
 class BrowserResource(UniversalBaseModel):
+    audit: typing.Optional[BrowserResourceAudit] = pydantic.Field(default=None)
+    """
+    Machine audit detail (preview).
+    """
+
     auto_upgrade: typing_extensions.Annotated[
         bool, FieldMetadata(alias="autoUpgrade"), pydantic.Field(alias="autoUpgrade")
     ]

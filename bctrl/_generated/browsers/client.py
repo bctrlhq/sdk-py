@@ -24,6 +24,7 @@ from ..types.start_browsers_request_space_id import StartBrowsersRequestSpaceId
 from ..types.stop_browsers_request_space_id import StopBrowsersRequestSpaceId
 from ..types.update_browsers_request_space_id import UpdateBrowsersRequestSpaceId
 from .raw_client import AsyncRawBrowsersClient, RawBrowsersClient
+from .types.browser_create_request_audit import BrowserCreateRequestAudit
 from .types.browser_create_request_captcha import BrowserCreateRequestCaptcha
 from .types.browser_create_request_proxy import BrowserCreateRequestProxy
 from .types.browser_create_request_space_id import BrowserCreateRequestSpaceId
@@ -33,6 +34,7 @@ from .types.browser_fetch_request_body_encoding import BrowserFetchRequestBodyEn
 from .types.browser_fetch_request_method import BrowserFetchRequestMethod
 from .types.browser_fetch_stream_request_body_encoding import BrowserFetchStreamRequestBodyEncoding
 from .types.browser_fetch_stream_request_method import BrowserFetchStreamRequestMethod
+from .types.browsers_update_request_audit import BrowsersUpdateRequestAudit
 from .types.browsers_update_request_captcha import BrowsersUpdateRequestCaptcha
 from .types.browsers_update_request_proxy import BrowsersUpdateRequestProxy
 from .types.browsers_update_request_stealth import BrowsersUpdateRequestStealth
@@ -148,6 +150,7 @@ class BrowsersClient:
         *,
         wait: typing.Optional[int] = None,
         idempotency_key: typing.Optional[str] = None,
+        audit: typing.Optional[BrowserCreateRequestAudit] = OMIT,
         auto_upgrade: typing.Optional[bool] = OMIT,
         captcha: typing.Optional[BrowserCreateRequestCaptcha] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
@@ -178,6 +181,9 @@ class BrowsersClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        audit : typing.Optional[BrowserCreateRequestAudit]
+            Machine audit detail (preview).
 
         auto_upgrade : typing.Optional[bool]
 
@@ -240,6 +246,7 @@ class BrowsersClient:
         _response = self._raw_client.create(
             wait=wait,
             idempotency_key=idempotency_key,
+            audit=audit,
             auto_upgrade=auto_upgrade,
             captcha=captcha,
             expire_after_idle_days=expire_after_idle_days,
@@ -358,6 +365,7 @@ class BrowsersClient:
         *,
         space_id: typing.Optional[UpdateBrowsersRequestSpaceId] = None,
         idempotency_key: typing.Optional[str] = None,
+        audit: typing.Optional[BrowsersUpdateRequestAudit] = OMIT,
         auto_upgrade: typing.Optional[bool] = OMIT,
         captcha: typing.Optional[BrowsersUpdateRequestCaptcha] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
@@ -389,6 +397,9 @@ class BrowsersClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        audit : typing.Optional[BrowsersUpdateRequestAudit]
+            Machine audit detail (preview).
 
         auto_upgrade : typing.Optional[bool]
 
@@ -452,6 +463,7 @@ class BrowsersClient:
             browser_id,
             space_id=space_id,
             idempotency_key=idempotency_key,
+            audit=audit,
             auto_upgrade=auto_upgrade,
             captcha=captcha,
             expire_after_idle_days=expire_after_idle_days,
@@ -894,6 +906,7 @@ class AsyncBrowsersClient:
         *,
         wait: typing.Optional[int] = None,
         idempotency_key: typing.Optional[str] = None,
+        audit: typing.Optional[BrowserCreateRequestAudit] = OMIT,
         auto_upgrade: typing.Optional[bool] = OMIT,
         captcha: typing.Optional[BrowserCreateRequestCaptcha] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
@@ -924,6 +937,9 @@ class AsyncBrowsersClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        audit : typing.Optional[BrowserCreateRequestAudit]
+            Machine audit detail (preview).
 
         auto_upgrade : typing.Optional[bool]
 
@@ -994,6 +1010,7 @@ class AsyncBrowsersClient:
         _response = await self._raw_client.create(
             wait=wait,
             idempotency_key=idempotency_key,
+            audit=audit,
             auto_upgrade=auto_upgrade,
             captcha=captcha,
             expire_after_idle_days=expire_after_idle_days,
@@ -1130,6 +1147,7 @@ class AsyncBrowsersClient:
         *,
         space_id: typing.Optional[UpdateBrowsersRequestSpaceId] = None,
         idempotency_key: typing.Optional[str] = None,
+        audit: typing.Optional[BrowsersUpdateRequestAudit] = OMIT,
         auto_upgrade: typing.Optional[bool] = OMIT,
         captcha: typing.Optional[BrowsersUpdateRequestCaptcha] = OMIT,
         expire_after_idle_days: typing.Optional[int] = OMIT,
@@ -1161,6 +1179,9 @@ class AsyncBrowsersClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        audit : typing.Optional[BrowsersUpdateRequestAudit]
+            Machine audit detail (preview).
 
         auto_upgrade : typing.Optional[bool]
 
@@ -1232,6 +1253,7 @@ class AsyncBrowsersClient:
             browser_id,
             space_id=space_id,
             idempotency_key=idempotency_key,
+            audit=audit,
             auto_upgrade=auto_upgrade,
             captcha=captcha,
             expire_after_idle_days=expire_after_idle_days,

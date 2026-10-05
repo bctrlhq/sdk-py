@@ -7,6 +7,8 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .types import (
+        BrowserCreateRequestAudit,
+        BrowserCreateRequestAuditFiles,
         BrowserCreateRequestCaptcha,
         BrowserCreateRequestProxy,
         BrowserCreateRequestProxyId,
@@ -18,6 +20,8 @@ if typing.TYPE_CHECKING:
         BrowserFetchRequestMethod,
         BrowserFetchStreamRequestBodyEncoding,
         BrowserFetchStreamRequestMethod,
+        BrowsersUpdateRequestAudit,
+        BrowsersUpdateRequestAuditFiles,
         BrowsersUpdateRequestCaptcha,
         BrowsersUpdateRequestProxy,
         BrowsersUpdateRequestProxyId,
@@ -31,6 +35,8 @@ if typing.TYPE_CHECKING:
     from .pages import BrowsersPagesScreenshotRequestFormat
     from .runs import ListRunsRequestInclude, ListRunsRequestOrder
 _dynamic_imports: typing.Dict[str, str] = {
+    "BrowserCreateRequestAudit": ".types",
+    "BrowserCreateRequestAuditFiles": ".types",
     "BrowserCreateRequestCaptcha": ".types",
     "BrowserCreateRequestProxy": ".types",
     "BrowserCreateRequestProxyId": ".types",
@@ -45,6 +51,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BrowsersComputerClickRequestButton": ".computer",
     "BrowsersComputerScrollRequestDirection": ".computer",
     "BrowsersPagesScreenshotRequestFormat": ".pages",
+    "BrowsersUpdateRequestAudit": ".types",
+    "BrowsersUpdateRequestAuditFiles": ".types",
     "BrowsersUpdateRequestCaptcha": ".types",
     "BrowsersUpdateRequestProxy": ".types",
     "BrowsersUpdateRequestProxyId": ".types",
@@ -88,6 +96,8 @@ def __dir__():
 
 
 __all__ = [
+    "BrowserCreateRequestAudit",
+    "BrowserCreateRequestAuditFiles",
     "BrowserCreateRequestCaptcha",
     "BrowserCreateRequestProxy",
     "BrowserCreateRequestProxyId",
@@ -102,6 +112,8 @@ __all__ = [
     "BrowsersComputerClickRequestButton",
     "BrowsersComputerScrollRequestDirection",
     "BrowsersPagesScreenshotRequestFormat",
+    "BrowsersUpdateRequestAudit",
+    "BrowsersUpdateRequestAuditFiles",
     "BrowsersUpdateRequestCaptcha",
     "BrowsersUpdateRequestProxy",
     "BrowsersUpdateRequestProxyId",

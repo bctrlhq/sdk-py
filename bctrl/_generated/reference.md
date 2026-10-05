@@ -1309,6 +1309,14 @@ client.browsers.create()
 <dl>
 <dd>
 
+**audit:** `typing.Optional[BrowserCreateRequestAudit]` — Machine audit detail (preview).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **auto_upgrade:** `typing.Optional[bool]` 
     
 </dd>
@@ -1721,6 +1729,14 @@ client.browsers.update(
 <dd>
 
 **idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**audit:** `typing.Optional[BrowsersUpdateRequestAudit]` — Machine audit detail (preview).
     
 </dd>
 </dl>
@@ -6077,6 +6093,14 @@ client.sandboxes.create()
 <dd>
 
 **idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**audit:** `typing.Optional[SandboxAudit]` 
     
 </dd>
 </dl>

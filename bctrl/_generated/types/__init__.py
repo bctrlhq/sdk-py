@@ -265,6 +265,8 @@ if typing.TYPE_CHECKING:
     from .browser_proxy_config_two_pool2udp_mode import BrowserProxyConfigTwoPool2UdpMode
     from .browser_proxy_input import BrowserProxyInput
     from .browser_resource import BrowserResource
+    from .browser_resource_audit import BrowserResourceAudit
+    from .browser_resource_audit_files import BrowserResourceAuditFiles
     from .browser_resource_captcha import BrowserResourceCaptcha
     from .browser_resource_object import BrowserResourceObject
     from .browser_resource_proxy import BrowserResourceProxy
@@ -734,6 +736,8 @@ if typing.TYPE_CHECKING:
     from .run_usage_billing_status import RunUsageBillingStatus
     from .runs_delete_response import RunsDeleteResponse
     from .sandbox import Sandbox
+    from .sandbox_audit import SandboxAudit
+    from .sandbox_audit_files import SandboxAuditFiles
     from .sandbox_capabilities import SandboxCapabilities
     from .sandbox_connection import SandboxConnection
     from .sandbox_connection_create_request import (
@@ -1230,6 +1234,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BrowserProxyConfigTwo_Pool2": ".browser_proxy_config_two",
     "BrowserProxyInput": ".browser_proxy_input",
     "BrowserResource": ".browser_resource",
+    "BrowserResourceAudit": ".browser_resource_audit",
+    "BrowserResourceAuditFiles": ".browser_resource_audit_files",
     "BrowserResourceCaptcha": ".browser_resource_captcha",
     "BrowserResourceObject": ".browser_resource_object",
     "BrowserResourceProxy": ".browser_resource_proxy",
@@ -1683,6 +1689,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "RunUsageBillingStatus": ".run_usage_billing_status",
     "RunsDeleteResponse": ".runs_delete_response",
     "Sandbox": ".sandbox",
+    "SandboxAudit": ".sandbox_audit",
+    "SandboxAuditFiles": ".sandbox_audit_files",
     "SandboxCapabilities": ".sandbox_capabilities",
     "SandboxConnection": ".sandbox_connection",
     "SandboxConnectionCreateRequest": ".sandbox_connection_create_request",
@@ -2202,6 +2210,8 @@ __all__ = [
     "BrowserProxyConfigTwo_Pool2",
     "BrowserProxyInput",
     "BrowserResource",
+    "BrowserResourceAudit",
+    "BrowserResourceAuditFiles",
     "BrowserResourceCaptcha",
     "BrowserResourceObject",
     "BrowserResourceProxy",
@@ -2655,6 +2665,8 @@ __all__ = [
     "RunUsageBillingStatus",
     "RunsDeleteResponse",
     "Sandbox",
+    "SandboxAudit",
+    "SandboxAuditFiles",
     "SandboxCapabilities",
     "SandboxConnection",
     "SandboxConnectionCreateRequest",

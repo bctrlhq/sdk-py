@@ -6,6 +6,8 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
+    from .browser_create_request_audit import BrowserCreateRequestAudit
+    from .browser_create_request_audit_files import BrowserCreateRequestAuditFiles
     from .browser_create_request_captcha import BrowserCreateRequestCaptcha
     from .browser_create_request_proxy import BrowserCreateRequestProxy
     from .browser_create_request_proxy_id import BrowserCreateRequestProxyId
@@ -17,6 +19,8 @@ if typing.TYPE_CHECKING:
     from .browser_fetch_request_method import BrowserFetchRequestMethod
     from .browser_fetch_stream_request_body_encoding import BrowserFetchStreamRequestBodyEncoding
     from .browser_fetch_stream_request_method import BrowserFetchStreamRequestMethod
+    from .browsers_update_request_audit import BrowsersUpdateRequestAudit
+    from .browsers_update_request_audit_files import BrowsersUpdateRequestAuditFiles
     from .browsers_update_request_captcha import BrowsersUpdateRequestCaptcha
     from .browsers_update_request_proxy import BrowsersUpdateRequestProxy
     from .browsers_update_request_proxy_id import BrowsersUpdateRequestProxyId
@@ -24,6 +28,8 @@ if typing.TYPE_CHECKING:
     from .browsers_update_request_viewport import BrowsersUpdateRequestViewport
     from .list_browsers_request_order import ListBrowsersRequestOrder
 _dynamic_imports: typing.Dict[str, str] = {
+    "BrowserCreateRequestAudit": ".browser_create_request_audit",
+    "BrowserCreateRequestAuditFiles": ".browser_create_request_audit_files",
     "BrowserCreateRequestCaptcha": ".browser_create_request_captcha",
     "BrowserCreateRequestProxy": ".browser_create_request_proxy",
     "BrowserCreateRequestProxyId": ".browser_create_request_proxy_id",
@@ -35,6 +41,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BrowserFetchRequestMethod": ".browser_fetch_request_method",
     "BrowserFetchStreamRequestBodyEncoding": ".browser_fetch_stream_request_body_encoding",
     "BrowserFetchStreamRequestMethod": ".browser_fetch_stream_request_method",
+    "BrowsersUpdateRequestAudit": ".browsers_update_request_audit",
+    "BrowsersUpdateRequestAuditFiles": ".browsers_update_request_audit_files",
     "BrowsersUpdateRequestCaptcha": ".browsers_update_request_captcha",
     "BrowsersUpdateRequestProxy": ".browsers_update_request_proxy",
     "BrowsersUpdateRequestProxyId": ".browsers_update_request_proxy_id",
@@ -66,6 +74,8 @@ def __dir__():
 
 
 __all__ = [
+    "BrowserCreateRequestAudit",
+    "BrowserCreateRequestAuditFiles",
     "BrowserCreateRequestCaptcha",
     "BrowserCreateRequestProxy",
     "BrowserCreateRequestProxyId",
@@ -77,6 +87,8 @@ __all__ = [
     "BrowserFetchRequestMethod",
     "BrowserFetchStreamRequestBodyEncoding",
     "BrowserFetchStreamRequestMethod",
+    "BrowsersUpdateRequestAudit",
+    "BrowsersUpdateRequestAuditFiles",
     "BrowsersUpdateRequestCaptcha",
     "BrowsersUpdateRequestProxy",
     "BrowsersUpdateRequestProxyId",
