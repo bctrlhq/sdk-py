@@ -9,6 +9,7 @@ from ..core.request_options import RequestOptions
 from ..types.resource_name import ResourceName
 from ..types.sandbox import Sandbox
 from ..types.sandbox_delete_response import SandboxDeleteResponse
+from ..types.sandbox_secret_env import SandboxSecretEnv
 from ..types.sandbox_snapshot_schedule import SandboxSnapshotSchedule
 from ..types.sandboxes_list_response import SandboxesListResponse
 from .raw_client import AsyncRawSandboxesClient, RawSandboxesClient
@@ -106,6 +107,7 @@ class SandboxesClient:
         from_snapshot: typing.Optional[str] = OMIT,
         image: typing.Optional[str] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
+        secret_env: typing.Optional[SandboxSecretEnv] = OMIT,
         snapshot_schedule: typing.Optional[SandboxSnapshotSchedule] = OMIT,
         space_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -125,6 +127,8 @@ class SandboxesClient:
             An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.
 
         name : typing.Optional[ResourceName]
+
+        secret_env : typing.Optional[SandboxSecretEnv]
 
         snapshot_schedule : typing.Optional[SandboxSnapshotSchedule]
 
@@ -155,6 +159,7 @@ class SandboxesClient:
             from_snapshot=from_snapshot,
             image=image,
             name=name,
+            secret_env=secret_env,
             snapshot_schedule=snapshot_schedule,
             space_id=space_id,
             request_options=request_options,
@@ -476,6 +481,7 @@ class AsyncSandboxesClient:
         from_snapshot: typing.Optional[str] = OMIT,
         image: typing.Optional[str] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
+        secret_env: typing.Optional[SandboxSecretEnv] = OMIT,
         snapshot_schedule: typing.Optional[SandboxSnapshotSchedule] = OMIT,
         space_id: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
@@ -495,6 +501,8 @@ class AsyncSandboxesClient:
             An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.
 
         name : typing.Optional[ResourceName]
+
+        secret_env : typing.Optional[SandboxSecretEnv]
 
         snapshot_schedule : typing.Optional[SandboxSnapshotSchedule]
 
@@ -533,6 +541,7 @@ class AsyncSandboxesClient:
             from_snapshot=from_snapshot,
             image=image,
             name=name,
+            secret_env=secret_env,
             snapshot_schedule=snapshot_schedule,
             space_id=space_id,
             request_options=request_options,

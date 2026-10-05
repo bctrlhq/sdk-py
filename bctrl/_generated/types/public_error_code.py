@@ -160,6 +160,7 @@ PublicErrorCode = typing.Union[
         "sandbox.port_refused",
         "sandbox.port_unreachable",
         "sandbox.snapshot_space_mismatch",
+        "sandbox.secret_env_fork",
         "sandboxSnapshot.not_found",
         "sandboxSnapshot.name_conflict",
         "environment.snapshots_unavailable",

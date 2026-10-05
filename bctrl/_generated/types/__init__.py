@@ -775,6 +775,10 @@ if typing.TYPE_CHECKING:
     from .sandbox_process_event_process_output_stream import SandboxProcessEventProcessOutputStream
     from .sandbox_process_object import SandboxProcessObject
     from .sandbox_process_status import SandboxProcessStatus
+    from .sandbox_secret_env import SandboxSecretEnv
+    from .sandbox_secret_env_state import SandboxSecretEnvState
+    from .sandbox_secret_env_state_value import SandboxSecretEnvStateValue
+    from .sandbox_secret_env_value import SandboxSecretEnvValue
     from .sandbox_snapshot import SandboxSnapshot
     from .sandbox_snapshot_delete_response import SandboxSnapshotDeleteResponse
     from .sandbox_snapshot_delete_response_object import SandboxSnapshotDeleteResponseObject
@@ -1716,6 +1720,10 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SandboxProcessEvent_ProcessOutput": ".sandbox_process_event",
     "SandboxProcessObject": ".sandbox_process_object",
     "SandboxProcessStatus": ".sandbox_process_status",
+    "SandboxSecretEnv": ".sandbox_secret_env",
+    "SandboxSecretEnvState": ".sandbox_secret_env_state",
+    "SandboxSecretEnvStateValue": ".sandbox_secret_env_state_value",
+    "SandboxSecretEnvValue": ".sandbox_secret_env_value",
     "SandboxSnapshot": ".sandbox_snapshot",
     "SandboxSnapshotDeleteResponse": ".sandbox_snapshot_delete_response",
     "SandboxSnapshotDeleteResponseObject": ".sandbox_snapshot_delete_response_object",
@@ -2684,6 +2692,10 @@ __all__ = [
     "SandboxProcessEvent_ProcessOutput",
     "SandboxProcessObject",
     "SandboxProcessStatus",
+    "SandboxSecretEnv",
+    "SandboxSecretEnvState",
+    "SandboxSecretEnvStateValue",
+    "SandboxSecretEnvValue",
     "SandboxSnapshot",
     "SandboxSnapshotDeleteResponse",
     "SandboxSnapshotDeleteResponseObject",

@@ -6108,6 +6108,14 @@ client.sandboxes.create()
 <dl>
 <dd>
 
+**secret_env:** `typing.Optional[SandboxSecretEnv]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **snapshot_schedule:** `typing.Optional[SandboxSnapshotSchedule]` 
     
 </dd>
