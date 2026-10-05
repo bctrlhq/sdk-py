@@ -7,15 +7,7 @@ from importlib import import_module
 
 if typing.TYPE_CHECKING:
     from .types import ListTasksRequestOrder, ListTasksRequestStatus
-    from . import trace
-    from .trace import ListTraceRequestOrder, ListTraceRequestResourceType
-_dynamic_imports: typing.Dict[str, str] = {
-    "ListTasksRequestOrder": ".types",
-    "ListTasksRequestStatus": ".types",
-    "ListTraceRequestOrder": ".trace",
-    "ListTraceRequestResourceType": ".trace",
-    "trace": ".trace",
-}
+_dynamic_imports: typing.Dict[str, str] = {"ListTasksRequestOrder": ".types", "ListTasksRequestStatus": ".types"}
 
 
 def __getattr__(attr_name: str) -> typing.Any:
@@ -39,10 +31,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = [
-    "ListTasksRequestOrder",
-    "ListTasksRequestStatus",
-    "ListTraceRequestOrder",
-    "ListTraceRequestResourceType",
-    "trace",
-]
+__all__ = ["ListTasksRequestOrder", "ListTasksRequestStatus"]

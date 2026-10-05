@@ -6,11 +6,11 @@ import typing
 from importlib import import_module
 
 if typing.TYPE_CHECKING:
-    from .list_trace_request_order import ListTraceRequestOrder
-    from .list_trace_request_resource_type import ListTraceRequestResourceType
+    from .types import DrainCreateRequestCategoriesItem, DrainUpdateRequestCategoriesItem, ListDrainsRequestOrder
 _dynamic_imports: typing.Dict[str, str] = {
-    "ListTraceRequestOrder": ".list_trace_request_order",
-    "ListTraceRequestResourceType": ".list_trace_request_resource_type",
+    "DrainCreateRequestCategoriesItem": ".types",
+    "DrainUpdateRequestCategoriesItem": ".types",
+    "ListDrainsRequestOrder": ".types",
 }
 
 
@@ -35,4 +35,4 @@ def __dir__():
     return sorted(lazy_attrs)
 
 
-__all__ = ["ListTraceRequestOrder", "ListTraceRequestResourceType"]
+__all__ = ["DrainCreateRequestCategoriesItem", "DrainUpdateRequestCategoriesItem", "ListDrainsRequestOrder"]

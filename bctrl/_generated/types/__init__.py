@@ -386,6 +386,39 @@ if typing.TYPE_CHECKING:
     from .download_files_request_space_id_one import DownloadFilesRequestSpaceIdOne
     from .drag_computer_request_space_id import DragComputerRequestSpaceId
     from .drag_computer_request_space_id_one import DragComputerRequestSpaceIdOne
+    from .drain import Drain
+    from .drain_categories_item import DrainCategoriesItem
+    from .drain_create_response import DrainCreateResponse
+    from .drain_create_response_categories_item import DrainCreateResponseCategoriesItem
+    from .drain_create_response_object import DrainCreateResponseObject
+    from .drain_delete_response import DrainDeleteResponse
+    from .drain_delete_response_object import DrainDeleteResponseObject
+    from .drain_destination import (
+        DrainDestination,
+        DrainDestination_Https,
+        DrainDestination_Otlp,
+        DrainDestination_R2,
+        DrainDestination_S3,
+    )
+    from .drain_destination_output import (
+        DrainDestinationOutput,
+        DrainDestinationOutput_Https,
+        DrainDestinationOutput_Otlp,
+        DrainDestinationOutput_R2,
+        DrainDestinationOutput_S3,
+    )
+    from .drain_https_destination import DrainHttpsDestination
+    from .drain_object import DrainObject
+    from .drain_otlp_destination import DrainOtlpDestination
+    from .drain_otlp_destination_output import DrainOtlpDestinationOutput
+    from .drain_r2destination import DrainR2Destination
+    from .drain_r2destination_output import DrainR2DestinationOutput
+    from .drain_s3destination import DrainS3Destination
+    from .drain_s3destination_output import DrainS3DestinationOutput
+    from .drain_status import DrainStatus
+    from .drain_test_result import DrainTestResult
+    from .drain_test_result_object import DrainTestResultObject
+    from .drains_list_response import DrainsListResponse
     from .embedded_view import EmbeddedView
     from .embedded_view_bootstrap import EmbeddedViewBootstrap
     from .embedded_view_bootstrap_object import EmbeddedViewBootstrapObject
@@ -498,12 +531,6 @@ if typing.TYPE_CHECKING:
     from .list_runs_request_status import ListRunsRequestStatus
     from .list_runs_request_status_one_item import ListRunsRequestStatusOneItem
     from .list_runs_request_status_zero import ListRunsRequestStatusZero
-    from .list_trace_request_kind import ListTraceRequestKind
-    from .list_trace_request_kind_one_item import ListTraceRequestKindOneItem
-    from .list_trace_request_kind_zero import ListTraceRequestKindZero
-    from .list_trace_request_status import ListTraceRequestStatus
-    from .list_trace_request_status_one_item import ListTraceRequestStatusOneItem
-    from .list_trace_request_status_zero import ListTraceRequestStatusZero
     from .location import Location
     from .location_home_regions_item import LocationHomeRegionsItem
     from .location_id import LocationId
@@ -789,6 +816,10 @@ if typing.TYPE_CHECKING:
     from .space_region import SpaceRegion
     from .space_secrets_mount import SpaceSecretsMount
     from .space_status import SpaceStatus
+    from .span import Span
+    from .span_attributes_value import SpanAttributesValue
+    from .span_kind import SpanKind
+    from .span_status import SpanStatus
     from .spending_cap import SpendingCap
     from .spending_cap_currency import SpendingCapCurrency
     from .spending_cap_object import SpendingCapObject
@@ -843,7 +874,6 @@ if typing.TYPE_CHECKING:
     from .task_status import TaskStatus
     from .task_usage import TaskUsage
     from .tasks_list_response import TasksListResponse
-    from .tasks_trace_list_response import TasksTraceListResponse
     from .too_many_requests_error_body import TooManyRequestsErrorBody
     from .too_many_requests_error_body_error import TooManyRequestsErrorBodyError
     from .tool import Tool
@@ -919,6 +949,9 @@ if typing.TYPE_CHECKING:
     from .tool_delete_response import ToolDeleteResponse
     from .tool_delete_response_object import ToolDeleteResponseObject
     from .tool_list_response import ToolListResponse
+    from .trace import Trace
+    from .trace_object import TraceObject
+    from .trace_semconv import TraceSemconv
     from .trace_span import TraceSpan
     from .trace_span_kind import TraceSpanKind
     from .trace_span_list_response import TraceSpanListResponse
@@ -1307,6 +1340,35 @@ _dynamic_imports: typing.Dict[str, str] = {
     "DownloadFilesRequestSpaceIdOne": ".download_files_request_space_id_one",
     "DragComputerRequestSpaceId": ".drag_computer_request_space_id",
     "DragComputerRequestSpaceIdOne": ".drag_computer_request_space_id_one",
+    "Drain": ".drain",
+    "DrainCategoriesItem": ".drain_categories_item",
+    "DrainCreateResponse": ".drain_create_response",
+    "DrainCreateResponseCategoriesItem": ".drain_create_response_categories_item",
+    "DrainCreateResponseObject": ".drain_create_response_object",
+    "DrainDeleteResponse": ".drain_delete_response",
+    "DrainDeleteResponseObject": ".drain_delete_response_object",
+    "DrainDestination": ".drain_destination",
+    "DrainDestinationOutput": ".drain_destination_output",
+    "DrainDestinationOutput_Https": ".drain_destination_output",
+    "DrainDestinationOutput_Otlp": ".drain_destination_output",
+    "DrainDestinationOutput_R2": ".drain_destination_output",
+    "DrainDestinationOutput_S3": ".drain_destination_output",
+    "DrainDestination_Https": ".drain_destination",
+    "DrainDestination_Otlp": ".drain_destination",
+    "DrainDestination_R2": ".drain_destination",
+    "DrainDestination_S3": ".drain_destination",
+    "DrainHttpsDestination": ".drain_https_destination",
+    "DrainObject": ".drain_object",
+    "DrainOtlpDestination": ".drain_otlp_destination",
+    "DrainOtlpDestinationOutput": ".drain_otlp_destination_output",
+    "DrainR2Destination": ".drain_r2destination",
+    "DrainR2DestinationOutput": ".drain_r2destination_output",
+    "DrainS3Destination": ".drain_s3destination",
+    "DrainS3DestinationOutput": ".drain_s3destination_output",
+    "DrainStatus": ".drain_status",
+    "DrainTestResult": ".drain_test_result",
+    "DrainTestResultObject": ".drain_test_result_object",
+    "DrainsListResponse": ".drains_list_response",
     "EmbeddedView": ".embedded_view",
     "EmbeddedViewBootstrap": ".embedded_view_bootstrap",
     "EmbeddedViewBootstrapObject": ".embedded_view_bootstrap_object",
@@ -1421,12 +1483,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ListRunsRequestStatus": ".list_runs_request_status",
     "ListRunsRequestStatusOneItem": ".list_runs_request_status_one_item",
     "ListRunsRequestStatusZero": ".list_runs_request_status_zero",
-    "ListTraceRequestKind": ".list_trace_request_kind",
-    "ListTraceRequestKindOneItem": ".list_trace_request_kind_one_item",
-    "ListTraceRequestKindZero": ".list_trace_request_kind_zero",
-    "ListTraceRequestStatus": ".list_trace_request_status",
-    "ListTraceRequestStatusOneItem": ".list_trace_request_status_one_item",
-    "ListTraceRequestStatusZero": ".list_trace_request_status_zero",
     "Location": ".location",
     "LocationHomeRegionsItem": ".location_home_regions_item",
     "LocationId": ".location_id",
@@ -1700,6 +1756,10 @@ _dynamic_imports: typing.Dict[str, str] = {
     "SpaceRegion": ".space_region",
     "SpaceSecretsMount": ".space_secrets_mount",
     "SpaceStatus": ".space_status",
+    "Span": ".span",
+    "SpanAttributesValue": ".span_attributes_value",
+    "SpanKind": ".span_kind",
+    "SpanStatus": ".span_status",
     "SpendingCap": ".spending_cap",
     "SpendingCapCurrency": ".spending_cap_currency",
     "SpendingCapObject": ".spending_cap_object",
@@ -1757,7 +1817,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "TaskStatus": ".task_status",
     "TaskUsage": ".task_usage",
     "TasksListResponse": ".tasks_list_response",
-    "TasksTraceListResponse": ".tasks_trace_list_response",
     "TooManyRequestsErrorBody": ".too_many_requests_error_body",
     "TooManyRequestsErrorBodyError": ".too_many_requests_error_body_error",
     "Tool": ".tool",
@@ -1831,6 +1890,9 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ToolDeleteResponse": ".tool_delete_response",
     "ToolDeleteResponseObject": ".tool_delete_response_object",
     "ToolListResponse": ".tool_list_response",
+    "Trace": ".trace",
+    "TraceObject": ".trace_object",
+    "TraceSemconv": ".trace_semconv",
     "TraceSpan": ".trace_span",
     "TraceSpanKind": ".trace_span_kind",
     "TraceSpanListResponse": ".trace_span_list_response",
@@ -2245,6 +2307,35 @@ __all__ = [
     "DownloadFilesRequestSpaceIdOne",
     "DragComputerRequestSpaceId",
     "DragComputerRequestSpaceIdOne",
+    "Drain",
+    "DrainCategoriesItem",
+    "DrainCreateResponse",
+    "DrainCreateResponseCategoriesItem",
+    "DrainCreateResponseObject",
+    "DrainDeleteResponse",
+    "DrainDeleteResponseObject",
+    "DrainDestination",
+    "DrainDestinationOutput",
+    "DrainDestinationOutput_Https",
+    "DrainDestinationOutput_Otlp",
+    "DrainDestinationOutput_R2",
+    "DrainDestinationOutput_S3",
+    "DrainDestination_Https",
+    "DrainDestination_Otlp",
+    "DrainDestination_R2",
+    "DrainDestination_S3",
+    "DrainHttpsDestination",
+    "DrainObject",
+    "DrainOtlpDestination",
+    "DrainOtlpDestinationOutput",
+    "DrainR2Destination",
+    "DrainR2DestinationOutput",
+    "DrainS3Destination",
+    "DrainS3DestinationOutput",
+    "DrainStatus",
+    "DrainTestResult",
+    "DrainTestResultObject",
+    "DrainsListResponse",
     "EmbeddedView",
     "EmbeddedViewBootstrap",
     "EmbeddedViewBootstrapObject",
@@ -2359,12 +2450,6 @@ __all__ = [
     "ListRunsRequestStatus",
     "ListRunsRequestStatusOneItem",
     "ListRunsRequestStatusZero",
-    "ListTraceRequestKind",
-    "ListTraceRequestKindOneItem",
-    "ListTraceRequestKindZero",
-    "ListTraceRequestStatus",
-    "ListTraceRequestStatusOneItem",
-    "ListTraceRequestStatusZero",
     "Location",
     "LocationHomeRegionsItem",
     "LocationId",
@@ -2638,6 +2723,10 @@ __all__ = [
     "SpaceRegion",
     "SpaceSecretsMount",
     "SpaceStatus",
+    "Span",
+    "SpanAttributesValue",
+    "SpanKind",
+    "SpanStatus",
     "SpendingCap",
     "SpendingCapCurrency",
     "SpendingCapObject",
@@ -2695,7 +2784,6 @@ __all__ = [
     "TaskStatus",
     "TaskUsage",
     "TasksListResponse",
-    "TasksTraceListResponse",
     "TooManyRequestsErrorBody",
     "TooManyRequestsErrorBodyError",
     "Tool",
@@ -2769,6 +2857,9 @@ __all__ = [
     "ToolDeleteResponse",
     "ToolDeleteResponseObject",
     "ToolListResponse",
+    "Trace",
+    "TraceObject",
+    "TraceSemconv",
     "TraceSpan",
     "TraceSpanKind",
     "TraceSpanListResponse",

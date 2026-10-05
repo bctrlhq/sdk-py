@@ -22,6 +22,7 @@ if typing.TYPE_CHECKING:
     from .browser.client import AsyncBrowserClient, BrowserClient
     from .browsers.client import AsyncBrowsersClient, BrowsersClient
     from .conversations.client import AsyncConversationsClient, ConversationsClient
+    from .drains.client import AsyncDrainsClient, DrainsClient
     from .events.client import AsyncEventsClient, EventsClient
     from .files.client import AsyncFilesClient, FilesClient
     from .locations.client import AsyncLocationsClient, LocationsClient
@@ -35,6 +36,7 @@ if typing.TYPE_CHECKING:
     from .tasks.client import AsyncTasksClient, TasksClient
     from .tool_calls.client import AsyncToolCallsClient, ToolCallsClient
     from .tools.client import AsyncToolsClient, ToolsClient
+    from .traces.client import AsyncTracesClient, TracesClient
     from .usage.client import AsyncUsageClient, UsageClient
     from .views.client import AsyncViewsClient, ViewsClient
     from .webhooks.client import AsyncWebhooksClient, WebhooksClient
@@ -139,6 +141,7 @@ class Bctrl:
         self._auth: typing.Optional[AuthClient] = None
         self._browsers: typing.Optional[BrowsersClient] = None
         self._conversations: typing.Optional[ConversationsClient] = None
+        self._drains: typing.Optional[DrainsClient] = None
         self._events: typing.Optional[EventsClient] = None
         self._files: typing.Optional[FilesClient] = None
         self._locations: typing.Optional[LocationsClient] = None
@@ -152,6 +155,7 @@ class Bctrl:
         self._tasks: typing.Optional[TasksClient] = None
         self._tool_calls: typing.Optional[ToolCallsClient] = None
         self._tools: typing.Optional[ToolsClient] = None
+        self._traces: typing.Optional[TracesClient] = None
         self._usage: typing.Optional[UsageClient] = None
         self._views: typing.Optional[ViewsClient] = None
         self._webhooks: typing.Optional[WebhooksClient] = None
@@ -256,6 +260,14 @@ class Bctrl:
         return self._conversations
 
     @property
+    def drains(self):
+        if self._drains is None:
+            from .drains.client import DrainsClient  # noqa: E402
+
+            self._drains = DrainsClient(client_wrapper=self._client_wrapper)
+        return self._drains
+
+    @property
     def events(self):
         if self._events is None:
             from .events.client import EventsClient  # noqa: E402
@@ -358,6 +370,14 @@ class Bctrl:
 
             self._tools = ToolsClient(client_wrapper=self._client_wrapper)
         return self._tools
+
+    @property
+    def traces(self):
+        if self._traces is None:
+            from .traces.client import TracesClient  # noqa: E402
+
+            self._traces = TracesClient(client_wrapper=self._client_wrapper)
+        return self._traces
 
     @property
     def usage(self):
@@ -520,6 +540,7 @@ class AsyncBctrl:
         self._auth: typing.Optional[AsyncAuthClient] = None
         self._browsers: typing.Optional[AsyncBrowsersClient] = None
         self._conversations: typing.Optional[AsyncConversationsClient] = None
+        self._drains: typing.Optional[AsyncDrainsClient] = None
         self._events: typing.Optional[AsyncEventsClient] = None
         self._files: typing.Optional[AsyncFilesClient] = None
         self._locations: typing.Optional[AsyncLocationsClient] = None
@@ -533,6 +554,7 @@ class AsyncBctrl:
         self._tasks: typing.Optional[AsyncTasksClient] = None
         self._tool_calls: typing.Optional[AsyncToolCallsClient] = None
         self._tools: typing.Optional[AsyncToolsClient] = None
+        self._traces: typing.Optional[AsyncTracesClient] = None
         self._usage: typing.Optional[AsyncUsageClient] = None
         self._views: typing.Optional[AsyncViewsClient] = None
         self._webhooks: typing.Optional[AsyncWebhooksClient] = None
@@ -645,6 +667,14 @@ class AsyncBctrl:
         return self._conversations
 
     @property
+    def drains(self):
+        if self._drains is None:
+            from .drains.client import AsyncDrainsClient  # noqa: E402
+
+            self._drains = AsyncDrainsClient(client_wrapper=self._client_wrapper)
+        return self._drains
+
+    @property
     def events(self):
         if self._events is None:
             from .events.client import AsyncEventsClient  # noqa: E402
@@ -747,6 +777,14 @@ class AsyncBctrl:
 
             self._tools = AsyncToolsClient(client_wrapper=self._client_wrapper)
         return self._tools
+
+    @property
+    def traces(self):
+        if self._traces is None:
+            from .traces.client import AsyncTracesClient  # noqa: E402
+
+            self._traces = AsyncTracesClient(client_wrapper=self._client_wrapper)
+        return self._traces
 
     @property
     def usage(self):

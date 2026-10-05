@@ -94,6 +94,15 @@ class RunEvent(UniversalBaseModel):
     ] = None
     time: Rfc3339Timestamp
     timestamp: Rfc3339Timestamp
+    trace_id: typing_extensions.Annotated[
+        typing.Optional[str],
+        FieldMetadata(alias="traceId"),
+        pydantic.Field(alias="traceId", description="W3C trace ID: GET /traces/{traceId} returns the span tree."),
+    ] = None
+    """
+    W3C trace ID: GET /traces/{traceId} returns the span tree.
+    """
+
     type: str
     updated_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")

@@ -10,26 +10,29 @@ from ..core.jsonable_encoder import quote_path_param
 from ..core.parse_error import ParsingError
 from ..core.pydantic_utilities import parse_obj_as
 from ..core.request_options import RequestOptions
+from ..core.serialization import convert_and_respect_annotation_metadata
 from ..errors.bad_request_error import BadRequestError
 from ..errors.forbidden_error import ForbiddenError
 from ..errors.not_found_error import NotFoundError
 from ..errors.too_many_requests_error import TooManyRequestsError
 from ..errors.unauthorized_error import UnauthorizedError
+from ..types.drain import Drain
+from ..types.drain_create_response import DrainCreateResponse
+from ..types.drain_delete_response import DrainDeleteResponse
+from ..types.drain_destination import DrainDestination
+from ..types.drain_test_result import DrainTestResult
+from ..types.drains_list_response import DrainsListResponse
 from ..types.resource_name import ResourceName
-from ..types.webhook import Webhook
-from ..types.webhook_create_response import WebhookCreateResponse
-from ..types.webhook_delete_response import WebhookDeleteResponse
-from ..types.webhook_delivery import WebhookDelivery
-from ..types.webhook_rotate_secret_response import WebhookRotateSecretResponse
-from ..types.webhooks_list_response import WebhooksListResponse
-from .types.list_webhooks_request_order import ListWebhooksRequestOrder
+from .types.drain_create_request_categories_item import DrainCreateRequestCategoriesItem
+from .types.drain_update_request_categories_item import DrainUpdateRequestCategoriesItem
+from .types.list_drains_request_order import ListDrainsRequestOrder
 from pydantic import ValidationError
 
 # this is used as the default value for optional parameters
 OMIT = typing.cast(typing.Any, ...)
 
 
-class RawWebhooksClient:
+class RawDrainsClient:
     def __init__(self, *, client_wrapper: SyncClientWrapper):
         self._client_wrapper = client_wrapper
 
@@ -37,18 +40,18 @@ class RawWebhooksClient:
         self,
         *,
         cursor: typing.Optional[str] = None,
-        order: typing.Optional[ListWebhooksRequestOrder] = None,
+        order: typing.Optional[ListDrainsRequestOrder] = None,
         limit: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[WebhooksListResponse]:
+    ) -> HttpResponse[DrainsListResponse]:
         """
-        List webhook endpoints visible to the current organization or subaccount scope.
+        List the drains that export Events to your own observability stack or bucket.
 
         Parameters
         ----------
         cursor : typing.Optional[str]
 
-        order : typing.Optional[ListWebhooksRequestOrder]
+        order : typing.Optional[ListDrainsRequestOrder]
             Order by createdAt and ID. Defaults to desc.
 
         limit : typing.Optional[int]
@@ -58,11 +61,11 @@ class RawWebhooksClient:
 
         Returns
         -------
-        HttpResponse[WebhooksListResponse]
+        HttpResponse[DrainsListResponse]
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            "v1/webhooks",
+            "v1/drains",
             method="GET",
             params={
                 "cursor": cursor,
@@ -74,9 +77,9 @@ class RawWebhooksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    WebhooksListResponse,
+                    DrainsListResponse,
                     parse_obj_as(
-                        type_=WebhooksListResponse,  # type: ignore
+                        type_=DrainsListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -115,23 +118,23 @@ class RawWebhooksClient:
     def create(
         self,
         *,
-        events: typing.Sequence[str],
-        url: str,
+        destination: DrainDestination,
         idempotency_key: typing.Optional[str] = None,
+        categories: typing.Optional[typing.Sequence[DrainCreateRequestCategoriesItem]] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[WebhookCreateResponse]:
+    ) -> HttpResponse[DrainCreateResponse]:
         """
-        Create a webhook endpoint. Deliveries are signed per Standard Webhooks (webhook-id, webhook-timestamp, webhook-signature), so any Standard Webhooks library verifies them. The whsec_ signing secret is returned once; store it securely.
+        Create a drain. Events after now are exported in batches, in commit order, retried with backoff until delivered: otlp sends them as OTLP/HTTP logs and their finished spans as traces, s3 and r2 write gzipped NDJSON under time-partitioned keys, https posts NDJSON signed like webhooks (the secret is returned once). Credentials are secret references.
 
         Parameters
         ----------
-        events : typing.Sequence[str]
-
-        url : str
+        destination : DrainDestination
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        categories : typing.Optional[typing.Sequence[DrainCreateRequestCategoriesItem]]
 
         name : typing.Optional[ResourceName]
 
@@ -140,16 +143,18 @@ class RawWebhooksClient:
 
         Returns
         -------
-        HttpResponse[WebhookCreateResponse]
+        HttpResponse[DrainCreateResponse]
             Created
         """
         _response = self._client_wrapper.httpx_client.request(
-            "v1/webhooks",
+            "v1/drains",
             method="POST",
             json={
-                "events": events,
+                "categories": categories,
+                "destination": convert_and_respect_annotation_metadata(
+                    object_=destination, annotation=DrainDestination, direction="write"
+                ),
                 "name": name,
-                "url": url,
             },
             headers={
                 "content-type": "application/json",
@@ -161,9 +166,9 @@ class RawWebhooksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    WebhookCreateResponse,
+                    DrainCreateResponse,
                     parse_obj_as(
-                        type_=WebhookCreateResponse,  # type: ignore
+                        type_=DrainCreateResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -221,33 +226,33 @@ class RawWebhooksClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def get(self, webhook_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[Webhook]:
+    def get(self, drain_id: str, *, request_options: typing.Optional[RequestOptions] = None) -> HttpResponse[Drain]:
         """
-        Get one webhook endpoint without exposing its signing secret.
+        Get a drain with its delivery status: last delivery, last error and the Events and bytes sent.
 
         Parameters
         ----------
-        webhook_id : str
+        drain_id : str
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[Webhook]
+        HttpResponse[Drain]
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{quote_path_param(webhook_id)}",
+            f"v1/drains/{quote_path_param(drain_id)}",
             method="GET",
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    Webhook,
+                    Drain,
                     parse_obj_as(
-                        type_=Webhook,  # type: ignore
+                        type_=Drain,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -296,17 +301,17 @@ class RawWebhooksClient:
 
     def delete(
         self,
-        webhook_id: str,
+        drain_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[WebhookDeleteResponse]:
+    ) -> HttpResponse[DrainDeleteResponse]:
         """
-        Delete a webhook endpoint. Historical delivery records remain in the audit ledger.
+        Delete a drain. Events not yet sent are not exported.
 
         Parameters
         ----------
-        webhook_id : str
+        drain_id : str
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
@@ -316,11 +321,11 @@ class RawWebhooksClient:
 
         Returns
         -------
-        HttpResponse[WebhookDeleteResponse]
+        HttpResponse[DrainDeleteResponse]
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{quote_path_param(webhook_id)}",
+            f"v1/drains/{quote_path_param(drain_id)}",
             method="DELETE",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -330,9 +335,9 @@ class RawWebhooksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    WebhookDeleteResponse,
+                    DrainDeleteResponse,
                     parse_obj_as(
-                        type_=WebhookDeleteResponse,  # type: ignore
+                        type_=DrainDeleteResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -392,49 +397,51 @@ class RawWebhooksClient:
 
     def update(
         self,
-        webhook_id: str,
+        drain_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
+        categories: typing.Optional[typing.Sequence[DrainUpdateRequestCategoriesItem]] = OMIT,
+        destination: typing.Optional[DrainDestination] = OMIT,
         enabled: typing.Optional[bool] = OMIT,
-        events: typing.Optional[typing.Sequence[str]] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
-        url: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[Webhook]:
+    ) -> HttpResponse[Drain]:
         """
-        Update a webhook destination, event subscriptions, label, or enabled state.
+        Update a drain destination, its category filter, label or enabled state. A disabled drain keeps its place and resumes from it.
 
         Parameters
         ----------
-        webhook_id : str
+        drain_id : str
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
 
+        categories : typing.Optional[typing.Sequence[DrainUpdateRequestCategoriesItem]]
+
+        destination : typing.Optional[DrainDestination]
+
         enabled : typing.Optional[bool]
 
-        events : typing.Optional[typing.Sequence[str]]
-
         name : typing.Optional[ResourceName]
-
-        url : typing.Optional[str]
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        HttpResponse[Webhook]
+        HttpResponse[Drain]
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{quote_path_param(webhook_id)}",
+            f"v1/drains/{quote_path_param(drain_id)}",
             method="PATCH",
             json={
+                "categories": categories,
+                "destination": convert_and_respect_annotation_metadata(
+                    object_=destination, annotation=DrainDestination, direction="write"
+                ),
                 "enabled": enabled,
-                "events": events,
                 "name": name,
-                "url": url,
             },
             headers={
                 "content-type": "application/json",
@@ -446,9 +453,9 @@ class RawWebhooksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    Webhook,
+                    Drain,
                     parse_obj_as(
-                        type_=Webhook,  # type: ignore
+                        type_=Drain,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -517,19 +524,19 @@ class RawWebhooksClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    def rotate_secret(
+    def test(
         self,
-        webhook_id: str,
+        drain_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[WebhookRotateSecretResponse]:
+    ) -> HttpResponse[DrainTestResult]:
         """
-        Replace a webhook signing secret. The new secret is returned once and signs every delivery from now on; for 24 hours the previous secret also signs (a second v1 signature), so receivers can switch without dropping deliveries.
+        Send one test Event to the drain destination now and report the outcome. The drain position does not move.
 
         Parameters
         ----------
-        webhook_id : str
+        drain_id : str
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
@@ -539,11 +546,11 @@ class RawWebhooksClient:
 
         Returns
         -------
-        HttpResponse[WebhookRotateSecretResponse]
+        HttpResponse[DrainTestResult]
             OK
         """
         _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{quote_path_param(webhook_id)}/rotate-secret",
+            f"v1/drains/{quote_path_param(drain_id)}/test",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -553,105 +560,9 @@ class RawWebhooksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    WebhookRotateSecretResponse,
+                    DrainTestResult,
                     parse_obj_as(
-                        type_=WebhookRotateSecretResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return HttpResponse(response=_response, data=_data)
-            if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(
-                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
-            )
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    def test(
-        self,
-        webhook_id: str,
-        *,
-        idempotency_key: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> HttpResponse[WebhookDelivery]:
-        """
-        Queue a signed test event for a webhook endpoint and return its delivery record.
-
-        Parameters
-        ----------
-        webhook_id : str
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        HttpResponse[WebhookDelivery]
-            Accepted
-        """
-        _response = self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{quote_path_param(webhook_id)}/test",
-            method="POST",
-            headers={
-                "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
-            },
-            request_options=request_options,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    WebhookDelivery,
-                    parse_obj_as(
-                        type_=WebhookDelivery,  # type: ignore
+                        type_=DrainTestResult,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -710,7 +621,7 @@ class RawWebhooksClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
 
-class AsyncRawWebhooksClient:
+class AsyncRawDrainsClient:
     def __init__(self, *, client_wrapper: AsyncClientWrapper):
         self._client_wrapper = client_wrapper
 
@@ -718,18 +629,18 @@ class AsyncRawWebhooksClient:
         self,
         *,
         cursor: typing.Optional[str] = None,
-        order: typing.Optional[ListWebhooksRequestOrder] = None,
+        order: typing.Optional[ListDrainsRequestOrder] = None,
         limit: typing.Optional[int] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[WebhooksListResponse]:
+    ) -> AsyncHttpResponse[DrainsListResponse]:
         """
-        List webhook endpoints visible to the current organization or subaccount scope.
+        List the drains that export Events to your own observability stack or bucket.
 
         Parameters
         ----------
         cursor : typing.Optional[str]
 
-        order : typing.Optional[ListWebhooksRequestOrder]
+        order : typing.Optional[ListDrainsRequestOrder]
             Order by createdAt and ID. Defaults to desc.
 
         limit : typing.Optional[int]
@@ -739,11 +650,11 @@ class AsyncRawWebhooksClient:
 
         Returns
         -------
-        AsyncHttpResponse[WebhooksListResponse]
+        AsyncHttpResponse[DrainsListResponse]
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "v1/webhooks",
+            "v1/drains",
             method="GET",
             params={
                 "cursor": cursor,
@@ -755,9 +666,9 @@ class AsyncRawWebhooksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    WebhooksListResponse,
+                    DrainsListResponse,
                     parse_obj_as(
-                        type_=WebhooksListResponse,  # type: ignore
+                        type_=DrainsListResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -796,23 +707,23 @@ class AsyncRawWebhooksClient:
     async def create(
         self,
         *,
-        events: typing.Sequence[str],
-        url: str,
+        destination: DrainDestination,
         idempotency_key: typing.Optional[str] = None,
+        categories: typing.Optional[typing.Sequence[DrainCreateRequestCategoriesItem]] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[WebhookCreateResponse]:
+    ) -> AsyncHttpResponse[DrainCreateResponse]:
         """
-        Create a webhook endpoint. Deliveries are signed per Standard Webhooks (webhook-id, webhook-timestamp, webhook-signature), so any Standard Webhooks library verifies them. The whsec_ signing secret is returned once; store it securely.
+        Create a drain. Events after now are exported in batches, in commit order, retried with backoff until delivered: otlp sends them as OTLP/HTTP logs and their finished spans as traces, s3 and r2 write gzipped NDJSON under time-partitioned keys, https posts NDJSON signed like webhooks (the secret is returned once). Credentials are secret references.
 
         Parameters
         ----------
-        events : typing.Sequence[str]
-
-        url : str
+        destination : DrainDestination
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        categories : typing.Optional[typing.Sequence[DrainCreateRequestCategoriesItem]]
 
         name : typing.Optional[ResourceName]
 
@@ -821,16 +732,18 @@ class AsyncRawWebhooksClient:
 
         Returns
         -------
-        AsyncHttpResponse[WebhookCreateResponse]
+        AsyncHttpResponse[DrainCreateResponse]
             Created
         """
         _response = await self._client_wrapper.httpx_client.request(
-            "v1/webhooks",
+            "v1/drains",
             method="POST",
             json={
-                "events": events,
+                "categories": categories,
+                "destination": convert_and_respect_annotation_metadata(
+                    object_=destination, annotation=DrainDestination, direction="write"
+                ),
                 "name": name,
-                "url": url,
             },
             headers={
                 "content-type": "application/json",
@@ -842,9 +755,9 @@ class AsyncRawWebhooksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    WebhookCreateResponse,
+                    DrainCreateResponse,
                     parse_obj_as(
-                        type_=WebhookCreateResponse,  # type: ignore
+                        type_=DrainCreateResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -903,34 +816,34 @@ class AsyncRawWebhooksClient:
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
     async def get(
-        self, webhook_id: str, *, request_options: typing.Optional[RequestOptions] = None
-    ) -> AsyncHttpResponse[Webhook]:
+        self, drain_id: str, *, request_options: typing.Optional[RequestOptions] = None
+    ) -> AsyncHttpResponse[Drain]:
         """
-        Get one webhook endpoint without exposing its signing secret.
+        Get a drain with its delivery status: last delivery, last error and the Events and bytes sent.
 
         Parameters
         ----------
-        webhook_id : str
+        drain_id : str
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[Webhook]
+        AsyncHttpResponse[Drain]
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{quote_path_param(webhook_id)}",
+            f"v1/drains/{quote_path_param(drain_id)}",
             method="GET",
             request_options=request_options,
         )
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    Webhook,
+                    Drain,
                     parse_obj_as(
-                        type_=Webhook,  # type: ignore
+                        type_=Drain,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -979,17 +892,17 @@ class AsyncRawWebhooksClient:
 
     async def delete(
         self,
-        webhook_id: str,
+        drain_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[WebhookDeleteResponse]:
+    ) -> AsyncHttpResponse[DrainDeleteResponse]:
         """
-        Delete a webhook endpoint. Historical delivery records remain in the audit ledger.
+        Delete a drain. Events not yet sent are not exported.
 
         Parameters
         ----------
-        webhook_id : str
+        drain_id : str
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
@@ -999,11 +912,11 @@ class AsyncRawWebhooksClient:
 
         Returns
         -------
-        AsyncHttpResponse[WebhookDeleteResponse]
+        AsyncHttpResponse[DrainDeleteResponse]
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{quote_path_param(webhook_id)}",
+            f"v1/drains/{quote_path_param(drain_id)}",
             method="DELETE",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -1013,9 +926,9 @@ class AsyncRawWebhooksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    WebhookDeleteResponse,
+                    DrainDeleteResponse,
                     parse_obj_as(
-                        type_=WebhookDeleteResponse,  # type: ignore
+                        type_=DrainDeleteResponse,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1075,49 +988,51 @@ class AsyncRawWebhooksClient:
 
     async def update(
         self,
-        webhook_id: str,
+        drain_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
+        categories: typing.Optional[typing.Sequence[DrainUpdateRequestCategoriesItem]] = OMIT,
+        destination: typing.Optional[DrainDestination] = OMIT,
         enabled: typing.Optional[bool] = OMIT,
-        events: typing.Optional[typing.Sequence[str]] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
-        url: typing.Optional[str] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[Webhook]:
+    ) -> AsyncHttpResponse[Drain]:
         """
-        Update a webhook destination, event subscriptions, label, or enabled state.
+        Update a drain destination, its category filter, label or enabled state. A disabled drain keeps its place and resumes from it.
 
         Parameters
         ----------
-        webhook_id : str
+        drain_id : str
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
 
+        categories : typing.Optional[typing.Sequence[DrainUpdateRequestCategoriesItem]]
+
+        destination : typing.Optional[DrainDestination]
+
         enabled : typing.Optional[bool]
 
-        events : typing.Optional[typing.Sequence[str]]
-
         name : typing.Optional[ResourceName]
-
-        url : typing.Optional[str]
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
         Returns
         -------
-        AsyncHttpResponse[Webhook]
+        AsyncHttpResponse[Drain]
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{quote_path_param(webhook_id)}",
+            f"v1/drains/{quote_path_param(drain_id)}",
             method="PATCH",
             json={
+                "categories": categories,
+                "destination": convert_and_respect_annotation_metadata(
+                    object_=destination, annotation=DrainDestination, direction="write"
+                ),
                 "enabled": enabled,
-                "events": events,
                 "name": name,
-                "url": url,
             },
             headers={
                 "content-type": "application/json",
@@ -1129,9 +1044,9 @@ class AsyncRawWebhooksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    Webhook,
+                    Drain,
                     parse_obj_as(
-                        type_=Webhook,  # type: ignore
+                        type_=Drain,  # type: ignore
                         object_=_response.json(),
                     ),
                 )
@@ -1200,19 +1115,19 @@ class AsyncRawWebhooksClient:
             )
         raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
 
-    async def rotate_secret(
+    async def test(
         self,
-        webhook_id: str,
+        drain_id: str,
         *,
         idempotency_key: typing.Optional[str] = None,
         request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[WebhookRotateSecretResponse]:
+    ) -> AsyncHttpResponse[DrainTestResult]:
         """
-        Replace a webhook signing secret. The new secret is returned once and signs every delivery from now on; for 24 hours the previous secret also signs (a second v1 signature), so receivers can switch without dropping deliveries.
+        Send one test Event to the drain destination now and report the outcome. The drain position does not move.
 
         Parameters
         ----------
-        webhook_id : str
+        drain_id : str
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
@@ -1222,11 +1137,11 @@ class AsyncRawWebhooksClient:
 
         Returns
         -------
-        AsyncHttpResponse[WebhookRotateSecretResponse]
+        AsyncHttpResponse[DrainTestResult]
             OK
         """
         _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{quote_path_param(webhook_id)}/rotate-secret",
+            f"v1/drains/{quote_path_param(drain_id)}/test",
             method="POST",
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
@@ -1236,105 +1151,9 @@ class AsyncRawWebhooksClient:
         try:
             if 200 <= _response.status_code < 300:
                 _data = typing.cast(
-                    WebhookRotateSecretResponse,
+                    DrainTestResult,
                     parse_obj_as(
-                        type_=WebhookRotateSecretResponse,  # type: ignore
-                        object_=_response.json(),
-                    ),
-                )
-                return AsyncHttpResponse(response=_response, data=_data)
-            if _response.status_code == 401:
-                raise UnauthorizedError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 403:
-                raise ForbiddenError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 404:
-                raise NotFoundError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            if _response.status_code == 429:
-                raise TooManyRequestsError(
-                    headers=dict(_response.headers),
-                    body=typing.cast(
-                        typing.Any,
-                        parse_obj_as(
-                            type_=typing.Any,  # type: ignore
-                            object_=_response.json(),
-                        ),
-                    ),
-                )
-            _response_json = _response.json()
-        except JSONDecodeError:
-            raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response.text)
-        except ValidationError as e:
-            raise ParsingError(
-                status_code=_response.status_code, headers=dict(_response.headers), body=_response.json(), cause=e
-            )
-        raise ApiError(status_code=_response.status_code, headers=dict(_response.headers), body=_response_json)
-
-    async def test(
-        self,
-        webhook_id: str,
-        *,
-        idempotency_key: typing.Optional[str] = None,
-        request_options: typing.Optional[RequestOptions] = None,
-    ) -> AsyncHttpResponse[WebhookDelivery]:
-        """
-        Queue a signed test event for a webhook endpoint and return its delivery record.
-
-        Parameters
-        ----------
-        webhook_id : str
-
-        idempotency_key : typing.Optional[str]
-            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
-
-        request_options : typing.Optional[RequestOptions]
-            Request-specific configuration.
-
-        Returns
-        -------
-        AsyncHttpResponse[WebhookDelivery]
-            Accepted
-        """
-        _response = await self._client_wrapper.httpx_client.request(
-            f"v1/webhooks/{quote_path_param(webhook_id)}/test",
-            method="POST",
-            headers={
-                "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
-            },
-            request_options=request_options,
-        )
-        try:
-            if 200 <= _response.status_code < 300:
-                _data = typing.cast(
-                    WebhookDelivery,
-                    parse_obj_as(
-                        type_=WebhookDelivery,  # type: ignore
+                        type_=DrainTestResult,  # type: ignore
                         object_=_response.json(),
                     ),
                 )

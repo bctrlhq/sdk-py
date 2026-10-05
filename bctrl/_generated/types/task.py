@@ -77,6 +77,15 @@ class Task(UniversalBaseModel):
         typing.Optional[Rfc3339Timestamp], FieldMetadata(alias="startedAt"), pydantic.Field(alias="startedAt")
     ] = None
     status: TaskStatus
+    trace_id: typing_extensions.Annotated[
+        typing.Optional[str],
+        FieldMetadata(alias="traceId"),
+        pydantic.Field(alias="traceId", description="W3C trace ID: GET /traces/{traceId} returns the span tree."),
+    ] = None
+    """
+    W3C trace ID: GET /traces/{traceId} returns the span tree.
+    """
+
     updated_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]

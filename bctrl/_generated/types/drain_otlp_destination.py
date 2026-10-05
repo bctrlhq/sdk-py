@@ -3,18 +3,12 @@
 import typing
 
 import pydantic
-import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from ..core.serialization import FieldMetadata
-from .trace_span import TraceSpan
 
 
-class TasksTraceListResponse(UniversalBaseModel):
-    data: typing.List[TraceSpan]
-    has_more: typing_extensions.Annotated[bool, FieldMetadata(alias="hasMore"), pydantic.Field(alias="hasMore")]
-    next_cursor: typing_extensions.Annotated[
-        typing.Optional[str], FieldMetadata(alias="nextCursor"), pydantic.Field(alias="nextCursor")
-    ] = None
+class DrainOtlpDestination(UniversalBaseModel):
+    endpoint: str
+    headers: typing.Optional[typing.Dict[str, str]] = None
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

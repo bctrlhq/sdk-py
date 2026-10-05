@@ -2,4 +2,4 @@
 
 import typing
 
-ListTraceRequestOrder = typing.Union[typing.Literal["asc", "desc"], typing.Any]
+DrainDeleteResponseObject = typing.Union[typing.Literal["drain"], typing.Any]
