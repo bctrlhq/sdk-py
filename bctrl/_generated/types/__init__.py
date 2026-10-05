@@ -418,6 +418,8 @@ if typing.TYPE_CHECKING:
     from .extension_id import ExtensionId
     from .fetch_browsers_request_space_id import FetchBrowsersRequestSpaceId
     from .fetch_browsers_request_space_id_one import FetchBrowsersRequestSpaceIdOne
+    from .fetch_stream_browsers_request_space_id import FetchStreamBrowsersRequestSpaceId
+    from .fetch_stream_browsers_request_space_id_one import FetchStreamBrowsersRequestSpaceIdOne
     from .file import File
     from .file_delete_response import FileDeleteResponse
     from .file_delete_response_object import FileDeleteResponseObject
@@ -1340,6 +1342,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ExtensionId": ".extension_id",
     "FetchBrowsersRequestSpaceId": ".fetch_browsers_request_space_id",
     "FetchBrowsersRequestSpaceIdOne": ".fetch_browsers_request_space_id_one",
+    "FetchStreamBrowsersRequestSpaceId": ".fetch_stream_browsers_request_space_id",
+    "FetchStreamBrowsersRequestSpaceIdOne": ".fetch_stream_browsers_request_space_id_one",
     "File": ".file",
     "FileDeleteResponse": ".file_delete_response",
     "FileDeleteResponseObject": ".file_delete_response_object",
@@ -2279,6 +2283,8 @@ __all__ = [
     "ExtensionId",
     "FetchBrowsersRequestSpaceId",
     "FetchBrowsersRequestSpaceIdOne",
+    "FetchStreamBrowsersRequestSpaceId",
+    "FetchStreamBrowsersRequestSpaceIdOne",
     "File",
     "FileDeleteResponse",
     "FileDeleteResponseObject",

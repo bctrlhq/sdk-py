@@ -2030,6 +2030,144 @@ client.browsers.fetch(
 </dl>
 </details>
 
+<details><summary><code>client.browsers.<a href="src/bctrl/browsers/client.py">fetch_stream</a>(...) -> typing.Iterator[bytes]</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Send an HTTP request from the browser itself, like fetch, and stream the response body back as it arrives, of any size and with bounded memory at every hop; a slow reader slows the upstream read. The upstream status is in BCTRL-Fetch-Status and its headers (JSON) in BCTRL-Fetch-Headers. A failure before the first byte is an error response; a failure after it aborts the stream, and the Run's completion Event records unknown. Human control blocks it.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```python
+from bctrl import Bctrl
+from bctrl.environment import BctrlEnvironment
+
+client = Bctrl(
+    token="<token>",
+    environment=BctrlEnvironment.PRODUCTION,
+)
+
+client.browsers.fetch_stream(
+    browser_id="browserId",
+    url="url",
+)
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**browser_id:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**url:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**space_id:** `typing.Optional[FetchStreamBrowsersRequestSpaceId]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotency_key:** `typing.Optional[str]` — Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**body:** `typing.Optional[str]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**body_encoding:** `typing.Optional[BrowserFetchStreamRequestBodyEncoding]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**headers:** `typing.Optional[typing.Dict[str, str]]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**method:** `typing.Optional[BrowserFetchStreamRequestMethod]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**timeout_ms:** `typing.Optional[int]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**request_options:** `typing.Optional[RequestOptions]` — Request-specific configuration.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.browsers.<a href="src/bctrl/browsers/client.py">start</a>(...) -> BrowserResource</code></summary>
 <dl>
 <dd>

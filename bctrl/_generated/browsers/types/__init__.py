@@ -15,6 +15,8 @@ if typing.TYPE_CHECKING:
     from .browser_create_request_viewport import BrowserCreateRequestViewport
     from .browser_fetch_request_body_encoding import BrowserFetchRequestBodyEncoding
     from .browser_fetch_request_method import BrowserFetchRequestMethod
+    from .browser_fetch_stream_request_body_encoding import BrowserFetchStreamRequestBodyEncoding
+    from .browser_fetch_stream_request_method import BrowserFetchStreamRequestMethod
     from .browsers_update_request_captcha import BrowsersUpdateRequestCaptcha
     from .browsers_update_request_proxy import BrowsersUpdateRequestProxy
     from .browsers_update_request_proxy_id import BrowsersUpdateRequestProxyId
@@ -31,6 +33,8 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BrowserCreateRequestViewport": ".browser_create_request_viewport",
     "BrowserFetchRequestBodyEncoding": ".browser_fetch_request_body_encoding",
     "BrowserFetchRequestMethod": ".browser_fetch_request_method",
+    "BrowserFetchStreamRequestBodyEncoding": ".browser_fetch_stream_request_body_encoding",
+    "BrowserFetchStreamRequestMethod": ".browser_fetch_stream_request_method",
     "BrowsersUpdateRequestCaptcha": ".browsers_update_request_captcha",
     "BrowsersUpdateRequestProxy": ".browsers_update_request_proxy",
     "BrowsersUpdateRequestProxyId": ".browsers_update_request_proxy_id",
@@ -71,6 +75,8 @@ __all__ = [
     "BrowserCreateRequestViewport",
     "BrowserFetchRequestBodyEncoding",
     "BrowserFetchRequestMethod",
+    "BrowserFetchStreamRequestBodyEncoding",
+    "BrowserFetchStreamRequestMethod",
     "BrowsersUpdateRequestCaptcha",
     "BrowsersUpdateRequestProxy",
     "BrowsersUpdateRequestProxyId",

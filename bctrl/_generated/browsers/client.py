@@ -13,6 +13,7 @@ from ..types.browser_resource import BrowserResource
 from ..types.browsers_delete_response import BrowsersDeleteResponse
 from ..types.delete_browsers_request_space_id import DeleteBrowsersRequestSpaceId
 from ..types.fetch_browsers_request_space_id import FetchBrowsersRequestSpaceId
+from ..types.fetch_stream_browsers_request_space_id import FetchStreamBrowsersRequestSpaceId
 from ..types.get_browsers_request_space_id import GetBrowsersRequestSpaceId
 from ..types.json_object import JsonObject
 from ..types.list_browsers_request_space_id import ListBrowsersRequestSpaceId
@@ -30,6 +31,8 @@ from .types.browser_create_request_stealth import BrowserCreateRequestStealth
 from .types.browser_create_request_viewport import BrowserCreateRequestViewport
 from .types.browser_fetch_request_body_encoding import BrowserFetchRequestBodyEncoding
 from .types.browser_fetch_request_method import BrowserFetchRequestMethod
+from .types.browser_fetch_stream_request_body_encoding import BrowserFetchStreamRequestBodyEncoding
+from .types.browser_fetch_stream_request_method import BrowserFetchStreamRequestMethod
 from .types.browsers_update_request_captcha import BrowsersUpdateRequestCaptcha
 from .types.browsers_update_request_proxy import BrowsersUpdateRequestProxy
 from .types.browsers_update_request_stealth import BrowsersUpdateRequestStealth
@@ -550,6 +553,80 @@ class BrowsersClient:
             request_options=request_options,
         )
         return _response.data
+
+    def fetch_stream(
+        self,
+        browser_id: str,
+        *,
+        url: str,
+        space_id: typing.Optional[FetchStreamBrowsersRequestSpaceId] = None,
+        idempotency_key: typing.Optional[str] = None,
+        body: typing.Optional[str] = OMIT,
+        body_encoding: typing.Optional[BrowserFetchStreamRequestBodyEncoding] = OMIT,
+        headers: typing.Optional[typing.Dict[str, str]] = OMIT,
+        method: typing.Optional[BrowserFetchStreamRequestMethod] = OMIT,
+        timeout_ms: typing.Optional[int] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> typing.Iterator[bytes]:
+        """
+        Send an HTTP request from the browser itself, like fetch, and stream the response body back as it arrives, of any size and with bounded memory at every hop; a slow reader slows the upstream read. The upstream status is in BCTRL-Fetch-Status and its headers (JSON) in BCTRL-Fetch-Headers. A failure before the first byte is an error response; a failure after it aborts the stream, and the Run's completion Event records unknown. Human control blocks it.
+
+        Parameters
+        ----------
+        browser_id : str
+
+        url : str
+
+        space_id : typing.Optional[FetchStreamBrowsersRequestSpaceId]
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        body : typing.Optional[str]
+
+        body_encoding : typing.Optional[BrowserFetchStreamRequestBodyEncoding]
+
+        headers : typing.Optional[typing.Dict[str, str]]
+
+        method : typing.Optional[BrowserFetchStreamRequestMethod]
+
+        timeout_ms : typing.Optional[int]
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration. You can pass in configuration such as `chunk_size`, and more to customize the request and response.
+
+        Returns
+        -------
+        typing.Iterator[bytes]
+            The upstream response body, streamed as it arrives
+
+        Examples
+        --------
+        from bctrl import Bctrl
+
+        client = Bctrl(
+            bctrl_space="YOUR_BCTRL_SPACE",
+            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
+            token="YOUR_TOKEN",
+        )
+        client.browsers.fetch_stream(
+            browser_id="browserId",
+            url="url",
+        )
+        """
+        with self._raw_client.fetch_stream(
+            browser_id,
+            url=url,
+            space_id=space_id,
+            idempotency_key=idempotency_key,
+            body=body,
+            body_encoding=body_encoding,
+            headers=headers,
+            method=method,
+            timeout_ms=timeout_ms,
+            request_options=request_options,
+        ) as r:
+            yield from r.data
 
     def start(
         self,
@@ -1273,6 +1350,89 @@ class AsyncBrowsersClient:
             request_options=request_options,
         )
         return _response.data
+
+    async def fetch_stream(
+        self,
+        browser_id: str,
+        *,
+        url: str,
+        space_id: typing.Optional[FetchStreamBrowsersRequestSpaceId] = None,
+        idempotency_key: typing.Optional[str] = None,
+        body: typing.Optional[str] = OMIT,
+        body_encoding: typing.Optional[BrowserFetchStreamRequestBodyEncoding] = OMIT,
+        headers: typing.Optional[typing.Dict[str, str]] = OMIT,
+        method: typing.Optional[BrowserFetchStreamRequestMethod] = OMIT,
+        timeout_ms: typing.Optional[int] = OMIT,
+        request_options: typing.Optional[RequestOptions] = None,
+    ) -> typing.AsyncIterator[bytes]:
+        """
+        Send an HTTP request from the browser itself, like fetch, and stream the response body back as it arrives, of any size and with bounded memory at every hop; a slow reader slows the upstream read. The upstream status is in BCTRL-Fetch-Status and its headers (JSON) in BCTRL-Fetch-Headers. A failure before the first byte is an error response; a failure after it aborts the stream, and the Run's completion Event records unknown. Human control blocks it.
+
+        Parameters
+        ----------
+        browser_id : str
+
+        url : str
+
+        space_id : typing.Optional[FetchStreamBrowsersRequestSpaceId]
+
+        idempotency_key : typing.Optional[str]
+            Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        body : typing.Optional[str]
+
+        body_encoding : typing.Optional[BrowserFetchStreamRequestBodyEncoding]
+
+        headers : typing.Optional[typing.Dict[str, str]]
+
+        method : typing.Optional[BrowserFetchStreamRequestMethod]
+
+        timeout_ms : typing.Optional[int]
+
+        request_options : typing.Optional[RequestOptions]
+            Request-specific configuration. You can pass in configuration such as `chunk_size`, and more to customize the request and response.
+
+        Returns
+        -------
+        typing.AsyncIterator[bytes]
+            The upstream response body, streamed as it arrives
+
+        Examples
+        --------
+        import asyncio
+
+        from bctrl import AsyncBctrl
+
+        client = AsyncBctrl(
+            bctrl_space="YOUR_BCTRL_SPACE",
+            bctrl_subaccount_id="YOUR_BCTRL_SUBACCOUNT_ID",
+            token="YOUR_TOKEN",
+        )
+
+
+        async def main() -> None:
+            await client.browsers.fetch_stream(
+                browser_id="browserId",
+                url="url",
+            )
+
+
+        asyncio.run(main())
+        """
+        async with self._raw_client.fetch_stream(
+            browser_id,
+            url=url,
+            space_id=space_id,
+            idempotency_key=idempotency_key,
+            body=body,
+            body_encoding=body_encoding,
+            headers=headers,
+            method=method,
+            timeout_ms=timeout_ms,
+            request_options=request_options,
+        ) as r:
+            async for _chunk in r.data:
+                yield _chunk
 
     async def start(
         self,
