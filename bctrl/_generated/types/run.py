@@ -10,6 +10,7 @@ from .location_id import LocationId
 from .rfc3339timestamp import Rfc3339Timestamp
 from .run_connections import RunConnections
 from .run_control import RunControl
+from .run_machine_access import RunMachineAccess
 from .run_object import RunObject
 from .run_recording import RunRecording
 from .run_resource_type import RunResourceType
@@ -36,6 +37,18 @@ class Run(UniversalBaseModel):
     """
 
     location: LocationId
+    machine_access: typing_extensions.Annotated[
+        typing.Optional[RunMachineAccess],
+        FieldMetadata(alias="machineAccess"),
+        pydantic.Field(
+            alias="machineAccess",
+            description="Preview, with include=machineAccess. null when the Run’s log is not complete enough to tell.",
+        ),
+    ] = None
+    """
+    Preview, with include=machineAccess. null when the Run’s log is not complete enough to tell.
+    """
+
     object: RunObject
     recording: RunRecording
     resource_id: typing_extensions.Annotated[

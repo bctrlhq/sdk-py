@@ -2,4 +2,4 @@
 
 import typing
 
-GetRunsRequestInclude = typing.Union[typing.Literal["usage"], typing.Any]
+GetRunsRequestIncludeZero = typing.Union[typing.Literal["usage"], typing.Any]
