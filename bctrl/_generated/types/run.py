@@ -15,6 +15,7 @@ from .run_recording import RunRecording
 from .run_resource_type import RunResourceType
 from .run_status import RunStatus
 from .run_usage import RunUsage
+from .warning import Warning
 
 
 class Run(UniversalBaseModel):
@@ -84,6 +85,7 @@ class Run(UniversalBaseModel):
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]
     usage: typing.Optional[RunUsage] = None
+    warnings: typing.Optional[typing.List[Warning]] = None
 
     if IS_PYDANTIC_V2:
         model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2

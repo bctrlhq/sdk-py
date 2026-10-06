@@ -9,6 +9,7 @@ from ..core.serialization import FieldMetadata
 from .browser_network_traffic_config import BrowserNetworkTrafficConfig
 from .browser_resource_audit import BrowserResourceAudit
 from .browser_resource_captcha import BrowserResourceCaptcha
+from .browser_resource_copied_from import BrowserResourceCopiedFrom
 from .browser_resource_object import BrowserResourceObject
 from .browser_resource_proxy import BrowserResourceProxy
 from .browser_resource_saved_state import BrowserResourceSavedState
@@ -20,6 +21,7 @@ from .json_object import JsonObject
 from .location_request import LocationRequest
 from .rfc3339timestamp import Rfc3339Timestamp
 from .run import Run
+from .warning import Warning
 
 
 class BrowserResource(UniversalBaseModel):
@@ -32,6 +34,15 @@ class BrowserResource(UniversalBaseModel):
         bool, FieldMetadata(alias="autoUpgrade"), pydantic.Field(alias="autoUpgrade")
     ]
     captcha: typing.Optional[BrowserResourceCaptcha] = None
+    copied_from: typing_extensions.Annotated[
+        typing.Optional[BrowserResourceCopiedFrom],
+        FieldMetadata(alias="copiedFrom"),
+        pydantic.Field(alias="copiedFrom", description="Preview. The browser this one was copied from (fromBrowser)."),
+    ] = None
+    """
+    Preview. The browser this one was copied from (fromBrowser).
+    """
+
     created_at: typing_extensions.Annotated[
         Rfc3339Timestamp, FieldMetadata(alias="createdAt"), pydantic.Field(alias="createdAt")
     ]
@@ -97,6 +108,7 @@ class BrowserResource(UniversalBaseModel):
         Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
     ]
     viewport: BrowserResourceViewport
+    warnings: typing.Optional[typing.List[Warning]] = None
     web_rtc_proxy_only: typing_extensions.Annotated[
         bool, FieldMetadata(alias="webRtcProxyOnly"), pydantic.Field(alias="webRtcProxyOnly")
     ]

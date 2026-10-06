@@ -1357,6 +1357,14 @@ client.browsers.create()
 <dl>
 <dd>
 
+**from_browser:** `typing.Optional[str]` — Preview. Start from a copy of the last saved state of this browser (cookies, site storage, tabs, preferences); the source is not touched. Requires persona.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **gpu:** `typing.Optional[bool]` 
     
 </dd>
@@ -1398,6 +1406,14 @@ client.browsers.create()
 <dd>
 
 **network_traffic:** `typing.Optional[BrowserNetworkTrafficConfig]` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**persona:** `typing.Optional[BrowserPersonaChoice]` — Preview. Required with fromBrowser.
     
 </dd>
 </dl>

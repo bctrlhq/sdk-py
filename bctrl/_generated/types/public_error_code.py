@@ -120,6 +120,8 @@ PublicErrorCode = typing.Union[
         "browser.connections_unavailable",
         "browser.already_started",
         "browser.identity_in_use",
+        "browser.persona_required",
+        "browser.no_saved_state",
         "browser.identity_missing",
         "browser.configuration_missing",
         "browser.start_timeout",

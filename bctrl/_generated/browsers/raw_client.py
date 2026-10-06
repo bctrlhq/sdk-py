@@ -24,6 +24,7 @@ from ..errors.unauthorized_error import UnauthorizedError
 from ..types.browser_fetch_result import BrowserFetchResult
 from ..types.browser_list_response import BrowserListResponse
 from ..types.browser_network_traffic_config import BrowserNetworkTrafficConfig
+from ..types.browser_persona_choice import BrowserPersonaChoice
 from ..types.browser_resource import BrowserResource
 from ..types.browsers_delete_response import BrowsersDeleteResponse
 from ..types.delete_browsers_request_space_id import DeleteBrowsersRequestSpaceId
@@ -177,12 +178,14 @@ class RawBrowsersClient:
         expire_after_idle_days: typing.Optional[int] = OMIT,
         extensions: typing.Optional[typing.Sequence[str]] = OMIT,
         force_open_shadow_roots: typing.Optional[bool] = OMIT,
+        from_browser: typing.Optional[str] = OMIT,
         gpu: typing.Optional[bool] = OMIT,
         headless: typing.Optional[bool] = OMIT,
         location: typing.Optional[LocationRequest] = OMIT,
         metadata: typing.Optional[JsonObject] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
         network_traffic: typing.Optional[BrowserNetworkTrafficConfig] = OMIT,
+        persona: typing.Optional[BrowserPersonaChoice] = OMIT,
         proxy: typing.Optional[BrowserCreateRequestProxy] = OMIT,
         recording: typing.Optional[bool] = OMIT,
         space_id: typing.Optional[BrowserCreateRequestSpaceId] = OMIT,
@@ -216,6 +219,9 @@ class RawBrowsersClient:
 
         force_open_shadow_roots : typing.Optional[bool]
 
+        from_browser : typing.Optional[str]
+            Preview. Start from a copy of the last saved state of this browser (cookies, site storage, tabs, preferences); the source is not touched. Requires persona.
+
         gpu : typing.Optional[bool]
 
         headless : typing.Optional[bool]
@@ -227,6 +233,9 @@ class RawBrowsersClient:
         name : typing.Optional[ResourceName]
 
         network_traffic : typing.Optional[BrowserNetworkTrafficConfig]
+
+        persona : typing.Optional[BrowserPersonaChoice]
+            Preview. Required with fromBrowser.
 
         proxy : typing.Optional[BrowserCreateRequestProxy]
 
@@ -270,6 +279,7 @@ class RawBrowsersClient:
                 "expireAfterIdleDays": expire_after_idle_days,
                 "extensions": extensions,
                 "forceOpenShadowRoots": force_open_shadow_roots,
+                "fromBrowser": from_browser,
                 "gpu": gpu,
                 "headless": headless,
                 "location": convert_and_respect_annotation_metadata(
@@ -280,6 +290,7 @@ class RawBrowsersClient:
                 "networkTraffic": convert_and_respect_annotation_metadata(
                     object_=network_traffic, annotation=BrowserNetworkTrafficConfig, direction="write"
                 ),
+                "persona": persona,
                 "proxy": convert_and_respect_annotation_metadata(
                     object_=proxy, annotation=BrowserCreateRequestProxy, direction="write"
                 ),
@@ -1549,12 +1560,14 @@ class AsyncRawBrowsersClient:
         expire_after_idle_days: typing.Optional[int] = OMIT,
         extensions: typing.Optional[typing.Sequence[str]] = OMIT,
         force_open_shadow_roots: typing.Optional[bool] = OMIT,
+        from_browser: typing.Optional[str] = OMIT,
         gpu: typing.Optional[bool] = OMIT,
         headless: typing.Optional[bool] = OMIT,
         location: typing.Optional[LocationRequest] = OMIT,
         metadata: typing.Optional[JsonObject] = OMIT,
         name: typing.Optional[ResourceName] = OMIT,
         network_traffic: typing.Optional[BrowserNetworkTrafficConfig] = OMIT,
+        persona: typing.Optional[BrowserPersonaChoice] = OMIT,
         proxy: typing.Optional[BrowserCreateRequestProxy] = OMIT,
         recording: typing.Optional[bool] = OMIT,
         space_id: typing.Optional[BrowserCreateRequestSpaceId] = OMIT,
@@ -1588,6 +1601,9 @@ class AsyncRawBrowsersClient:
 
         force_open_shadow_roots : typing.Optional[bool]
 
+        from_browser : typing.Optional[str]
+            Preview. Start from a copy of the last saved state of this browser (cookies, site storage, tabs, preferences); the source is not touched. Requires persona.
+
         gpu : typing.Optional[bool]
 
         headless : typing.Optional[bool]
@@ -1599,6 +1615,9 @@ class AsyncRawBrowsersClient:
         name : typing.Optional[ResourceName]
 
         network_traffic : typing.Optional[BrowserNetworkTrafficConfig]
+
+        persona : typing.Optional[BrowserPersonaChoice]
+            Preview. Required with fromBrowser.
 
         proxy : typing.Optional[BrowserCreateRequestProxy]
 
@@ -1642,6 +1661,7 @@ class AsyncRawBrowsersClient:
                 "expireAfterIdleDays": expire_after_idle_days,
                 "extensions": extensions,
                 "forceOpenShadowRoots": force_open_shadow_roots,
+                "fromBrowser": from_browser,
                 "gpu": gpu,
                 "headless": headless,
                 "location": convert_and_respect_annotation_metadata(
@@ -1652,6 +1672,7 @@ class AsyncRawBrowsersClient:
                 "networkTraffic": convert_and_respect_annotation_metadata(
                     object_=network_traffic, annotation=BrowserNetworkTrafficConfig, direction="write"
                 ),
+                "persona": persona,
                 "proxy": convert_and_respect_annotation_metadata(
                     object_=proxy, annotation=BrowserCreateRequestProxy, direction="write"
                 ),

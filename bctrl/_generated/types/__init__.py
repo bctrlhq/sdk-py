@@ -235,6 +235,7 @@ if typing.TYPE_CHECKING:
     from .browser_page_deleted_object import BrowserPageDeletedObject
     from .browser_page_object import BrowserPageObject
     from .browser_pages_list import BrowserPagesList
+    from .browser_persona_choice import BrowserPersonaChoice
     from .browser_proxy_config import BrowserProxyConfig
     from .browser_proxy_config_dns_resolution import BrowserProxyConfigDnsResolution
     from .browser_proxy_config_dns_resolution_dns_resolution import BrowserProxyConfigDnsResolutionDnsResolution
@@ -268,6 +269,7 @@ if typing.TYPE_CHECKING:
     from .browser_resource_audit import BrowserResourceAudit
     from .browser_resource_audit_files import BrowserResourceAuditFiles
     from .browser_resource_captcha import BrowserResourceCaptcha
+    from .browser_resource_copied_from import BrowserResourceCopiedFrom
     from .browser_resource_object import BrowserResourceObject
     from .browser_resource_proxy import BrowserResourceProxy
     from .browser_resource_proxy_id import BrowserResourceProxyId
@@ -1004,6 +1006,7 @@ if typing.TYPE_CHECKING:
     from .views_list_response import ViewsListResponse
     from .wait_computer_request_space_id import WaitComputerRequestSpaceId
     from .wait_computer_request_space_id_one import WaitComputerRequestSpaceIdOne
+    from .warning import Warning
     from .webhook import Webhook
     from .webhook_create_response import WebhookCreateResponse
     from .webhook_create_response_object import WebhookCreateResponseObject
@@ -1206,6 +1209,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BrowserPageDeletedObject": ".browser_page_deleted_object",
     "BrowserPageObject": ".browser_page_object",
     "BrowserPagesList": ".browser_pages_list",
+    "BrowserPersonaChoice": ".browser_persona_choice",
     "BrowserProxyConfig": ".browser_proxy_config",
     "BrowserProxyConfigDnsResolution": ".browser_proxy_config_dns_resolution",
     "BrowserProxyConfigDnsResolutionDnsResolution": ".browser_proxy_config_dns_resolution_dns_resolution",
@@ -1237,6 +1241,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "BrowserResourceAudit": ".browser_resource_audit",
     "BrowserResourceAuditFiles": ".browser_resource_audit_files",
     "BrowserResourceCaptcha": ".browser_resource_captcha",
+    "BrowserResourceCopiedFrom": ".browser_resource_copied_from",
     "BrowserResourceObject": ".browser_resource_object",
     "BrowserResourceProxy": ".browser_resource_proxy",
     "BrowserResourceProxyId": ".browser_resource_proxy_id",
@@ -1956,6 +1961,7 @@ _dynamic_imports: typing.Dict[str, str] = {
     "ViewsListResponse": ".views_list_response",
     "WaitComputerRequestSpaceId": ".wait_computer_request_space_id",
     "WaitComputerRequestSpaceIdOne": ".wait_computer_request_space_id_one",
+    "Warning": ".warning",
     "Webhook": ".webhook",
     "WebhookCreateResponse": ".webhook_create_response",
     "WebhookCreateResponseObject": ".webhook_create_response_object",
@@ -2182,6 +2188,7 @@ __all__ = [
     "BrowserPageDeletedObject",
     "BrowserPageObject",
     "BrowserPagesList",
+    "BrowserPersonaChoice",
     "BrowserProxyConfig",
     "BrowserProxyConfigDnsResolution",
     "BrowserProxyConfigDnsResolutionDnsResolution",
@@ -2213,6 +2220,7 @@ __all__ = [
     "BrowserResourceAudit",
     "BrowserResourceAuditFiles",
     "BrowserResourceCaptcha",
+    "BrowserResourceCopiedFrom",
     "BrowserResourceObject",
     "BrowserResourceProxy",
     "BrowserResourceProxyId",
@@ -2932,6 +2940,7 @@ __all__ = [
     "ViewsListResponse",
     "WaitComputerRequestSpaceId",
     "WaitComputerRequestSpaceIdOne",
+    "Warning",
     "Webhook",
     "WebhookCreateResponse",
     "WebhookCreateResponseObject",
