@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any, Iterator, Literal, Mapping, Optional
 from urllib.parse import quote, urlencode
 
-from .generated.tool_types import BuiltinToolsClient
+from .generated.legacy_tool_types import BuiltinToolsClient
 from .http import V1HttpClient, make_file_part
 from .runtime_context import StartedRuntime
 

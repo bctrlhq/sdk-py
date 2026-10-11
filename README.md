@@ -2,6 +2,17 @@
 
 Python SDK for the BCTRL public API.
 
+The current generated public API is available from `bctrl.api`, including an async client:
+
+```python
+import os
+from bctrl.api import Bctrl, AsyncBctrl
+client = Bctrl(token=os.environ["BCTRL_API_KEY"])
+spaces = client.spaces.list()
+```
+
+The root entrypoint below retains the previous helper API for existing callers.
+
 ## Install
 
 ```bash
