@@ -14425,6 +14425,7 @@ client = Bctrl(
 client.browsers.files.upload(
     browser_id="browserId",
     path="path",
+    file="example_file",
 )
 
 ```
@@ -14450,6 +14451,14 @@ client.browsers.files.upload(
 <dd>
 
 **path:** `str` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**file:** `core.File` — File bytes to upload (at most 25 MiB).
     
 </dd>
 </dl>

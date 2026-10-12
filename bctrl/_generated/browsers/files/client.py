@@ -2,6 +2,7 @@
 
 import typing
 
+from ... import core
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.request_options import RequestOptions
 from ...types.browser_file_delete_result import BrowserFileDeleteResult
@@ -195,6 +196,7 @@ class FilesClient:
         browser_id: str,
         *,
         path: str,
+        file: core.File,
         overwrite: typing.Optional[UploadFilesRequestOverwrite] = None,
         create_parents: typing.Optional[UploadFilesRequestCreateParents] = None,
         space_id: typing.Optional[UploadFilesRequestSpaceId] = None,
@@ -209,6 +211,9 @@ class FilesClient:
         browser_id : str
 
         path : str
+
+        file : core.File
+            See core.File for more documentation
 
         overwrite : typing.Optional[UploadFilesRequestOverwrite]
 
@@ -244,6 +249,7 @@ class FilesClient:
         _response = self._raw_client.upload(
             browser_id,
             path=path,
+            file=file,
             overwrite=overwrite,
             create_parents=create_parents,
             space_id=space_id,
@@ -516,6 +522,7 @@ class AsyncFilesClient:
         browser_id: str,
         *,
         path: str,
+        file: core.File,
         overwrite: typing.Optional[UploadFilesRequestOverwrite] = None,
         create_parents: typing.Optional[UploadFilesRequestCreateParents] = None,
         space_id: typing.Optional[UploadFilesRequestSpaceId] = None,
@@ -530,6 +537,9 @@ class AsyncFilesClient:
         browser_id : str
 
         path : str
+
+        file : core.File
+            See core.File for more documentation
 
         overwrite : typing.Optional[UploadFilesRequestOverwrite]
 
@@ -573,6 +583,7 @@ class AsyncFilesClient:
         _response = await self._raw_client.upload(
             browser_id,
             path=path,
+            file=file,
             overwrite=overwrite,
             create_parents=create_parents,
             space_id=space_id,

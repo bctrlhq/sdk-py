@@ -8,4 +8,6 @@ from ._generated import types
 from .waits import wait_for, async_wait_for
 from .version import __version__
 
-__all__ = ["Bctrl", "AsyncBctrl", "Browser", "AsyncBrowser", "FetchStreamResponse", "AsyncFetchStreamResponse", "paginate", "async_paginate", "ApiError", "RequestOptions", "types", "wait_for", "async_wait_for", "__version__"]
+BctrlError = ApiError
+
+__all__ = ["Bctrl", "AsyncBctrl", "Browser", "AsyncBrowser", "FetchStreamResponse", "AsyncFetchStreamResponse", "paginate", "async_paginate", "ApiError", "BctrlError", "RequestOptions", "types", "wait_for", "async_wait_for", "__version__"]

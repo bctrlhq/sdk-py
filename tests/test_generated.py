@@ -7,6 +7,8 @@ import httpx
 import pytest
 
 from bctrl import Bctrl, AsyncBctrl, ApiError, types
+from bctrl._generated.core.pydantic_utilities import parse_obj_as
+from pydantic import BaseModel
 
 BROWSER = json.loads(Path(__file__).with_name("browser.json").read_text())
 UNKNOWN = {"error": {"code": "runtime.unknown", "message": "Lost acknowledgment", "requestId": "req-test",
@@ -67,7 +69,7 @@ def test_generated_retries_preserve_one_key_and_the_version_header():
 
     with httpx.Client(transport=httpx.MockTransport(send)) as transport:
         client = Bctrl(token="test", httpx_client=transport)
-        browser = client.browsers.create(name="checkout")
+        browser = client.browsers.create(name="checkout", idempotency_key="create-once")
         assert browser.id == BROWSER["id"]
         assert requests[0].headers["Idempotency-Key"] == requests[1].headers["Idempotency-Key"]
         assert requests[0].headers["BCTRL-Version"] == "2026-10-03"
@@ -120,9 +122,10 @@ def test_cursor_iteration_connect_and_cleanup_use_generated_operations():
 
 
 def test_sdk_names_preserve_both_aliases_on_the_wire():
-    model = types.AiStoredModelSelection.model_validate({"model": "test", "reasoning_effort": "low", "reasoningEffort": "high",
+    model = types.AiStoredModelSelection(**{"model": "test", "reasoning_effort": "low", "reasoningEffort": "high",
         "max_tokens": 1, "maxTokens": 2})
-    output = model.model_dump(by_alias=True, exclude_none=True)
+    output = (model.model_dump(by_alias=True, exclude_none=True) if hasattr(model, 'model_dump')
+              else BaseModel.dict(model, by_alias=True, exclude_none=True))
     assert output["reasoning_effort"] == "low"
     assert output["reasoningEffort"] == "high"
     assert output["max_tokens"] == 1
@@ -139,7 +142,7 @@ def test_async_generated_retries_and_unknown_outcomes():
 
         async with httpx.AsyncClient(transport=httpx.MockTransport(send)) as transport:
             client = AsyncBctrl(token="test", httpx_client=transport)
-            assert (await client.browsers.create()).id == BROWSER["id"]
+            assert (await client.browsers.create(idempotency_key="async-create-once")).id == BROWSER["id"]
             assert requests[0].headers["Idempotency-Key"] == requests[1].headers["Idempotency-Key"]
 
         async def unknown(request):

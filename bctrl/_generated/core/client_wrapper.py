@@ -37,12 +37,14 @@ class BaseClientWrapper:
         import platform
 
         headers: typing.Dict[str, str] = {
-            "User-Agent": "bctrl/0.1.5",
+            "User-Agent": "bctrl/0.3.0",
             "X-Fern-Language": "Python",
             "X-Fern-Runtime": f"python/{platform.python_version()}",
             "X-Fern-Platform": f"{platform.system().lower()}/{platform.release()}",
             **(self.get_custom_headers() or {}),
         }
+        if not any(name.lower() == "bctrl-version" for name in headers):
+            headers["BCTRL-Version"] = "2026-10-03"
         if self._bctrl_space is not None:
             headers["BCTRL-Space"] = self._bctrl_space
         if self._bctrl_subaccount_id is not None:
