@@ -4,6 +4,7 @@ import contextlib
 import typing
 from json.decoder import JSONDecodeError
 
+from ... import core
 from ...core.api_error import ApiError
 from ...core.client_wrapper import AsyncClientWrapper, SyncClientWrapper
 from ...core.http_response import AsyncHttpResponse, HttpResponse
@@ -411,6 +412,7 @@ class RawFilesClient:
         browser_id: str,
         *,
         path: str,
+        file: core.File,
         overwrite: typing.Optional[UploadFilesRequestOverwrite] = None,
         create_parents: typing.Optional[UploadFilesRequestCreateParents] = None,
         space_id: typing.Optional[UploadFilesRequestSpaceId] = None,
@@ -425,6 +427,9 @@ class RawFilesClient:
         browser_id : str
 
         path : str
+
+        file : core.File
+            See core.File for more documentation
 
         overwrite : typing.Optional[UploadFilesRequestOverwrite]
 
@@ -452,10 +457,16 @@ class RawFilesClient:
                 "createParents": create_parents,
                 "spaceId": space_id,
             },
+            data={},
+            files={
+                "file": file,
+            },
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
             },
             request_options=request_options,
+            omit=OMIT,
+            force_multipart=True,
         )
         try:
             if 200 <= _response.status_code < 300:
@@ -1060,6 +1071,7 @@ class AsyncRawFilesClient:
         browser_id: str,
         *,
         path: str,
+        file: core.File,
         overwrite: typing.Optional[UploadFilesRequestOverwrite] = None,
         create_parents: typing.Optional[UploadFilesRequestCreateParents] = None,
         space_id: typing.Optional[UploadFilesRequestSpaceId] = None,
@@ -1074,6 +1086,9 @@ class AsyncRawFilesClient:
         browser_id : str
 
         path : str
+
+        file : core.File
+            See core.File for more documentation
 
         overwrite : typing.Optional[UploadFilesRequestOverwrite]
 
@@ -1101,10 +1116,16 @@ class AsyncRawFilesClient:
                 "createParents": create_parents,
                 "spaceId": space_id,
             },
+            data={},
+            files={
+                "file": file,
+            },
             headers={
                 "Idempotency-Key": str(idempotency_key) if idempotency_key is not None else None,
             },
             request_options=request_options,
+            omit=OMIT,
+            force_multipart=True,
         )
         try:
             if 200 <= _response.status_code < 300:

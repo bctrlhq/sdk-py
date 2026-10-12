@@ -12,6 +12,7 @@ from ._generated.browsers.client import BrowsersClient, AsyncBrowsersClient
 from ._generated.conversations.client import ConversationsClient, AsyncConversationsClient
 from ._generated.events.client import EventsClient, AsyncEventsClient
 from ._generated.types.browser_resource import BrowserResource
+from ._generated.core.pydantic_utilities import parse_obj_as
 
 
 class BrowserEvents:
@@ -112,7 +113,8 @@ class AsyncFetchStreamResponse(FetchStreamResponse):
     async def __aiter__(self) -> AsyncIterator[bytes]:
         try:
             async for chunk in self._response.data:
-                yield chunk
+                if chunk:
+                    yield chunk
         finally:
             await self.aclose()
 
@@ -132,7 +134,7 @@ class AsyncFetchStreamResponse(FetchStreamResponse):
 
 
 def _handle(resource: BrowserResource, client: Any, model: type[Browser]) -> Any:
-    browser = model.model_validate(resource.model_dump(by_alias=True))
+    browser = parse_obj_as(model, resource.dict(by_alias=True))
     browser._client = client
     return browser
 

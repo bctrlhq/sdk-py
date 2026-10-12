@@ -9,6 +9,7 @@
     "package_name": "bctrl",
     "encode_path_params": true
   },
-  "invokedBy": "manual",
-  "requestedVersion": "0.1.5"
+  "invokedBy": "ci",
+  "requestedVersion": "0.3.0",
+  "ciProvider": "unknown"
 }

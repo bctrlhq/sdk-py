@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import asyncio
 import time
-import uuid
 from typing import Any
 
 
@@ -27,7 +26,7 @@ def _request(kwargs: dict[str, Any], default: int) -> tuple[dict[str, Any], int]
     if kwargs["method"].upper() not in ("GET", "HEAD", "OPTIONS"):
         combined = {**headers, **options.get("additional_headers", {})}
         if not any(name.lower() == "idempotency-key" and value is not None for name, value in combined.items()):
-            headers["Idempotency-Key"] = str(uuid.uuid4())
+            limit = 0
     return {**kwargs, "headers": headers, "request_options": options}, limit
 
 

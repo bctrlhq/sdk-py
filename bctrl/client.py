@@ -13,7 +13,9 @@ from .waits import wait_for, async_wait_for
 
 class Bctrl(GeneratedBctrl):
     def __init__(self, *, max_retries: int = 2, api_version: str = DEFAULT_API_VERSION, **kwargs: Any):
-        headers = {"BCTRL-Version": api_version, **(kwargs.pop("headers", None) or {})}
+        headers = dict(kwargs.pop("headers", None) or {})
+        if not any(name.lower() == "bctrl-version" for name in headers):
+            headers["BCTRL-Version"] = api_version
         super().__init__(max_retries=0, headers=headers, **kwargs)
         wrapper = self._client_wrapper
         wrapper.httpx_client = SafeHttpClient(wrapper.httpx_client, max_retries)
@@ -36,7 +38,9 @@ class Bctrl(GeneratedBctrl):
 
 class AsyncBctrl(GeneratedAsyncBctrl):
     def __init__(self, *, max_retries: int = 2, api_version: str = DEFAULT_API_VERSION, **kwargs: Any):
-        headers = {"BCTRL-Version": api_version, **(kwargs.pop("headers", None) or {})}
+        headers = dict(kwargs.pop("headers", None) or {})
+        if not any(name.lower() == "bctrl-version" for name in headers):
+            headers["BCTRL-Version"] = api_version
         super().__init__(max_retries=0, headers=headers, **kwargs)
         wrapper = self._client_wrapper
         wrapper.httpx_client = AsyncSafeHttpClient(wrapper.httpx_client, max_retries)

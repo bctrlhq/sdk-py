@@ -3,7 +3,7 @@
 # Run `pnpm generate:sdk-contracts` to regenerate.
 
 from __future__ import annotations
-from typing import Any, Literal, Mapping, TypeAlias, TypedDict, overload
+from typing import Any, Literal, Mapping, TypeAlias, TypedDict, Union, overload
 from typing_extensions import NotRequired, Required
 from urllib.parse import quote
 
@@ -63,7 +63,7 @@ class BuiltinToolCaptchaSolveInput(TypedDict):
     timeoutMs: NotRequired[int]
 
 class BuiltinToolCaptchaSolveOutput(TypedDict):
-    artifact: NotRequired[Any]
+    artifact: NotRequired[dict[str, Any]]
     duration: NotRequired[float]
     error: NotRequired[str]
     kind: NotRequired[Literal["token", "fields", "cookie", "text", "click_points", "grid", "browser_state"]]
@@ -89,40 +89,40 @@ class BuiltinToolCaptchaWaitOutput(TypedDict):
     pages: list[dict[str, Any]]
 
 class BuiltinToolCodeExecuteInput(TypedDict):
-    input: NotRequired[JsonObject]
+    input: NotRequired["JsonObject"]
     language: NotRequired[Literal["typescript"]]
     maxLogBytes: NotRequired[int]
     source: str
     timeoutMs: NotRequired[int]
 
-BuiltinToolCodeExecuteOutput: TypeAlias = JsonValue
+BuiltinToolCodeExecuteOutput: TypeAlias = "JsonValue"
 
 class BuiltinToolComputerUseInputVariant1(TypedDict):
     action: Literal["screenshot"]
 
 class BuiltinToolComputerUseInputVariant2(TypedDict):
     action: Literal["left_click"]
-    coordinate: NotRequired[list[Any]]
+    coordinate: NotRequired[tuple[int, int]]
     text: NotRequired[str]
 
 class BuiltinToolComputerUseInputVariant3(TypedDict):
     action: Literal["right_click"]
-    coordinate: NotRequired[list[Any]]
+    coordinate: NotRequired[tuple[int, int]]
     text: NotRequired[str]
 
 class BuiltinToolComputerUseInputVariant4(TypedDict):
     action: Literal["middle_click"]
-    coordinate: NotRequired[list[Any]]
+    coordinate: NotRequired[tuple[int, int]]
     text: NotRequired[str]
 
 class BuiltinToolComputerUseInputVariant5(TypedDict):
     action: Literal["double_click"]
-    coordinate: NotRequired[list[Any]]
+    coordinate: NotRequired[tuple[int, int]]
     text: NotRequired[str]
 
 class BuiltinToolComputerUseInputVariant6(TypedDict):
     action: Literal["triple_click"]
-    coordinate: NotRequired[list[Any]]
+    coordinate: NotRequired[tuple[int, int]]
     text: NotRequired[str]
 
 class BuiltinToolComputerUseInputVariant7(TypedDict):
@@ -136,20 +136,20 @@ class BuiltinToolComputerUseInputVariant8(TypedDict):
 
 class BuiltinToolComputerUseInputVariant9(TypedDict):
     action: Literal["mouse_move"]
-    coordinate: list[Any]
+    coordinate: tuple[int, int]
 
 class BuiltinToolComputerUseInputVariant10(TypedDict):
     action: Literal["scroll"]
-    coordinate: NotRequired[list[Any]]
+    coordinate: NotRequired[tuple[int, int]]
     scroll_amount: int
     scroll_direction: Literal["up", "down", "left", "right"]
     text: NotRequired[str]
 
 class BuiltinToolComputerUseInputVariant11(TypedDict):
     action: Literal["left_click_drag"]
-    coordinate: list[Any]
-    path: NotRequired[list[list[Any]]]
-    start_coordinate: NotRequired[list[Any]]
+    coordinate: tuple[int, int]
+    path: NotRequired[list[tuple[int, int]]]
+    start_coordinate: NotRequired[tuple[int, int]]
     text: NotRequired[str]
 
 class BuiltinToolComputerUseInputVariant12(TypedDict):
@@ -163,7 +163,7 @@ BuiltinToolComputerUseInput: TypeAlias = BuiltinToolComputerUseInputVariant1 | B
 
 class BuiltinToolComputerUseOutput(TypedDict):
     action: Literal["screenshot", "left_click", "right_click", "middle_click", "double_click", "triple_click", "type", "key", "mouse_move", "scroll", "left_click_drag", "wait", "cursor_position"]
-    coordinate: NotRequired[list[Any]]
+    coordinate: NotRequired[tuple[int, int]]
     eventId: str
     height: int
     image: NotRequired[dict[str, Any]]
@@ -176,7 +176,7 @@ class BuiltinToolFilesListInput(TypedDict):
 
 class BuiltinToolFilesListOutput(TypedDict):
     files: list[dict[str, Any]]
-    nextCursor: str | None
+    nextCursor: Union[str, None]
 
 class BuiltinToolFilesReadTextInput(TypedDict):
     fileId: str
@@ -194,24 +194,24 @@ class BuiltinToolHumanRequestInput(TypedDict):
     expiresInSeconds: NotRequired[int]
     handoff: NotRequired[bool]
     prompt: str
-    responseSchema: NotRequired[JsonObject]
+    responseSchema: NotRequired["JsonObject"]
     view: NotRequired[dict[str, Any]]
 
-BuiltinToolHumanRequestOutput: TypeAlias = str | float | bool | None | list[JsonValue] | dict[str, JsonValue]
+BuiltinToolHumanRequestOutput: TypeAlias = "JsonValue"
 
 class BuiltinToolRunFilesAddInput(TypedDict):
     fileId: str
 
 class BuiltinToolRunFilesAddOutput(TypedDict):
-    binding: dict[str, Any] | None
+    binding: Union[dict[str, Any], None]
     createdAt: str
     fileId: str
     filename: str
     object: Literal["run.file"]
     role: Literal["input", "output"]
-    runtimePath: str | None
+    runtimePath: Union[str, None]
     size: int
-    sourcePath: str | None
+    sourcePath: Union[str, None]
     spacePath: str
     updatedAt: str
 
@@ -221,15 +221,15 @@ class BuiltinToolRunFilesCollectInput(TypedDict):
     runtimePath: str
 
 class BuiltinToolRunFilesCollectOutput(TypedDict):
-    binding: dict[str, Any] | None
+    binding: Union[dict[str, Any], None]
     createdAt: str
     fileId: str
     filename: str
     object: Literal["run.file"]
     role: Literal["input", "output"]
-    runtimePath: str | None
+    runtimePath: Union[str, None]
     size: int
-    sourcePath: str | None
+    sourcePath: Union[str, None]
     spacePath: str
     updatedAt: str
 
@@ -249,7 +249,7 @@ class BuiltinToolRunFilesListInput(TypedDict):
 
 class BuiltinToolRunFilesListOutput(TypedDict):
     data: list[dict[str, Any]]
-    nextCursor: str | None
+    nextCursor: Union[str, None]
 
 class BuiltinToolRuntimeFilesListInput(TypedDict):
     cursor: NotRequired[str]
@@ -258,7 +258,7 @@ class BuiltinToolRuntimeFilesListInput(TypedDict):
 
 class BuiltinToolRuntimeFilesListOutput(TypedDict):
     entries: list[dict[str, Any]]
-    nextCursor: str | None
+    nextCursor: Union[str, None]
 
 class BuiltinToolSecretsFillInput(TypedDict):
     field: NotRequired[Literal["username", "password", "value"]]
@@ -284,7 +284,7 @@ class BuiltinToolSecretsListOutput(TypedDict):
     data: list[dict[str, Any]]
     folders: list[str]
     hasMore: bool
-    nextCursor: str | None
+    nextCursor: Union[str, None]
 
 class BuiltinToolSecretsRequestInput(TypedDict):
     expiresInSeconds: NotRequired[int]
@@ -315,12 +315,12 @@ class BuiltinToolStagehandActOutput(TypedDict):
 class BuiltinToolStagehandExtractInput(TypedDict):
     instruction: str
     pageId: NotRequired[str]
-    schema: NotRequired[JsonObject]
+    schema: NotRequired["JsonObject"]
     timeoutMs: NotRequired[int]
 
 class BuiltinToolStagehandExtractOutput(TypedDict):
     cacheStatus: NotRequired[Literal["HIT", "MISS"]]
-    value: JsonValue
+    value: "JsonValue"
 
 class BuiltinToolStagehandObserveInput(TypedDict):
     instruction: str

@@ -159,7 +159,24 @@ def _retry_timeout_from_retries(retries: int) -> float:
 
 
 def _should_retry(response: httpx.Response) -> bool:
-    return response.status_code >= 500 or response.status_code in [429, 408, 409]
+    try:
+        if _unknown_outcome(response.json()):
+            return False
+    except (ValueError, httpx.ResponseNotRead):
+        pass
+    return response.status_code >= 500 or response.status_code in [429, 408]
+
+
+def _unknown_outcome(value: typing.Any, depth: int = 0) -> bool:
+    if depth > 8:
+        return False
+    if isinstance(value, dict):
+        if value.get("status") == "unknown" or value.get("reasonClass") in ("unknown", "outcome_unknown"):
+            return True
+        return any(_unknown_outcome(child, depth + 1) for child in value.values())
+    if isinstance(value, list):
+        return any(_unknown_outcome(child, depth + 1) for child in value)
+    return False
 
 
 _SENSITIVE_HEADERS = frozenset(
@@ -450,6 +467,8 @@ class HttpClient:
             if request_options is not None
             else self.base_max_retries
         )
+        if method.upper() not in ("GET", "HEAD", "OPTIONS") and (files is not None or not any(name.lower() == "idempotency-key" for name in _request_headers)):
+            max_retries = 0
 
         try:
             response = self.httpx_client.request(
@@ -462,6 +481,7 @@ class HttpClient:
                 content=content,
                 files=request_files,
                 timeout=timeout,
+                follow_redirects=False,
             )
         except (httpx.ConnectError, httpx.RemoteProtocolError):
             if retries < max_retries:
@@ -623,6 +643,7 @@ class HttpClient:
             content=content,
             files=request_files,
             timeout=timeout,
+            follow_redirects=False,
         ) as stream:
             yield stream
 
@@ -760,6 +781,8 @@ class AsyncHttpClient:
             if request_options is not None
             else self.base_max_retries
         )
+        if method.upper() not in ("GET", "HEAD", "OPTIONS") and (files is not None or not any(name.lower() == "idempotency-key" for name in _request_headers)):
+            max_retries = 0
 
         try:
             response = await self.httpx_client.request(
@@ -772,6 +795,7 @@ class AsyncHttpClient:
                 content=content,
                 files=request_files,
                 timeout=timeout,
+                follow_redirects=False,
             )
         except (httpx.ConnectError, httpx.RemoteProtocolError):
             if retries < max_retries:
@@ -936,5 +960,6 @@ class AsyncHttpClient:
             content=content,
             files=request_files,
             timeout=timeout,
+            follow_redirects=False,
         ) as stream:
             yield stream
