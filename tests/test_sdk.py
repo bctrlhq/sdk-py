@@ -6,7 +6,7 @@ import unittest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 
-from bctrl import Bctrl
+from bctrl.legacy import Bctrl
 
 
 class MockHandler(BaseHTTPRequestHandler):

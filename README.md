@@ -1,83 +1,65 @@
-# bctrl
+# BCTRL Python SDK
 
-Python SDK for the BCTRL public API.
-
-The current generated public API is available from `bctrl.api`, including an async client:
-
-```python
-import os
-from bctrl.api import Bctrl, AsyncBctrl
-client = Bctrl(token=os.environ["BCTRL_API_KEY"])
-spaces = client.spaces.list()
-```
-
-The root entrypoint below retains the previous helper API for existing callers.
-
-## Install
+Sync and async clients for all current BCTRL public API operations: Browsers,
+Sandboxes, Tasks, Agents, Spaces, Files, Secrets, Tools, Runs, and account resources.
+Requires Python 3.10 or newer; supports Pydantic 1 and 2.
 
 ```bash
 pip install bctrl
 ```
 
-## Quick Start
-
 ```python
-from bctrl import Bctrl
+import os
+from bctrl import Bctrl, AsyncBctrl
 
-bctrl = Bctrl(api_key="bctrl_...")
-
-with bctrl.runtimes.started_browser(name="checkout") as browser:
-    print(browser.cdp_url)
-
-    conversation = bctrl.conversations.create(
-        runtime_id=browser.runtime_id,
-    )
-    bctrl.conversations.messages.create(
-        conversation["id"],
-        text="Extract the invoice number and total.",
-    )
-    for event in bctrl.conversations.stream(conversation["id"]):
-        print(event)
+client = Bctrl(token=os.environ['BCTRL_API_KEY'])
+spaces = client.spaces.list(limit=20)
+print(spaces.data)
 ```
 
-Python methods use `snake_case`; the SDK sends the API's camelCase fields on the
-wire. For example, `runtime_path` becomes `runtimePath`.
-
-## Human-facing Views
-
-Views are the supported way to share live progress and recordings. The bearer
-URL is returned only when the view is created:
+Create a recording-enabled browser and stop its Run:
 
 ```python
-view = bctrl.views.create(
-    scope={"runtime_id": "runtime_..."},
-    components={
-        "live": {"control": "none"},
-        "recordings": {},
-    },
-    expires_in_seconds=3600,
+import uuid
+
+browser = client.browsers.create(
+    name='example-browser', recording=True, wait=60,
+    idempotency_key=str(uuid.uuid4()),
 )
-
-print(view["url"])
+print(browser.id, browser.current_run)
+client.browsers.stop(browser.id, wait=60)
 ```
 
-Set the `chrome=none` query parameter before the URL fragment when embedding
-the complete white-label view in your own application. Organization branding
-is managed with `bctrl.account.get()` and `bctrl.account.update(...)`. Signed
-event delivery is managed through `bctrl.webhooks`, including secret rotation,
-delivery inspection, and redelivery.
+While a browser has an active Run, upload a file into it:
 
-## Design
+```python
+with open('input.txt', 'rb') as source:
+    client.browsers.files.upload(
+        'example-browser', path='/workspace/input.txt', file=source,
+    )
+```
 
-- Sync-first client.
-- Route-first namespaces that mirror the API reference.
-- Raw response bodies as dictionaries.
-- Python context managers for runtime lifecycle cleanup.
-- Typed built-in Tool inputs generated from the canonical Tool registry.
-- Sync SSE iterators for Conversations and unified Run streams.
-- Explicit helpers for pagination and multipart uploads.
-- No hidden follow-up requests or stateful resource refreshes.
+`AsyncBctrl` exposes the same operations with awaitable methods. Models use
+snake_case at the Python boundary and preserve the API's wire aliases.
+Pagination, binary responses, SSE streaming, and multipart uploads are generated
+from the same public contract. `bctrl.api` remains an alias for the current client.
 
-## License
+Requests pin `BCTRL-Version: 2026-10-03`. Use `bctrl_space` and
+`bctrl_subaccount_id` for authorized scope selectors. Custom `base_url` values
+identify the API origin, without a trailing `/v1`.
 
-ISC
+Read operations retry transient responses. Writes automatically retry only when
+an explicit idempotency key is supplied; multipart uploads, conflicts, and unknown
+outcomes are not replayed. Authenticated redirects are refused, including with a
+custom httpx client. Catch `BctrlError` to inspect HTTP status and error body;
+unexpected response shapes retain that HTTP context.
+
+## Migrating to 0.3
+
+The default `Bctrl` import now uses the current generated client and accepts
+`token` instead of `api_key`. Migrate Runtime/Toolset/Conversation-message workflows
+to Browsers/Sandboxes and Agents/Tasks. Method signatures and the generated API
+reference show the request parameters for each operation.
+
+Historical helpers remain under `bctrl.legacy` for callers targeting an older API.
+Their retired routes are not supported by the current production API.

@@ -2,11 +2,14 @@ import asyncio
 import unittest
 
 import httpx
-from bctrl.api import AsyncBctrl, Bctrl, types
+from bctrl import AsyncBctrl, Bctrl, types
+from bctrl.api import Bctrl as ApiBctrl
 from bctrl._generated.errors.forbidden_error import ForbiddenError
 
 
 class CurrentApiTests(unittest.TestCase):
+    def test_default_import_is_the_current_client(self):
+        self.assertIs(Bctrl, ApiBctrl)
     def test_generated_builtin_types_are_importable(self):
         # Importing the canonical helper also evaluates recursive and forward
         # type aliases, even though the legacy entrypoint uses frozen helpers.

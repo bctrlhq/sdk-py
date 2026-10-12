@@ -5,7 +5,7 @@ import time
 import unittest
 from typing import Any, Callable
 
-from bctrl import Bctrl
+from bctrl.legacy import Bctrl
 
 
 AI_MODEL = "openai/gpt-5.6-luna"
