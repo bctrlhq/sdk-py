@@ -423,15 +423,6 @@ if typing.TYPE_CHECKING:
     from .drain_test_result import DrainTestResult
     from .drain_test_result_object import DrainTestResultObject
     from .drains_list_response import DrainsListResponse
-    from .embedded_view import EmbeddedView
-    from .embedded_view_bootstrap import EmbeddedViewBootstrap
-    from .embedded_view_bootstrap_object import EmbeddedViewBootstrapObject
-    from .embedded_view_create_response import EmbeddedViewCreateResponse
-    from .embedded_view_create_response_object import EmbeddedViewCreateResponseObject
-    from .embedded_view_object import EmbeddedViewObject
-    from .embedded_view_presentation import EmbeddedViewPresentation
-    from .embedded_view_presentation_output import EmbeddedViewPresentationOutput
-    from .embedded_view_presentation_output_mode import EmbeddedViewPresentationOutputMode
     from .environment_ai_mount import EnvironmentAiMount
     from .environment_ai_mount_default import EnvironmentAiMountDefault
     from .environment_mounts import EnvironmentMounts
@@ -501,14 +492,6 @@ if typing.TYPE_CHECKING:
     from .help_topic_method import HelpTopicMethod
     from .help_topic_response import HelpTopicResponse
     from .help_topic_response_audience import HelpTopicResponseAudience
-    from .hosted_view import HostedView
-    from .hosted_view_bootstrap import HostedViewBootstrap
-    from .hosted_view_bootstrap_object import HostedViewBootstrapObject
-    from .hosted_view_create_response import HostedViewCreateResponse
-    from .hosted_view_create_response_object import HostedViewCreateResponseObject
-    from .hosted_view_object import HostedViewObject
-    from .hosted_view_presentation import HostedViewPresentation
-    from .hosted_view_presentation_mode import HostedViewPresentationMode
     from .input_request import InputRequest
     from .input_request_kind import InputRequestKind
     from .json_object import JsonObject
@@ -983,14 +966,16 @@ if typing.TYPE_CHECKING:
     from .upload_files_request_space_id_one import UploadFilesRequestSpaceIdOne
     from .view import View
     from .view_bootstrap import ViewBootstrap
+    from .view_bootstrap_object import ViewBootstrapObject
     from .view_components import ViewComponents
     from .view_components_input import ViewComponentsInput
     from .view_create_response import ViewCreateResponse
+    from .view_create_response_object import ViewCreateResponseObject
     from .view_delete_response import ViewDeleteResponse
     from .view_delete_response_object import ViewDeleteResponseObject
     from .view_files_capabilities import ViewFilesCapabilities
     from .view_files_capabilities_input import ViewFilesCapabilitiesInput
-    from .view_presentation import ViewPresentation, ViewPresentation_Embedded, ViewPresentation_Hosted
+    from .view_object import ViewObject
     from .view_scope import ViewScope
     from .view_scope_conversation import ViewScopeConversation
     from .view_scope_conversation_input import ViewScopeConversationInput
@@ -1389,15 +1374,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "DrainTestResult": ".drain_test_result",
     "DrainTestResultObject": ".drain_test_result_object",
     "DrainsListResponse": ".drains_list_response",
-    "EmbeddedView": ".embedded_view",
-    "EmbeddedViewBootstrap": ".embedded_view_bootstrap",
-    "EmbeddedViewBootstrapObject": ".embedded_view_bootstrap_object",
-    "EmbeddedViewCreateResponse": ".embedded_view_create_response",
-    "EmbeddedViewCreateResponseObject": ".embedded_view_create_response_object",
-    "EmbeddedViewObject": ".embedded_view_object",
-    "EmbeddedViewPresentation": ".embedded_view_presentation",
-    "EmbeddedViewPresentationOutput": ".embedded_view_presentation_output",
-    "EmbeddedViewPresentationOutputMode": ".embedded_view_presentation_output_mode",
     "EnvironmentAiMount": ".environment_ai_mount",
     "EnvironmentAiMountDefault": ".environment_ai_mount_default",
     "EnvironmentMounts": ".environment_mounts",
@@ -1469,14 +1445,6 @@ _dynamic_imports: typing.Dict[str, str] = {
     "HelpTopicMethod": ".help_topic_method",
     "HelpTopicResponse": ".help_topic_response",
     "HelpTopicResponseAudience": ".help_topic_response_audience",
-    "HostedView": ".hosted_view",
-    "HostedViewBootstrap": ".hosted_view_bootstrap",
-    "HostedViewBootstrapObject": ".hosted_view_bootstrap_object",
-    "HostedViewCreateResponse": ".hosted_view_create_response",
-    "HostedViewCreateResponseObject": ".hosted_view_create_response_object",
-    "HostedViewObject": ".hosted_view_object",
-    "HostedViewPresentation": ".hosted_view_presentation",
-    "HostedViewPresentationMode": ".hosted_view_presentation_mode",
     "InputRequest": ".input_request",
     "InputRequestKind": ".input_request_kind",
     "JsonObject": ".json_object",
@@ -1940,16 +1908,16 @@ _dynamic_imports: typing.Dict[str, str] = {
     "UploadFilesRequestSpaceIdOne": ".upload_files_request_space_id_one",
     "View": ".view",
     "ViewBootstrap": ".view_bootstrap",
+    "ViewBootstrapObject": ".view_bootstrap_object",
     "ViewComponents": ".view_components",
     "ViewComponentsInput": ".view_components_input",
     "ViewCreateResponse": ".view_create_response",
+    "ViewCreateResponseObject": ".view_create_response_object",
     "ViewDeleteResponse": ".view_delete_response",
     "ViewDeleteResponseObject": ".view_delete_response_object",
     "ViewFilesCapabilities": ".view_files_capabilities",
     "ViewFilesCapabilitiesInput": ".view_files_capabilities_input",
-    "ViewPresentation": ".view_presentation",
-    "ViewPresentation_Embedded": ".view_presentation",
-    "ViewPresentation_Hosted": ".view_presentation",
+    "ViewObject": ".view_object",
     "ViewScope": ".view_scope",
     "ViewScopeConversation": ".view_scope_conversation",
     "ViewScopeConversationInput": ".view_scope_conversation_input",
@@ -2372,15 +2340,6 @@ __all__ = [
     "DrainTestResult",
     "DrainTestResultObject",
     "DrainsListResponse",
-    "EmbeddedView",
-    "EmbeddedViewBootstrap",
-    "EmbeddedViewBootstrapObject",
-    "EmbeddedViewCreateResponse",
-    "EmbeddedViewCreateResponseObject",
-    "EmbeddedViewObject",
-    "EmbeddedViewPresentation",
-    "EmbeddedViewPresentationOutput",
-    "EmbeddedViewPresentationOutputMode",
     "EnvironmentAiMount",
     "EnvironmentAiMountDefault",
     "EnvironmentMounts",
@@ -2452,14 +2411,6 @@ __all__ = [
     "HelpTopicMethod",
     "HelpTopicResponse",
     "HelpTopicResponseAudience",
-    "HostedView",
-    "HostedViewBootstrap",
-    "HostedViewBootstrapObject",
-    "HostedViewCreateResponse",
-    "HostedViewCreateResponseObject",
-    "HostedViewObject",
-    "HostedViewPresentation",
-    "HostedViewPresentationMode",
     "InputRequest",
     "InputRequestKind",
     "JsonObject",
@@ -2923,16 +2874,16 @@ __all__ = [
     "UploadFilesRequestSpaceIdOne",
     "View",
     "ViewBootstrap",
+    "ViewBootstrapObject",
     "ViewComponents",
     "ViewComponentsInput",
     "ViewCreateResponse",
+    "ViewCreateResponseObject",
     "ViewDeleteResponse",
     "ViewDeleteResponseObject",
     "ViewFilesCapabilities",
     "ViewFilesCapabilitiesInput",
-    "ViewPresentation",
-    "ViewPresentation_Embedded",
-    "ViewPresentation_Hosted",
+    "ViewObject",
     "ViewScope",
     "ViewScopeConversation",
     "ViewScopeConversationInput",

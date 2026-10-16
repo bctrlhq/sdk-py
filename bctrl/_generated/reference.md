@@ -9998,6 +9998,14 @@ client.views.create(
 <dl>
 <dd>
 
+**allowed_origins:** `typing.Optional[typing.List[str]]` — Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **components:** `typing.Optional[ViewComponentsInput]` — Optional content and notification surfaces for the View.
     
 </dd>
@@ -10023,14 +10031,6 @@ client.views.create(
 <dd>
 
 **expires_in_seconds:** `typing.Optional[int]` — View lifetime in seconds. Defaults to 8 hours; maximum 30 days.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**presentation:** `typing.Optional[ViewPresentation]` — Hosted presentation by default; use embedded with explicit allowed origins.
     
 </dd>
 </dl>
