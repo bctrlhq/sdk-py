@@ -2,7 +2,58 @@
 
 import typing
 
-from .embedded_view import EmbeddedView
-from .hosted_view import HostedView
+import pydantic
+import typing_extensions
+from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
+from ..core.serialization import FieldMetadata
+from .resolved_branding import ResolvedBranding
+from .rfc3339timestamp import Rfc3339Timestamp
+from .view_components import ViewComponents
+from .view_object import ViewObject
+from .view_scope import ViewScope
 
-View = typing.Union[HostedView, EmbeddedView]
+
+class View(UniversalBaseModel):
+    allowed_origins: typing_extensions.Annotated[
+        typing.List[typing.Any],
+        FieldMetadata(alias="allowedOrigins"),
+        pydantic.Field(
+            alias="allowedOrigins",
+            description="Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.",
+        ),
+    ]
+    """
+    Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.
+    """
+
+    branding: ResolvedBranding
+    components: ViewComponents
+    control: bool
+    conversation_send: typing_extensions.Annotated[
+        typing.Optional[bool], FieldMetadata(alias="conversationSend"), pydantic.Field(alias="conversationSend")
+    ] = None
+    created_at: typing_extensions.Annotated[
+        Rfc3339Timestamp, FieldMetadata(alias="createdAt"), pydantic.Field(alias="createdAt")
+    ]
+    expires_at: typing_extensions.Annotated[
+        Rfc3339Timestamp, FieldMetadata(alias="expiresAt"), pydantic.Field(alias="expiresAt")
+    ]
+    id: str = pydantic.Field()
+    """
+    Public view resource id. It is safe to expose in URLs and logs.
+    """
+
+    object: ViewObject
+    scope: ViewScope
+    updated_at: typing_extensions.Annotated[
+        Rfc3339Timestamp, FieldMetadata(alias="updatedAt"), pydantic.Field(alias="updatedAt")
+    ]
+
+    if IS_PYDANTIC_V2:
+        model_config: typing.ClassVar[pydantic.ConfigDict] = pydantic.ConfigDict(extra="allow", frozen=True)  # type: ignore # Pydantic v2
+    else:
+
+        class Config:
+            frozen = True
+            smart_union = True
+            extra = pydantic.Extra.allow

@@ -8,7 +8,6 @@ from ..types.view_bootstrap import ViewBootstrap
 from ..types.view_components_input import ViewComponentsInput
 from ..types.view_create_response import ViewCreateResponse
 from ..types.view_delete_response import ViewDeleteResponse
-from ..types.view_presentation import ViewPresentation
 from ..types.view_scope_input import ViewScopeInput
 from ..types.views_list_response import ViewsListResponse
 from .raw_client import AsyncRawViewsClient, RawViewsClient
@@ -80,11 +79,11 @@ class ViewsClient:
         *,
         scope: ViewScopeInput,
         idempotency_key: typing.Optional[str] = None,
+        allowed_origins: typing.Optional[typing.Sequence[str]] = OMIT,
         components: typing.Optional[ViewComponentsInput] = OMIT,
         control: typing.Optional[bool] = OMIT,
         conversation_send: typing.Optional[bool] = OMIT,
         expires_in_seconds: typing.Optional[int] = OMIT,
-        presentation: typing.Optional[ViewPresentation] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> ViewCreateResponse:
         """
@@ -97,6 +96,9 @@ class ViewsClient:
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
 
+        allowed_origins : typing.Optional[typing.Sequence[str]]
+            Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.
+
         components : typing.Optional[ViewComponentsInput]
             Optional content and notification surfaces for the View.
 
@@ -108,9 +110,6 @@ class ViewsClient:
 
         expires_in_seconds : typing.Optional[int]
             View lifetime in seconds. Defaults to 8 hours; maximum 30 days.
-
-        presentation : typing.Optional[ViewPresentation]
-            Hosted presentation by default; use embedded with explicit allowed origins.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -138,11 +137,11 @@ class ViewsClient:
         _response = self._raw_client.create(
             scope=scope,
             idempotency_key=idempotency_key,
+            allowed_origins=allowed_origins,
             components=components,
             control=control,
             conversation_send=conversation_send,
             expires_in_seconds=expires_in_seconds,
-            presentation=presentation,
             request_options=request_options,
         )
         return _response.data
@@ -295,11 +294,11 @@ class AsyncViewsClient:
         *,
         scope: ViewScopeInput,
         idempotency_key: typing.Optional[str] = None,
+        allowed_origins: typing.Optional[typing.Sequence[str]] = OMIT,
         components: typing.Optional[ViewComponentsInput] = OMIT,
         control: typing.Optional[bool] = OMIT,
         conversation_send: typing.Optional[bool] = OMIT,
         expires_in_seconds: typing.Optional[int] = OMIT,
-        presentation: typing.Optional[ViewPresentation] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> ViewCreateResponse:
         """
@@ -312,6 +311,9 @@ class AsyncViewsClient:
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
 
+        allowed_origins : typing.Optional[typing.Sequence[str]]
+            Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.
+
         components : typing.Optional[ViewComponentsInput]
             Optional content and notification surfaces for the View.
 
@@ -323,9 +325,6 @@ class AsyncViewsClient:
 
         expires_in_seconds : typing.Optional[int]
             View lifetime in seconds. Defaults to 8 hours; maximum 30 days.
-
-        presentation : typing.Optional[ViewPresentation]
-            Hosted presentation by default; use embedded with explicit allowed origins.
 
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
@@ -361,11 +360,11 @@ class AsyncViewsClient:
         _response = await self._raw_client.create(
             scope=scope,
             idempotency_key=idempotency_key,
+            allowed_origins=allowed_origins,
             components=components,
             control=control,
             conversation_send=conversation_send,
             expires_in_seconds=expires_in_seconds,
-            presentation=presentation,
             request_options=request_options,
         )
         return _response.data

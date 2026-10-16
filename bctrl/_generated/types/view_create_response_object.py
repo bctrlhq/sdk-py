@@ -2,4 +2,4 @@
 
 import typing
 
-EmbeddedViewObject = typing.Union[typing.Literal["view"], typing.Any]
+ViewCreateResponseObject = typing.Union[typing.Literal["view"], typing.Any]

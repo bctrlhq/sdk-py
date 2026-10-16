@@ -3,20 +3,11 @@
 import typing
 
 import pydantic
-import typing_extensions
 from ..core.pydantic_utilities import IS_PYDANTIC_V2, UniversalBaseModel
-from ..core.serialization import FieldMetadata
 from .branding_tokens import BrandingTokens
 
 
 class ResolvedBranding(UniversalBaseModel):
-    logo: typing.Optional[str] = None
-    product_name: typing_extensions.Annotated[
-        str, FieldMetadata(alias="productName"), pydantic.Field(alias="productName")
-    ]
-    show_powered_by: typing_extensions.Annotated[
-        bool, FieldMetadata(alias="showPoweredBy"), pydantic.Field(alias="showPoweredBy")
-    ]
     tokens: BrandingTokens
 
     if IS_PYDANTIC_V2:

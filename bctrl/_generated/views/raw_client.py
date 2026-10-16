@@ -23,7 +23,6 @@ from ..types.view_bootstrap import ViewBootstrap
 from ..types.view_components_input import ViewComponentsInput
 from ..types.view_create_response import ViewCreateResponse
 from ..types.view_delete_response import ViewDeleteResponse
-from ..types.view_presentation import ViewPresentation
 from ..types.view_scope_input import ViewScopeInput
 from ..types.views_list_response import ViewsListResponse
 from .types.list_views_request_order import ListViewsRequestOrder
@@ -121,11 +120,11 @@ class RawViewsClient:
         *,
         scope: ViewScopeInput,
         idempotency_key: typing.Optional[str] = None,
+        allowed_origins: typing.Optional[typing.Sequence[str]] = OMIT,
         components: typing.Optional[ViewComponentsInput] = OMIT,
         control: typing.Optional[bool] = OMIT,
         conversation_send: typing.Optional[bool] = OMIT,
         expires_in_seconds: typing.Optional[int] = OMIT,
-        presentation: typing.Optional[ViewPresentation] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> HttpResponse[ViewCreateResponse]:
         """
@@ -137,6 +136,9 @@ class RawViewsClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        allowed_origins : typing.Optional[typing.Sequence[str]]
+            Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.
 
         components : typing.Optional[ViewComponentsInput]
             Optional content and notification surfaces for the View.
@@ -150,9 +152,6 @@ class RawViewsClient:
         expires_in_seconds : typing.Optional[int]
             View lifetime in seconds. Defaults to 8 hours; maximum 30 days.
 
-        presentation : typing.Optional[ViewPresentation]
-            Hosted presentation by default; use embedded with explicit allowed origins.
-
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -165,15 +164,13 @@ class RawViewsClient:
             "v1/views",
             method="POST",
             json={
+                "allowedOrigins": allowed_origins,
                 "components": convert_and_respect_annotation_metadata(
                     object_=components, annotation=ViewComponentsInput, direction="write"
                 ),
                 "control": control,
                 "conversationSend": conversation_send,
                 "expiresInSeconds": expires_in_seconds,
-                "presentation": convert_and_respect_annotation_metadata(
-                    object_=presentation, annotation=ViewPresentation, direction="write"
-                ),
                 "scope": convert_and_respect_annotation_metadata(
                     object_=scope, annotation=ViewScopeInput, direction="write"
                 ),
@@ -543,11 +540,11 @@ class AsyncRawViewsClient:
         *,
         scope: ViewScopeInput,
         idempotency_key: typing.Optional[str] = None,
+        allowed_origins: typing.Optional[typing.Sequence[str]] = OMIT,
         components: typing.Optional[ViewComponentsInput] = OMIT,
         control: typing.Optional[bool] = OMIT,
         conversation_send: typing.Optional[bool] = OMIT,
         expires_in_seconds: typing.Optional[int] = OMIT,
-        presentation: typing.Optional[ViewPresentation] = OMIT,
         request_options: typing.Optional[RequestOptions] = None,
     ) -> AsyncHttpResponse[ViewCreateResponse]:
         """
@@ -559,6 +556,9 @@ class AsyncRawViewsClient:
 
         idempotency_key : typing.Optional[str]
             Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.
+
+        allowed_origins : typing.Optional[typing.Sequence[str]]
+            Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.
 
         components : typing.Optional[ViewComponentsInput]
             Optional content and notification surfaces for the View.
@@ -572,9 +572,6 @@ class AsyncRawViewsClient:
         expires_in_seconds : typing.Optional[int]
             View lifetime in seconds. Defaults to 8 hours; maximum 30 days.
 
-        presentation : typing.Optional[ViewPresentation]
-            Hosted presentation by default; use embedded with explicit allowed origins.
-
         request_options : typing.Optional[RequestOptions]
             Request-specific configuration.
 
@@ -587,15 +584,13 @@ class AsyncRawViewsClient:
             "v1/views",
             method="POST",
             json={
+                "allowedOrigins": allowed_origins,
                 "components": convert_and_respect_annotation_metadata(
                     object_=components, annotation=ViewComponentsInput, direction="write"
                 ),
                 "control": control,
                 "conversationSend": conversation_send,
                 "expiresInSeconds": expires_in_seconds,
-                "presentation": convert_and_respect_annotation_metadata(
-                    object_=presentation, annotation=ViewPresentation, direction="write"
-                ),
                 "scope": convert_and_respect_annotation_metadata(
                     object_=scope, annotation=ViewScopeInput, direction="write"
                 ),

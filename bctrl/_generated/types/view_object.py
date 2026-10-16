@@ -2,4 +2,4 @@
 
 import typing
 
-HostedViewObject = typing.Union[typing.Literal["view"], typing.Any]
+ViewObject = typing.Union[typing.Literal["view"], typing.Any]

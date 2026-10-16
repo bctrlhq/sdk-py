@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Iterator, Literal, Mapping, Optional
+from typing import Any, Iterator, Literal, Mapping, Optional, Sequence
 from urllib.parse import quote, urlencode
 
 from .generated.legacy_tool_types import BuiltinToolsClient
@@ -593,14 +593,16 @@ class ViewsClient:
         *,
         scope: Mapping[str, Any],
         components: Mapping[str, Any] | None = None,
-        presentation: Mapping[str, Any] | None = None,
+        allowed_origins: Sequence[str] | None = None,
         expires_in_seconds: int | None = None,
     ) -> JsonObject:
+        """Create a View. ``allowed_origins`` lists the exact sites that may embed it in an iframe; without it no site
+        may frame the View, and it opens only as its own page."""
         body: JsonObject = {"scope": _body(scope)}
         if components is not None:
             body["components"] = _body(components)
-        if presentation is not None:
-            body["presentation"] = _body(presentation)
+        if allowed_origins is not None:
+            body["allowedOrigins"] = list(allowed_origins)
         if expires_in_seconds is not None:
             body["expiresInSeconds"] = expires_in_seconds
         return self._http.request("POST", "/views", json_body=body)

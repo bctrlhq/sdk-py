@@ -2,4 +2,4 @@
 
 import typing
 
-HostedViewBootstrapObject = typing.Union[typing.Literal["view"], typing.Any]
+ViewBootstrapObject = typing.Union[typing.Literal["view"], typing.Any]
