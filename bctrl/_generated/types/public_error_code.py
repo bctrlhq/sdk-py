@@ -122,6 +122,8 @@ PublicErrorCode = typing.Union[
         "browser.identity_missing",
         "browser.configuration_missing",
         "browser.start_timeout",
+        "browser.start_failed",
+        "browser.proxy_unavailable",
         "browser.stop_pending",
         "capabilities.invalid_override_value",
         "capabilities.organization_not_found",

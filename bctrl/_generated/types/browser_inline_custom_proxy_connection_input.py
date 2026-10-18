@@ -23,7 +23,11 @@ class BrowserInlineCustomProxyConnectionInput(UniversalBaseModel):
     host: str
     password: typing.Optional[str] = None
     port: int
-    protocol: BrowserInlineCustomProxyConnectionInputProtocol
+    protocol: typing.Optional[BrowserInlineCustomProxyConnectionInputProtocol] = pydantic.Field(default=None)
+    """
+    Defaults to socks5.
+    """
+
     type: typing.Optional[BrowserInlineCustomProxyConnectionInputType] = None
     udp_mode: typing_extensions.Annotated[
         typing.Optional[BrowserInlineCustomProxyConnectionInputUdpMode],

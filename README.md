@@ -42,7 +42,7 @@ with open('input.txt', 'rb') as source:
 `AsyncBctrl` exposes the same operations with awaitable methods. Models use
 snake_case at the Python boundary and preserve the API's wire aliases.
 Pagination, binary responses, SSE streaming, and multipart uploads are generated
-from the same public contract. `bctrl.api` remains an alias for the current client.
+from the same public contract.
 
 Requests pin `BCTRL-Version: 2026-10-03`. Use `bctrl_space` and
 `bctrl_subaccount_id` for authorized scope selectors. Custom `base_url` values
@@ -61,5 +61,8 @@ The default `Bctrl` import now uses the current generated client and accepts
 to Browsers/Sandboxes and Agents/Tasks. Method signatures and the generated API
 reference show the request parameters for each operation.
 
-Historical helpers remain under `bctrl.legacy` for callers targeting an older API.
-Their retired routes are not supported by the current production API.
+## Migrating to 3.0
+
+`bctrl.legacy` and `bctrl.api` are removed; import everything from `bctrl`. The
+`api_version` constructor argument is removed: requests pin the API version the
+SDK was generated for, and an explicit `BCTRL-Version` header still overrides it.

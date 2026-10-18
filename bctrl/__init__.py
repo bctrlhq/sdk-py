@@ -1,12 +1,12 @@
-"""Official generated BCTRL Python SDK, with sync and async clients."""
-from .client import Bctrl, AsyncBctrl
-from .browser_helpers import Browser, AsyncBrowser, FetchStreamResponse, AsyncFetchStreamResponse
-from .pagination import paginate, async_paginate
+"""The official Python library for the BCTRL API, with sync and async clients."""
+from ._client import Bctrl, AsyncBctrl
+from ._generated import types
 from ._generated.core.api_error import ApiError
 from ._generated.core.request_options import RequestOptions
-from ._generated import types
-from .waits import wait_for, async_wait_for
-from .version import __version__
+from ._version import __version__
+from .lib.browsers import Browser, AsyncBrowser, FetchStreamResponse, AsyncFetchStreamResponse
+from .lib.pagination import paginate, async_paginate
+from .lib.waits import wait_for, async_wait_for
 
 BctrlError = ApiError
 

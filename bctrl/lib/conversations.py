@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from ._generated.conversations.client import AsyncConversationsClient, ConversationsClient
-from ._generated.events.client import AsyncEventsClient, EventsClient
+from .._generated.conversations.client import AsyncConversationsClient, ConversationsClient
+from .._generated.events.client import AsyncEventsClient, EventsClient
 
 
 class Conversations(ConversationsClient):

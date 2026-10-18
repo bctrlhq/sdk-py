@@ -26,7 +26,11 @@ class ProxyCustomCreateRequest(UniversalBaseModel):
     """
 
     port: typing.Optional[int] = None
-    protocol: typing.Optional[ProxyCustomCreateRequestProtocol] = None
+    protocol: typing.Optional[ProxyCustomCreateRequestProtocol] = pydantic.Field(default=None)
+    """
+    Defaults to socks5, also for a url without a scheme.
+    """
+
     udp_mode: typing_extensions.Annotated[
         typing.Optional[ProxyCustomCreateRequestUdpMode],
         FieldMetadata(alias="udpMode"),

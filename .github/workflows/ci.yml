@@ -12,18 +12,17 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v5
+      # The oldest supported Python, so newer syntax cannot slip in.
       - uses: actions/setup-python@v6
         with:
-          python-version: ${{ matrix.python-version }}
-      - run: python -m pip install --upgrade pip
-      - run: python -m pip install . build pytest
+          python-version: "3.10"
+      - run: python -m pip install . build pytest pyright mypy
       - name: Test the installed package
         run: |
           cd "$RUNNER_TEMP"
           python -m pytest "$GITHUB_WORKSPACE/tests"
+      - run: pyright
+      - run: mypy
       - run: python -m build

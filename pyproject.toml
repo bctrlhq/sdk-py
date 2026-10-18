@@ -1,7 +1,7 @@
 [project]
 name = "bctrl"
-version = "0.3.0"
-description = "Remote browser automation for AI agents - Python SDK"
+dynamic = ["version"]
+description = "The official Python library for the BCTRL API"
 readme = "README.md"
 license = "ISC"
 requires-python = ">=3.10"
@@ -10,15 +10,16 @@ authors = [
 ]
 keywords = ["browser", "automation", "ai", "puppeteer", "playwright", "selenium", "web", "scraping"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: ISC License (ISCL)",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Internet :: WWW/HTTP :: Browsers",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 
 dependencies = [
@@ -27,22 +28,36 @@ dependencies = [
     "pydantic>=1.9.2,<3",
 ]
 
+[dependency-groups]
+dev = ["pytest", "pyright", "mypy"]
+
 [project.urls]
 Homepage = "https://github.com/bctrlhq/sdk-py"
 Documentation = "https://github.com/bctrlhq/sdk-py#readme"
 Repository = "https://github.com/bctrlhq/sdk-py"
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
-[tool.hatch.build]
-exclude = [
-    ".venv-build",
-    "dist",
-    "tests",
-    "node_modules",
-]
+[tool.hatch.version]
+path = "bctrl/_version.py"
+
+[tool.hatch.build.targets.sdist]
+include = ["bctrl", "tests", "README.md", "LICENSE"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["bctrl"]
+# Fern's own tests and docs target its standalone layout, not this package.
+exclude = ["bctrl/_generated/tests", "bctrl/_generated/*.md", "bctrl/_generated/.fern", "bctrl/generated_clients.manifest.json"]
+
+# Pyright reports on the hand-written code; Fern's pydantic v1/v2 compatibility layer is checked by mypy.
+[tool.pyright]
+include = ["bctrl"]
+exclude = ["bctrl/_generated"]
+pythonVersion = "3.10"
+
+[tool.mypy]
+packages = ["bctrl"]
+exclude = ["bctrl/_generated/tests/"]
+python_version = "3.10"
