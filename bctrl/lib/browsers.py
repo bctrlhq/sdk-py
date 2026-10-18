@@ -5,14 +5,13 @@ import asyncio
 import json
 import time
 from contextlib import contextmanager, asynccontextmanager
-from typing import Any, Iterator, AsyncIterator
+from typing import Any, Iterator, AsyncIterator, TypeVar
 
 from pydantic import PrivateAttr
-from ._generated.browsers.client import BrowsersClient, AsyncBrowsersClient
-from ._generated.conversations.client import ConversationsClient, AsyncConversationsClient
-from ._generated.events.client import EventsClient, AsyncEventsClient
-from ._generated.types.browser_resource import BrowserResource
-from ._generated.core.pydantic_utilities import parse_obj_as
+from .._generated.browsers.client import BrowsersClient, AsyncBrowsersClient
+from .._generated.events.client import EventsClient, AsyncEventsClient
+from .._generated.types.browser_resource import BrowserResource
+from .._generated.core.pydantic_utilities import parse_obj_as
 
 
 class BrowserEvents:
@@ -29,44 +28,54 @@ class BrowserEvents:
         return self._events.stream(browser=self._browser_id, **kwargs)
 
 
-class Browser(BrowserResource):
+def _cdp_url(browser: BrowserResource) -> str | None:
+    """The CDP URL once the browser's Run is active; raises if the Run ended instead."""
+    run = browser.current_run
+    if run is None:
+        return None
+    if run.status in ("failed", "ended"):
+        raise RuntimeError(f"Browser Run {run.status}: {run.end_reason}")
+    return run.connections.cdp_url if run.status == "active" and run.connections else None
+
+
+def _wait_seconds(deadline: float) -> int:
+    return min(60, max(1, int(deadline - time.monotonic())))
+
+
+class _BrowserHandle(BrowserResource):
     _client: Any = PrivateAttr()
 
     @property
     def events(self) -> BrowserEvents:
         return BrowserEvents(self._client._events_client(), self.id)
 
+
+class Browser(_BrowserHandle):
     def wait_until_ready(self, *, timeout: float = 120) -> Browser:
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
-            browser = self._client.get(self.id, wait=min(60, max(1, int(deadline - time.monotonic()))))
-            if browser.current_run and browser.current_run.status in ("failed", "ended"):
-                raise RuntimeError(f"Browser Run {browser.current_run.status}: {browser.current_run.end_reason}")
-            if browser.current_run and browser.current_run.status == "active" and browser.current_run.connections:
+            browser: Browser = self._client.get(self.id, wait=_wait_seconds(deadline))
+            if _cdp_url(browser):
                 return browser
             time.sleep(0.25)
         raise TimeoutError("Timed out waiting for browser connections")
 
     def connect(self, playwright: Any, *, timeout: float = 120) -> Any:
-        browser = self.wait_until_ready(timeout=timeout)
-        return playwright.chromium.connect_over_cdp(browser.current_run.connections.cdp_url)
+        return playwright.chromium.connect_over_cdp(_cdp_url(self.wait_until_ready(timeout=timeout)))
 
 
-class AsyncBrowser(Browser):
+class AsyncBrowser(_BrowserHandle):
     async def wait_until_ready(self, *, timeout: float = 120) -> AsyncBrowser:
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
-            browser = await self._client.get(self.id, wait=min(60, max(1, int(deadline - time.monotonic()))))
-            if browser.current_run and browser.current_run.status in ("failed", "ended"):
-                raise RuntimeError(f"Browser Run {browser.current_run.status}: {browser.current_run.end_reason}")
-            if browser.current_run and browser.current_run.status == "active" and browser.current_run.connections:
+            browser: AsyncBrowser = await self._client.get(self.id, wait=_wait_seconds(deadline))
+            if _cdp_url(browser):
                 return browser
             await asyncio.sleep(0.25)
         raise TimeoutError("Timed out waiting for browser connections")
 
     async def connect(self, playwright: Any, *, timeout: float = 120) -> Any:
-        browser = await self.wait_until_ready(timeout=timeout)
-        return await playwright.chromium.connect_over_cdp(browser.current_run.connections.cdp_url)
+        return await playwright.chromium.connect_over_cdp(_cdp_url(await self.wait_until_ready(timeout=timeout)))
 
 
 class FetchStreamResponse:
@@ -75,7 +84,7 @@ class FetchStreamResponse:
     ``close``) to stop early."""
 
     def __init__(self, context: Any, response: Any):
-        self._context = context
+        self._context: Any = context
         self._response = response
         headers = response.headers
         self.status: int = int(headers.get("bctrl-fetch-status", "0"))
@@ -133,7 +142,10 @@ class AsyncFetchStreamResponse(FetchStreamResponse):
         await self.aclose()
 
 
-def _handle(resource: BrowserResource, client: Any, model: type[Browser]) -> Any:
+_Handle = TypeVar("_Handle", bound=_BrowserHandle)
+
+
+def _handle(resource: BrowserResource, client: Any, model: type[_Handle]) -> _Handle:
     browser = parse_obj_as(model, resource.dict(by_alias=True))
     browser._client = client
     return browser
